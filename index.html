@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How many countries have you been to? — count them from your own photos</title>
+<meta name="description" content="Drop in your photos, a whole folder, a Google Takeout export or a Google Maps Timeline file, and see every country you've been to on a map. It runs in your browser — nothing is uploaded." />
+<link rel="canonical" href="https://driftlog-counter.pages.dev/" />
+<link rel="alternate" hreflang="en" href="https://driftlog-counter.pages.dev/" />
+<link rel="alternate" hreflang="ja" href="https://zubotabi-counter.pages.dev/" />
+<link rel="alternate" hreflang="x-default" href="https://driftlog-counter.pages.dev/" />
+<meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=en_counter_sb" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftlog" />
+<meta property="og:url" content="https://driftlog-counter.pages.dev/" />
+<meta property="og:title" content="How many countries have you been to?" />
+<meta property="og:description" content="Drop in your photos and watch the map fill in. Nothing is uploaded — it all runs in your browser." />
+<meta property="og:image" content="https://driftlog-counter.pages.dev/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="How many countries have you been to? Drop in your photos and the map fills in." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How many countries have you been to?" />
+<meta name="twitter:description" content="Drop in your photos and watch the map fill in. Nothing is uploaded — it all runs in your browser." />
+<meta name="twitter:image" content="https://driftlog-counter.pages.dev/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Driftlog Counter",
+"url":"https://driftlog-counter.pages.dev/","applicationCategory":"TravelApplication",
+"operatingSystem":"Any (runs in the browser)",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"description":"Counts how many countries you have been to from the GPS coordinates stored in your own photos, a Google Takeout export or a Google Maps Timeline export. Runs entirely in the browser: no upload, no account.",
+"author":{"@type":"Person","name":"Akira Takashima"},
+"publisher":{"@type":"Organization","name":"Shiori Studio"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How can I find out how many countries I have been to?","acceptedAnswer":{"@type":"Answer","text":"Photos taken with location services switched on store GPS coordinates inside the file. This page reads those coordinates, works out which country each one falls in, and counts the distinct countries for you. A Google Maps Timeline export or a Google Takeout folder works the same way."}},
+{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself, its fonts and its map file, which you can verify in the network tab."}},
+{"@type":"Question","name":"Which files work?","acceptedAnswer":{"@type":"Answer","text":"JPEG and HEIC photos, TIFF-based raw files such as DNG, iPhone and Android videos, the JSON files in a Google Takeout (Google Photos) export, and Google Maps Timeline exports (Timeline.json, Records.json and Semantic Location History). Photos taken with location turned off contain no coordinates and cannot be counted."}},
+{"@type":"Question","name":"Can I use it on my iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tap Choose photos, pick from your Photo Library and leave Location Is Included switched on, which is the default on recent iOS versions. For a whole library at once, the Driftlog app reads the location in your photo library directly. Android browsers remove the location from photos, so on Android use a Google Maps Timeline export instead."}},
+{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the page is free and needs no account. It is made by the developer of Driftlog, an iPhone app that keeps the same map up to date on its own."}}]}
+</script>
+<link rel="stylesheet" href="/fonts.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#8F7765;
+    --accent:#D6692E; --accent-d:#B9561F; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
+    color:var(--ink);min-height:100vh;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header{text-align:center;padding:60px 0 22px}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent);text-transform:uppercase}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,60px);line-height:1.14;margin-top:20px;letter-spacing:-.015em;text-wrap:balance}
+  .lead{font-weight:300;color:var(--muted);margin:20px auto 0;max-width:580px;font-size:clamp(15px,2.1vw,18px)}
+  .drop{margin:32px 0 0;background:var(--card);border:1.5px dashed var(--line);border-radius:20px;padding:44px 24px 36px;text-align:center;
+    transition:border-color .18s,background .18s}
+  .drop.over{border-color:var(--accent);background:var(--tint)}
+  .drop h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;text-wrap:balance}
+  .drop .what{color:var(--muted);font-size:14px;margin:10px auto 0;max-width:560px}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+  .btn:hover{border-color:var(--accent)}
+  .btn:focus-visible,.linkbtn:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-d);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:16px}
+  .note{font-size:12.5px;color:var(--muted2);margin-top:14px}
+  .mobile-note{display:none;margin:16px auto 0;max-width:520px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left}
+  .is-mobile .mobile-note{display:block}
+  .is-mobile #pickDir{display:none}
+  #status{text-align:center;color:var(--muted);font-size:14px;margin-top:18px;min-height:22px}
+  #status a{color:var(--accent-d)}
+  .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
+  .bar.on{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .result{display:none;margin-top:30px}
+  .result.on{display:block}
+  .example-flag{display:none;text-align:center;margin-bottom:12px;font-size:12px;letter-spacing:.2em;font-weight:600;text-transform:uppercase;color:var(--accent-d)}
+  .result.example .example-flag{display:block}
+  .count{text-align:center;margin-bottom:12px}
+  .count .n{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(56px,13vw,110px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+  .count .lbl{font-size:15px;color:var(--muted);margin-top:8px}
+  canvas{width:100%;height:auto;display:block;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+  .list{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;justify-content:center}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13.5px;font-variant-numeric:tabular-nums}
+  .chip b{font-weight:500}
+  .chip span{color:var(--muted)}
+  .also{text-align:center;color:var(--muted);font-size:13.5px;margin-top:14px}
+  .stats{text-align:center;color:var(--muted2);font-size:12.5px;margin-top:12px;font-variant-numeric:tabular-nums}
+  .actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+  .pitch{margin:56px 0 0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px 28px;text-align:center}
+  .pitch h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:26px;text-wrap:balance}
+  .pitch p{color:var(--muted);font-weight:300;margin-top:14px;max-width:540px;margin-inline:auto}
+  .pitch .cta{display:inline-block;margin-top:22px;background:var(--accent);color:#fff;font-weight:500;padding:14px 30px;border-radius:999px;text-decoration:none}
+  .pitch .cta:hover{background:var(--accent-d)}
+  .pitch .sub{font-size:12.5px;color:var(--muted2);margin-top:14px}
+  .demo{margin-top:26px}
+  .demo video{width:100%;max-width:264px;aspect-ratio:9/16;display:block;margin:0 auto;background:#fff;
+    border:1px solid var(--line);border-radius:26px;box-shadow:0 12px 34px rgba(50,32,20,.11)}
+  .demo .cap{font-size:12.5px;color:var(--muted2);margin-top:14px;line-height:1.65}
+  .how{margin:44px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
+  .how h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
+  .how dl{display:grid;gap:14px}
+  .how dt{color:var(--ink);font-weight:500}
+  .how dd{margin-top:2px}
+  .how a{color:var(--accent-d)}
+  footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  @media (prefers-reduced-motion: reduce){ .bar i{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Driftlog</div>
+    <h1>How many countries<br>have you been to?</h1>
+    <p class="lead">Most people can't answer that without counting on their fingers and still getting it wrong. Your photos already know. Drop them in below.</p>
+  </header>
+
+  <section class="drop" id="drop" aria-label="Add photos or location files">
+    <h2>Drop photos or a whole folder here</h2>
+    <p class="what">Holiday photos, a camera-roll export, a Google Takeout folder, or a Google Maps Timeline export (Timeline.json). Unzip Takeout archives first.</p>
+    <div class="btns">
+      <button class="btn primary" id="pickFiles" type="button">Choose photos</button>
+      <button class="btn" id="pickDir" type="button">Choose a folder</button>
+    </div>
+    <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
+    <input type="file" id="dirInput" hidden webkitdirectory multiple />
+    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well; for your whole library, the <a href="#app">Driftlog app</a> reads it directly. Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://driftlog-app.pages.dev/google-maps-timeline-countries/">how to export it</a>).</p>
+    <p class="note">Nothing is uploaded. Files are read inside your browser — check the network tab, or switch off Wi-Fi once the page has loaded. It keeps working.</p>
+    <button class="linkbtn" id="exampleBtn" type="button">No photos to hand? See an example</button>
+  </section>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="bar" id="bar"><i></i></div>
+
+  <section class="result" id="result" aria-label="Your countries">
+    <div class="example-flag">Example — not your photos</div>
+    <div class="count"><div class="n" id="num">0</div><div class="lbl" id="lbl">countries</div></div>
+    <canvas id="map" width="1200" height="1150" role="img" aria-label="World map with the countries found in your files filled in"></canvas>
+    <div class="list" id="list"></div>
+    <p class="also" id="also"></p>
+    <p class="stats" id="stats"></p>
+    <div class="actions">
+      <button class="btn primary" id="share" type="button" hidden>Share</button>
+      <button class="btn" id="save" type="button">Save this image</button>
+      <button class="btn" id="again" type="button">Start over</button>
+    </div>
+  </section>
+
+  <section class="pitch" id="app">
+    <h3>This is the part Driftlog does every day.</h3>
+    <p>Driftlog is an iPhone app that keeps this map up to date on its own. No check-ins, no journaling — you carry your phone and the map fills in. It reads your old photos the way this page just did, then keeps going from there.</p>
+    <div class="demo">
+      <video id="demo" src="./app-demo.mp4" poster="./app-demo-poster.jpg"
+             muted loop playsinline autoplay preload="metadata"
+             aria-label="The Driftlog app importing a camera roll: 22 trips found, the counter reaching 22 countries, and the world map filling in."></video>
+      <p class="cap">The app importing a camera roll — 6,432 photos in, 22 countries out, map filled. 9 seconds, no sound, loops.</p>
+    </div>
+    <a class="cta" id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_counter&amp;mt=8" rel="noopener">Get Driftlog on the App Store</a>
+    <p class="sub">Free to try · one-time unlock, no subscription · iPhone and iPad, iOS 17+ · no account, nothing kept on a server</p>
+  </section>
+
+  <section class="how" aria-label="How this page works">
+    <h3>How this works</h3>
+    <dl>
+      <div><dt>Photos</dt><dd>A photo taken with location on carries GPS coordinates in its EXIF metadata. The page reads only the start of each JPEG, the metadata box of each HEIC, and the header of each video — never the picture itself — then tests each coordinate against country borders.</dd></div>
+      <div><dt>Google Takeout and Timeline</dt><dd>Google Photos exports keep a location in a small JSON file next to each photo; Maps Timeline exports (the newer on-device <code>Timeline.json</code>, older <code>Records.json</code> and Semantic Location History) are read in slices, so large files work too. The Driftlog app itself does not import these files — this page is the only part of Driftlog that does.</dd></div>
+      <div><dt>What counts as a country</dt><dd>The headline uses the same list as the passport stamps in Driftlog: the 193 UN member states plus Taiwan. Territories such as Hong Kong, Puerto Rico or Greenland are listed underneath, not counted. Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side.</dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML, fonts, map file and demo video, all fetched as the page loads, so it works with the network switched off afterwards. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    Made by <a href="https://driftlog-app.pages.dev" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="https://zubotabi-counter.pages.dev/" hreflang="ja" lang="ja">日本語</a>
+  </footer>
+</div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i');
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_ANDROID) document.getElementById('mobileNote').innerHTML = 'On Android, the browser removes the location from photos you pick, so photos won’t count here. Choose a <b>Google Maps Timeline export</b> (Timeline.json) instead, or open this page on a computer.';
+if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
+
+function setStatus(t, html){ if (html) statusEl.innerHTML = t; else statusEl.textContent = t; }
+function setProgress(f){ if (f == null){ barEl.classList.remove('on'); return; } barEl.classList.add('on'); barFill.style.width = Math.round(f*100) + '%'; }
+const fmt = n => n.toLocaleString('en-US');
+const tick = () => new Promise(r => setTimeout(r, 0));
+
+// ---------- country borders (Natural Earth 1:50m, 1:10m for small places; delta-encoded at 1/10000 degree) ----------
+let FEATS = null;
+function decodeRing(arr){
+  const out = new Float64Array(arr.length);
+  let x = 0, y = 0;
+  for (let i = 0; i < arr.length; i += 2){ x += arr[i]; y += arr[i+1]; out[i] = x / 10000; out[i+1] = y / 10000; }
+  return out;
+}
+function ringBox(r){
+  let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity;
+  for (let i = 0; i < r.length; i += 2){ const x = r[i], y = r[i+1]; if (x < a) a = x; if (x > c) c = x; if (y < b) b = y; if (y > d) d = y; }
+  return [a, b, c, d];
+}
+let MAP_REQ = null;
+const fetchMap = () => MAP_REQ || (MAP_REQ = fetch('./countries50.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).catch(e => { MAP_REQ = null; throw e; }));
+const CANVAS_FONTS = ['600 132px Fraunces', '300 38px Inter', '400 24px Inter', '600 25px Inter'];
+// Fetch the borders and fonts once the page is idle, so a file dropped later is read even with the network switched off.
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => {
+  fetchMap().catch(() => {});
+  if (document.fonts && document.fonts.load) CANVAS_FONTS.forEach(f => document.fonts.load(f).catch(() => {}));
+});
+async function loadCountries(){
+  if (FEATS) return;
+  // The map image is drawn on a canvas, which silently falls back to Georgia (old-style digits) if Fraunces is not loaded yet.
+  if (document.fonts && document.fonts.load) await Promise.all(CANVAS_FONTS.map(f => document.fonts.load(f))).catch(() => {});
+  setStatus('Loading the world map…');
+  const raw = await fetchMap().catch(() => { throw new Error('The map file did not load. Reload the page and try again.'); });
+  FEATS = raw.map(f => {
+    const polys = (f.t === 'Polygon' ? [f.c] : f.c).map(poly => poly.map(decodeRing));
+    return { n: f.n, a: f.a, k: f.k, b: f.b, polys, pb: polys.map(p => ringBox(p[0])) };
+  });
+}
+function inRing(x, y, r){
+  let inside = false;
+  for (let i = 0, j = r.length - 2; i < r.length; j = i, i += 2){
+    const yi = r[i+1], yj = r[j+1];
+    if ((yi > y) !== (yj > y)){
+      const xi = r[i], xj = r[j];
+      if (x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+    }
+  }
+  return inside;
+}
+function containing(lon, lat){
+  for (let fi = 0; fi < FEATS.length; fi++){          // smallest first: enclaves win
+    const f = FEATS[fi], b = f.b;
+    if (lon < b[0] || lon > b[2] || lat < b[1] || lat > b[3]) continue;
+    for (let pi = 0; pi < f.polys.length; pi++){
+      const pb = f.pb[pi];
+      if (lon < pb[0] || lon > pb[2] || lat < pb[1] || lat > pb[3]) continue;
+      const poly = f.polys[pi];
+      if (!inRing(lon, lat, poly[0])) continue;
+      let hole = false;
+      for (let h = 1; h < poly.length; h++) if (inRing(lon, lat, poly[h])){ hole = true; break; }
+      if (!hole) return fi * 10000 + pi;
+    }
+  }
+  return -1;
+}
+// Photos taken on a beach, a pier or a ferry often fall just outside simplified coastlines.
+function nearest(lon, lat, maxDeg){
+  const k = Math.cos(lat * Math.PI / 180) || 1e-6;
+  let best = -1, bestD = maxDeg * maxDeg;
+  for (let fi = 0; fi < FEATS.length; fi++){
+    const f = FEATS[fi], b = f.b;
+    if (lon < b[0] - maxDeg / k || lon > b[2] + maxDeg / k || lat < b[1] - maxDeg || lat > b[3] + maxDeg) continue;
+    for (let pi = 0; pi < f.polys.length; pi++){
+      const r = f.polys[pi][0];
+      for (let i = 0, j = r.length - 2; i < r.length; j = i, i += 2){
+        const ax = (r[j] - lon) * k, ay = r[j+1] - lat, bx = (r[i] - lon) * k, by = r[i+1] - lat;
+        const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+        let t = L ? -(ax * dx + ay * dy) / L : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const px = ax + t * dx, py = ay + t * dy, d = px * px + py * py;
+        if (d < bestD){ bestD = d; best = fi * 10000 + pi; }
+      }
+    }
+  }
+  return best;
+}
+const CACHE = new Map();
+// Returns featureIndex * 10000 + polygonIndex, or -1.
+function countryIndex(lon, lat){
+  if (!(lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) || (lat === 0 && lon === 0)) return -1;
+  const key = Math.round(lat * 200) * 100000 + Math.round(lon * 200);   // ~500 m cells
+  let fi = CACHE.get(key);
+  if (fi === undefined){ fi = containing(lon, lat); if (fi < 0) fi = nearest(lon, lat, 0.12); CACHE.set(key, fi); }
+  return fi;
+}
+
+// ---------- EXIF / TIFF ----------
+const TYPE_SIZE = {1:1,2:1,3:2,4:4,5:8,7:1,9:4,10:8,12:8};
+function readTiff(v, tiff){
+  try {
+    const bom = v.getUint16(tiff), le = bom === 0x4949;
+    if (!le && bom !== 0x4D4D) return null;
+    if (v.getUint16(tiff + 2, le) !== 42) return null;
+    const ifd = off => {
+      const m = new Map();
+      if (off + 2 > v.byteLength) return m;
+      const n = v.getUint16(off, le);
+      for (let i = 0; i < n; i++){ const e = off + 2 + i * 12; if (e + 12 > v.byteLength) break; m.set(v.getUint16(e, le), e); }
+      return m;
+    };
+    const valOff = e => { const size = (TYPE_SIZE[v.getUint16(e + 2, le)] || 1) * v.getUint32(e + 4, le); return size <= 4 ? e + 8 : tiff + v.getUint32(e + 8, le); };
+    const ascii = e => { const o = valOff(e), n = v.getUint32(e + 4, le); let s = ''; for (let i = 0; i < n && o + i < v.byteLength; i++){ const c = v.getUint8(o + i); if (!c) break; s += String.fromCharCode(c); } return s; };
+    const rat3 = e => { const o = valOff(e); const r = k => { const a = v.getUint32(o + k * 8, le), b = v.getUint32(o + k * 8 + 4, le); return b ? a / b : 0; }; return r(0) + r(1) / 60 + r(2) / 3600; };
+    const yearOf = s => { const y = parseInt(s.slice(0, 4), 10); return y > 1900 && y < 2100 ? y : null; };
+    const ifd0 = ifd(tiff + v.getUint32(tiff + 4, le));
+    let year = null, point = null;
+    if (ifd0.has(0x8769)){
+      const ex = ifd(tiff + v.getUint32(ifd0.get(0x8769) + 8, le));
+      if (ex.has(0x9003)) year = yearOf(ascii(ex.get(0x9003)));
+    }
+    if (!year && ifd0.has(0x0132)) year = yearOf(ascii(ifd0.get(0x0132)));
+    if (ifd0.has(0x8825)){
+      const g = ifd(tiff + v.getUint32(ifd0.get(0x8825) + 8, le));
+      if (g.has(2) && g.has(4)){
+        let lat = rat3(g.get(2)), lon = rat3(g.get(4));
+        if (g.has(1) && ascii(g.get(1)) === 'S') lat = -lat;
+        if (g.has(3) && ascii(g.get(3)) === 'W') lon = -lon;
+        if (isFinite(lat) && isFinite(lon) && !(lat === 0 && lon === 0)) point = [lon, lat];
+      }
+      if (!year && g.has(29)) year = yearOf(ascii(g.get(29)));
+    }
+    return point ? { point, year } : { point: null, year };
+  } catch (e){ return null; }
+}
+function jpegTiffStart(v){
+  if (v.byteLength < 4 || v.getUint16(0) !== 0xFFD8) return -1;
+  let o = 2;
+  while (o + 4 <= v.byteLength){
+    if (v.getUint8(o) !== 0xFF) return -1;
+    const m = v.getUint8(o + 1);
+    if (m === 0xFF){ o++; continue; }
+    if (m === 0xD9 || m === 0xDA) return -1;
+    const len = v.getUint16(o + 2);
+    if (m === 0xE1 && o + 10 <= v.byteLength && v.getUint32(o + 4) === 0x45786966 && v.getUint16(o + 8) === 0) return o + 10;
+    o += 2 + len;
+  }
+  return -2;
+}
+function scanExifMarker(u8){
+  for (let i = u8.indexOf(0x45); i >= 0 && i < u8.length - 6; i = u8.indexOf(0x45, i + 1)){
+    if (u8[i+1] === 0x78 && u8[i+2] === 0x69 && u8[i+3] === 0x66 && u8[i+4] === 0 && u8[i+5] === 0) return i + 6;
+  }
+  return -1;
+}
+async function readJpeg(file){
+  let buf = await file.slice(0, 128 * 1024).arrayBuffer();
+  let v = new DataView(buf), t = jpegTiffStart(v);
+  if (t === -2 && file.size > buf.byteLength){ buf = await file.slice(0, 1024 * 1024).arrayBuffer(); v = new DataView(buf); t = jpegTiffStart(v); }
+  if (t < 0) t = scanExifMarker(new Uint8Array(buf));
+  return t < 0 ? null : readTiff(v, t);
+}
+const fourcc = (v, o) => String.fromCharCode(v.getUint8(o), v.getUint8(o+1), v.getUint8(o+2), v.getUint8(o+3));
+async function readHeif(file){
+  try {
+    const v = new DataView(await file.slice(0, 512 * 1024).arrayBuffer());
+    let o = 0, meta = null;
+    while (o + 8 <= v.byteLength){
+      let size = v.getUint32(o), hdr = 8; const type = fourcc(v, o + 4);
+      if (size === 1){ size = Number(v.getBigUint64(o + 8)); hdr = 16; } else if (size === 0) size = v.byteLength - o;
+      if (type === 'meta'){ meta = [o + hdr + 4, Math.min(o + size, v.byteLength)]; break; }
+      if (size < 8) break; o += size;
+    }
+    if (!meta) return null;
+    let exifId = null, iloc = -1;
+    for (let p = meta[0]; p + 8 <= meta[1];){
+      const size = v.getUint32(p), type = fourcc(v, p + 4);
+      if (size < 8) break;
+      if (type === 'iinf'){
+        const ver = v.getUint8(p + 8); let q = p + 12;
+        const n = ver === 0 ? v.getUint16(q) : v.getUint32(q); q += ver === 0 ? 2 : 4;
+        for (let i = 0; i < n && q + 8 <= p + size; i++){
+          const bs = v.getUint32(q);
+          if (fourcc(v, q + 4) === 'infe' && v.getUint8(q + 8) >= 2){
+            const iv = v.getUint8(q + 8); let r = q + 12;
+            const id = iv === 2 ? v.getUint16(r) : v.getUint32(r); r += (iv === 2 ? 2 : 4) + 2;
+            if (fourcc(v, r) === 'Exif'){ exifId = id; break; }
+          }
+          if (bs < 8) break; q += bs;
+        }
+      }
+      if (type === 'iloc') iloc = p;
+      p += size;
+    }
+    if (exifId === null || iloc < 0) return null;
+    const ver = v.getUint8(iloc + 8); let q = iloc + 12;
+    const b1 = v.getUint8(q), b2 = v.getUint8(q + 1); q += 2;
+    const offSize = b1 >> 4, lenSize = b1 & 15, baseSize = b2 >> 4, idxSize = (ver === 1 || ver === 2) ? (b2 & 15) : 0;
+    const rd = n => { let x = 0; if (n === 2) x = v.getUint16(q); else if (n === 4) x = v.getUint32(q); else if (n === 8) x = Number(v.getBigUint64(q)); q += n; return x; };
+    const count = ver < 2 ? v.getUint16(q) : v.getUint32(q); q += ver < 2 ? 2 : 4;
+    let ext = null;
+    for (let i = 0; i < count && !ext; i++){
+      const id = ver < 2 ? v.getUint16(q) : v.getUint32(q); q += ver < 2 ? 2 : 4;
+      let method = 0; if (ver === 1 || ver === 2){ method = v.getUint16(q) & 15; q += 2; }
+      q += 2;
+      const base = rd(baseSize), n = v.getUint16(q); q += 2;
+      let first = null;
+      for (let e = 0; e < n; e++){ if (idxSize) rd(idxSize); const off = rd(offSize), len = rd(lenSize); if (!first) first = { off: base + off, len }; }
+      if (id === exifId && method === 0) ext = first;
+    }
+    if (!ext || !ext.len) return null;
+    const ev = new DataView(await file.slice(ext.off, ext.off + Math.min(ext.len, 256 * 1024)).arrayBuffer());
+    const t = 4 + ev.getUint32(0);
+    return t + 8 <= ev.byteLength ? readTiff(ev, t) : null;
+  } catch (e){ return null; }
+}
+async function readRawTiff(file){
+  const v = new DataView(await file.slice(0, 1024 * 1024).arrayBuffer());
+  return readTiff(v, 0);
+}
+async function readVideo(file){
+  const parts = [file.slice(0, 1024 * 1024)];
+  if (file.size > 1024 * 1024) parts.push(file.slice(Math.max(1024 * 1024, file.size - 1024 * 1024)));
+  for (const part of parts){
+    const txt = new TextDecoder('latin1').decode(await part.arrayBuffer());
+    const m = txt.match(/([+-]\d{2}\.\d{3,})([+-]\d{3}\.\d{3,})/);
+    if (m){
+      const lat = +m[1], lon = +m[2];
+      if (Math.abs(lat) <= 90 && Math.abs(lon) <= 180 && !(lat === 0 && lon === 0)) return { point: [lon, lat], year: null };
+    }
+  }
+  return null;
+}
+
+// ---------- Google Takeout sidecars and Timeline exports ----------
+function sidecarPoint(o){
+  for (const k of ['geoDataExif', 'geoData']){
+    const g = o && o[k];
+    if (g && typeof g.latitude === 'number' && typeof g.longitude === 'number' && !(g.latitude === 0 && g.longitude === 0))
+      return [g.longitude, g.latitude];
+  }
+  return null;
+}
+const LOC_RE = /"latitudeE7"\s*:\s*(-?\d+)\s*,\s*"longitudeE7"\s*:\s*(-?\d+)|(-?\d{1,2}(?:\.\d+)?)(?:°|\\u00b0),\s*(-?\d{1,3}(?:\.\d+)?)(?:°|\\u00b0)|geo:(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)|"(?:timestamp|startTime|endTime|time|startTimestamp|endTimestamp|creationTimestamp)"\s*:\s*"(\d{4})-\d\d|"timestampMs"\s*:\s*"(\d{12,13})"/g;
+async function scanLocationFile(file, onPoint, onProgress){
+  const CH = 8 * 1024 * 1024, OV = 512, dec = new TextDecoder();
+  let pos = 0, carry = '', year = null, n = 0;
+  while (pos < file.size){
+    const end = Math.min(pos + CH, file.size), last = end >= file.size;
+    const text = carry + dec.decode(await file.slice(pos, end).arrayBuffer(), { stream: !last });
+    const cut = last ? text.length : text.length - OV;
+    LOC_RE.lastIndex = 0;
+    let m;
+    while ((m = LOC_RE.exec(text)) !== null){
+      if (m.index >= cut) break;
+      if (m[7]){ year = +m[7]; continue; }
+      if (m[8]){ year = new Date(+m[8]).getUTCFullYear(); continue; }
+      let lat, lon;
+      if (m[1] !== undefined){
+        // Records.json puts the timestamp after the coordinates in the same object.
+        const ahead = /"timestamp(Ms)?"\s*:\s*"(\d{4}|\d{12,13})/.exec(text.slice(m.index, m.index + 400));
+        if (ahead) year = ahead[1] ? new Date(+ahead[2]).getUTCFullYear() : +ahead[2].slice(0, 4);
+        lat = +m[1]; lon = +m[2];
+        if (lat > 900000000) lat -= 4294967296;
+        if (lon > 1800000000) lon -= 4294967296;
+        lat /= 1e7; lon /= 1e7;
+      } else if (m[3] !== undefined){ lat = +m[3]; lon = +m[4]; }
+      else { lat = +m[5]; lon = +m[6]; }
+      onPoint([lon, lat], year); n++;
+    }
+    carry = last ? '' : text.slice(cut);
+    pos = end;
+    onProgress(pos / file.size);
+    await tick();
+  }
+  return n;
+}
+
+// ---------- collecting files (buttons, drag and drop, whole folders) ----------
+const KIND = name => {
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  if (/^(jpe?g|jfif)$/.test(ext)) return 'jpeg';
+  if (/^(heic|heif|hif|avif)$/.test(ext)) return 'heif';
+  if (/^(dng|tiff?|nef|arw|cr2|orf|rw2|pef|srw)$/.test(ext)) return 'tiff';
+  if (/^(mov|mp4|m4v|3gp)$/.test(ext)) return 'video';
+  if (ext === 'json') return 'json';
+  return null;
+};
+async function entriesToFiles(entries){
+  const out = [];
+  const walk = async entry => {
+    if (!entry || entry.name.startsWith('.')) return;
+    if (entry.isFile){ out.push(await new Promise((res, rej) => entry.file(res, rej)).catch(() => null)); return; }
+    if (entry.isDirectory){
+      const reader = entry.createReader();
+      for (;;){
+        const batch = await new Promise((res, rej) => reader.readEntries(res, rej)).catch(() => []);
+        if (!batch.length) break;
+        for (const e of batch) await walk(e);
+        if (out.length % 500 === 0) setStatus(`Looking through folders… ${fmt(out.length)} files so far`);
+      }
+    }
+  };
+  for (const e of entries) await walk(e);
+  return out.filter(Boolean);
+}
+
+// ---------- the run ----------
+let lastRun = null, busy = false;
+async function handle(files){
+  if (busy) return;
+  busy = true;
+  try {
+    await loadCountries();
+    const all = [...files].filter(f => f && !f.name.startsWith('._') && !f.name.startsWith('.'));
+    const media = all.filter(f => KIND(f.name) && KIND(f.name) !== 'json');
+    const jsons = all.filter(f => KIND(f.name) === 'json');
+    if (!media.length && !jsons.length){
+      setStatus(all.length ? `None of those ${fmt(all.length)} files are photos, videos or location exports I can read.` : 'Nothing to read in that selection.');
+      return;
+    }
+    const agg = new Map();
+    const add = (code, year, kind) => {
+      const fi = Math.floor(code / 10000);
+      let a = agg.get(fi);
+      if (!a){ a = { photos: 0, points: 0, y0: null, y1: null, hit: new Set() }; agg.set(fi, a); }
+      a.hit.add(code % 10000);
+      a[kind]++;
+      if (year){ if (a.y0 === null || year < a.y0) a.y0 = year; if (a.y1 === null || year > a.y1) a.y1 = year; }
+    };
+    const stats = { media: media.length, withLoc: 0, sidecars: 0, points: 0, unmatched: 0, timelineFiles: 0 };
+    const located = new Set();
+    let done = 0;
+    const total = media.length + jsons.length;
+    const worker = async queue => {
+      while (queue.length){
+        const f = queue.shift();
+        let r = null;
+        const kind = KIND(f.name);
+        try {
+          if (kind === 'jpeg') r = await readJpeg(f);
+          else if (kind === 'heif') r = await readHeif(f);
+          else if (kind === 'tiff') r = await readRawTiff(f);
+          else if (kind === 'video') r = await readVideo(f);
+        } catch (e){ r = null; }
+        if (r && r.point){
+          stats.withLoc++;
+          located.add(f.name.toLowerCase());
+          const code = countryIndex(r.point[0], r.point[1]);
+          if (code >= 0) add(code, r.year, 'photos'); else stats.unmatched++;
+        }
+        done++;
+        if (done % 20 === 0){ setStatus(`Reading ${fmt(done)} of ${fmt(total)} files · ${fmt(stats.withLoc)} with a location`); setProgress(done / total); await tick(); }
+      }
+    };
+    const queue = media.slice();
+    await Promise.all([worker(queue), worker(queue), worker(queue), worker(queue)]);
+
+    for (const f of jsons){
+      if (f.size < 256 * 1024){
+        let o = null;
+        try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
+        if (o && (o.geoData || o.geoDataExif) && typeof o.title === 'string'){
+          const p = sidecarPoint(o);
+          if (p && !located.has(o.title.toLowerCase())){
+            stats.sidecars++;
+            located.add(o.title.toLowerCase());
+            const ts = o.photoTakenTime && +o.photoTakenTime.timestamp;
+            const code = countryIndex(p[0], p[1]);
+            if (code >= 0) add(code, ts ? new Date(ts * 1000).getUTCFullYear() : null, 'photos'); else stats.unmatched++;
+          }
+          done++;
+          continue;
+        }
+      }
+      const before = stats.points;
+      await scanLocationFile(f, (p, year) => {
+        stats.points++;
+        const code = countryIndex(p[0], p[1]);
+        if (code >= 0) add(code, year, 'points');
+      }, frac => { setStatus(`Reading ${f.name} · ${Math.round(frac * 100)}% · ${fmt(stats.points)} location points`); setProgress(frac); });
+      if (stats.points > before) stats.timelineFiles++;
+      done++;
+    }
+    setProgress(null);
+    lastRun = { agg, stats, example: false };
+    render(lastRun);
+  } catch (e){
+    setProgress(null);
+    setStatus(e && e.message ? e.message : 'Something went wrong while reading those files.');
+  } finally { busy = false; }
+}
+
+function render(run){
+  const { agg, stats, example } = run;
+  const rows = [...agg.entries()].map(([fi, a]) => ({ f: FEATS[fi], ...a }));
+  const counted = rows.filter(r => r.f.k).sort((x, y) => (x.y0 ?? 9999) - (y.y0 ?? 9999) || x.f.n.localeCompare(y.f.n));
+  const others = rows.filter(r => !r.f.k).sort((x, y) => x.f.n.localeCompare(y.f.n));
+  if (!counted.length && !others.length){
+    const any = stats.withLoc + stats.sidecars + stats.points;
+    if (any) setStatus(`Read ${fmt(any)} locations, but none landed in a country I could match. Try a different batch.`);
+    else if (IS_IOS) setStatus(`None of those ${fmt(stats.media)} photos had a location in them. In the photo picker, check that “Location Is Included” is on (tap it to switch), and that the camera had location turned on — or <a href="#app">let the Driftlog app read your library</a>.`, true);
+    else if (IS_ANDROID) setStatus(`None of those ${fmt(stats.media)} files had a location in them. Android removes it from photos picked in a browser — use a Google Maps Timeline export here, or try on a computer.`);
+    else setStatus(`None of those ${fmt(stats.media)} files had a location saved in them. Photos taken with location turned off for the camera carry no coordinates.`);
+    return;
+  }
+  const uniq = new Set(counted.map(r => r.f.a || r.f.n));
+  const n = uniq.size;
+  $('#num').textContent = n;
+  $('#lbl').textContent = (n === 1 ? 'country' : 'countries') + (example ? ' in this example' : ', found in your files');
+  const years = r => r.y0 ? (r.y0 === r.y1 ? `${r.y0}` : `${r.y0}–${r.y1}`) : '';
+  const qty = r => r.photos ? `${fmt(r.photos)} photo${r.photos === 1 ? '' : 's'}` : `${fmt(r.points)} point${r.points === 1 ? '' : 's'}`;
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const merged = new Map();
+  for (const r of counted){ const key = r.f.a || r.f.n; if (!merged.has(key)) merged.set(key, r); else { const m = merged.get(key); m.photos += r.photos; m.points += r.points; m.y0 = Math.min(m.y0 ?? r.y0, r.y0 ?? m.y0); m.y1 = Math.max(m.y1 ?? r.y1, r.y1 ?? m.y1); } }
+  $('#list').innerHTML = [...merged.values()].map(r => `<span class="chip"><b>${esc(r.f.n)}</b> <span>· ${[years(r), qty(r)].filter(Boolean).join(' · ')}</span></span>`).join('');
+  $('#also').textContent = others.length ? `Also found: ${others.map(r => r.f.n).join(', ')} — listed but not counted, since the count follows the 193 UN member states plus Taiwan.` : '';
+  const bits = [];
+  if (stats.media) bits.push(`${fmt(stats.media)} photos and videos read, ${fmt(stats.withLoc)} with a location`);
+  if (stats.sidecars) bits.push(`${fmt(stats.sidecars)} Google Photos location${stats.sidecars === 1 ? '' : 's'}`);
+  if (stats.points) bits.push(`${fmt(stats.points)} Timeline point${stats.points === 1 ? '' : 's'}`);
+  if (stats.unmatched) bits.push(`${fmt(stats.unmatched)} too far from any border to place`);
+  $('#stats').textContent = example ? 'Example data: a made-up set of trips, not anyone\'s real photos.' : bits.join(' · ');
+  const fromTimeline = !example && !stats.withLoc && !stats.sidecars && stats.points > 0;
+  drawMap(new Map([...agg.entries()].map(([fi, a]) => [fi, a.hit || new Set()])), n, example, fromTimeline);
+  prepareShare(n, example, fromTimeline);
+  const res = $('#result');
+  res.classList.toggle('example', !!example);
+  res.classList.add('on');
+  setStatus(example ? 'This is an example. Drop your own photos above to see yours.' : 'Done. Nothing left your browser.');
+  res.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+
+// ---------- map drawing ----------
+const W = 1200, H = 1150, MAP_TOP = 330, MAP_H = 620;
+const project = (lon, lat) => [(lon + 180) / 360 * W, MAP_TOP + (85 - lat) / 145 * MAP_H];
+function drawMap(visited, n, example, fromTimeline){
+  const cv = $('#map'), c = cv.getContext('2d');
+  c.fillStyle = '#FCF7F0'; c.fillRect(0, 0, W, H);
+  c.fillStyle = '#FDF6EE'; c.fillRect(0, MAP_TOP - 40, W, MAP_H + 80);
+  const dots = [];
+  const center = pb => [(pb[0] + pb[2]) / 2, (pb[1] + pb[3]) / 2];
+  const km = (p, q) => { const R = 6371, t = Math.PI / 180, dLat = (q[1] - p[1]) * t, dLon = (q[0] - p[0]) * t;
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(p[1] * t) * Math.cos(q[1] * t) * Math.sin(dLon / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+  const paint = (f, fi) => {
+    // France's outline includes French Guiana, Réunion and the Antilles: a trip to Paris should not paint South America.
+    const hits = visited.get(fi);
+    if (!hits) return () => false;
+    if (f.a !== 'FR') return () => true;
+    const hc = [...hits].map(pi => center(f.pb[pi]));
+    return pi => hits.has(pi) || hc.some(h => km(h, center(f.pb[pi])) < 1500);
+  };
+  const drawFeat = (f, fi, onFn, wantOn) => {
+    c.beginPath();
+    f.polys.forEach((poly, pi) => {
+      if (onFn(pi) !== wantOn) return;
+      for (const r of poly){
+        for (let i = 0; i < r.length; i += 2){
+          const [x, y] = project(r[i], Math.max(r[i+1], -60));
+          (i === 0 || Math.abs(r[i] - r[i-2]) > 180) ? c.moveTo(x, y) : c.lineTo(x, y);
+        }
+        c.closePath();
+      }
+    });
+    c.fillStyle = wantOn ? '#D6692E' : '#E8DACA';
+    c.fill('evenodd');
+    c.strokeStyle = wantOn ? '#C25A22' : '#DFCDB9';
+    c.lineWidth = wantOn ? 1.2 : 0.6;
+    c.stroke();
+  };
+  FEATS.forEach((f, fi) => {
+    if (f.b[3] < -60) return;
+    const onFn = paint(f, fi);
+    drawFeat(f, fi, onFn, false);
+    if (visited.has(fi)){
+      drawFeat(f, fi, onFn, true);
+      const [x0, y0] = project(f.b[0], f.b[3]), [x1, y1] = project(f.b[2], f.b[1]);
+      if ((x1 - x0) < 7 && (y1 - y0) < 7) dots.push([(x0 + x1) / 2, (y0 + y1) / 2]);
+    }
+  });
+  for (const [x, y] of dots){
+    c.beginPath(); c.arc(x, y, 7, 0, Math.PI * 2);
+    c.fillStyle = 'rgba(214,105,46,.25)'; c.fill();
+    c.beginPath(); c.arc(x, y, 3.2, 0, Math.PI * 2);
+    c.fillStyle = '#D6692E'; c.fill();
+  }
+  c.textAlign = 'center';
+  c.fillStyle = '#D6692E'; c.font = '600 25px Inter, sans-serif';
+  if ('letterSpacing' in c) c.letterSpacing = '6px';
+  c.fillText(example ? 'EXAMPLE · HAS BEEN TO' : 'I HAVE BEEN TO', W / 2, 116);
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
+  c.fillStyle = '#322014'; c.font = '600 132px Fraunces, Georgia, serif';
+  c.fillText(String(n), W / 2, 236);
+  c.fillStyle = '#7A6555'; c.font = '300 38px Inter, sans-serif';
+  c.fillText(n === 1 ? 'country' : 'countries', W / 2, 286);
+  c.fillStyle = '#7A6555'; c.font = '300 27px Inter, sans-serif';
+  c.fillText(example ? 'example data, not real photos' : fromTimeline ? 'counted from my own location history, in my own browser' : 'counted from my own photos, in my own browser', W / 2, MAP_TOP + MAP_H + 88);
+  c.fillStyle = '#8F7765'; c.font = '400 24px Inter, sans-serif';
+  c.fillText('driftlog-counter.pages.dev', W / 2, MAP_TOP + MAP_H + 140);
+}
+
+// ---------- sharing ----------
+// The image is made ahead of time: iOS only opens the share sheet if share() runs straight from the tap.
+const PAGE_URL = 'https://driftlog-counter.pages.dev/';
+let share = null;
+const CAN_SHARE = !!navigator.share;
+function prepareShare(n, example, fromTimeline){
+  const text = example
+    ? 'A free page that counts the countries you have been to from your own photos. Nothing gets uploaded.'
+    : `I have been to ${n} ${n === 1 ? 'country' : 'countries'}, counted from my own ${fromTimeline ? 'Google Maps Timeline' : 'photos'}. Nothing gets uploaded.`;
+  share = { text, file: null };
+  const btn = $('#share');
+  btn.hidden = false;
+  btn.textContent = CAN_SHARE ? 'Share' : 'Copy link';
+  $('#map').toBlob(b => { if (b && share && share.text === text) share.file = new File([b], example ? 'countries-example.png' : 'my-countries.png', { type: 'image/png' }); }, 'image/png');
+}
+async function copyLink(text){
+  try { await navigator.clipboard.writeText(`${text} ${PAGE_URL}`); setStatus('Copied a line and the link. Paste it anywhere.'); }
+  catch (e){ setStatus(`Link to this page: ${PAGE_URL}`); }
+}
+$('#share').addEventListener('click', async () => {
+  if (!share) return;
+  const { text, file } = share;
+  if (!CAN_SHARE) return copyLink(text);
+  try {
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: `${text} ${PAGE_URL}` });
+    else await navigator.share({ text, url: PAGE_URL });
+  } catch (e){
+    if (e && e.name === 'AbortError') return;
+    copyLink(text);
+  }
+});
+
+// ---------- example ----------
+const EXAMPLE = [
+  [-9.14, 38.72, 2014], [-8.61, 41.15, 2014], [-3.70, 40.42, 2015], [2.35, 48.86, 2015], [12.50, 41.90, 2016], [12.453, 41.903, 2016],
+  [7.42, 43.74, 2016], [139.77, 35.68, 2017], [135.77, 35.01, 2019], [103.85, 1.29, 2018], [114.17, 22.30, 2018], [100.50, 13.75, 2018],
+  [126.98, 37.57, 2023], [-123.12, 49.28, 2021], [-73.99, 40.73, 2022], [-117.16, 32.72, 2026], [-99.13, 19.43, 2024],
+  [-21.94, 64.15, 2025], [-7.99, 31.63, 2025]
+];
+async function showExample(){
+  if (busy) return;
+  try {
+    await loadCountries();
+    const agg = new Map();
+    for (const [lon, lat, y] of EXAMPLE){
+      const code = countryIndex(lon, lat);
+      if (code < 0) continue;
+      const fi = Math.floor(code / 10000);
+      const a = agg.get(fi) || { photos: 0, points: 0, y0: null, y1: null, hit: new Set() };
+      a.hit.add(code % 10000);
+      a.photos += 3 + (Math.abs(lon * 7) | 0) % 40; a.y0 = a.y0 ? Math.min(a.y0, y) : y; a.y1 = a.y1 ? Math.max(a.y1, y) : y;
+      agg.set(fi, a);
+    }
+    lastRun = { agg, stats: {}, example: true };
+    render(lastRun);
+  } catch (e){ setStatus(e.message || 'The example did not load.'); }
+}
+
+// ---------- wiring ----------
+const drop = $('#drop');
+$('#pickFiles').addEventListener('click', () => $('#fileInput').click());
+$('#pickDir').addEventListener('click', () => $('#dirInput').click());
+$('#fileInput').addEventListener('change', e => handle(e.target.files));
+$('#dirInput').addEventListener('change', e => handle(e.target.files));
+$('#exampleBtn').addEventListener('click', showExample);
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+drop.addEventListener('dragleave', e => { if (!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const items = e.dataTransfer.items;
+  const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
+  if (entries.some(en => en.isDirectory)){ setStatus('Looking through folders…'); handle(await entriesToFiles(entries)); }
+  else handle(e.dataTransfer.files);
+});
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
+$('#save').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.download = lastRun && lastRun.example ? 'countries-example.png' : 'my-countries.png';
+  a.href = $('#map').toDataURL('image/png');
+  a.click();
+});
+$('#again').addEventListener('click', () => {
+  $('#result').classList.remove('on', 'example'); setStatus(''); setProgress(null); share = null; $('#share').hidden = true;
+  $('#fileInput').value = ''; $('#dirInput').value = '';
+  drop.scrollIntoView({ block: 'center' });
+});
+(() => {
+  const v = $('#demo');
+  if (v && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ v.removeAttribute('autoplay'); v.loop = false; v.controls = true; v.pause(); }
+})();
+</script>
+</body>
+</html>
