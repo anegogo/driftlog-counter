@@ -5,7 +5,7 @@
 Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-counter.pages.dev
 
 - No dependencies, no build step, no framework. One HTML file and one 890 KB border file.
-- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
+- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page, its fonts, the border file and a short demo video of the app. The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
 - Works in iPhone Safari: the iOS photo picker passes the location along while it shows “Location Is Included”.
 
 ## What it reads
@@ -13,11 +13,11 @@ Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-count
 | Input | How |
 |---|---|
 | JPEG | EXIF in the APP1 segment. Reads the first 128 KB (1 MB if the segment is further in). |
-| HEIC / HEIF / AVIF | Walks the ISO-BMFF boxes to `meta`, finds the `Exif` item in `iinf`, resolves its extent in `iloc`, and reads only those bytes. |
-| TIFF-based RAW (DNG, NEF, ARW, CR2, ORF, RW2…) | The TIFF IFDs directly. |
+| HEIC / HEIF / AVIF | Reads the first 512 KB to walk the ISO-BMFF boxes to `meta`, finds the `Exif` item in `iinf`, resolves its extent in `iloc`, then reads that extent. The image itself is never decoded. |
+| TIFF-based RAW (DNG, NEF, ARW, CR2, ORF, RW2…) | The TIFF IFDs directly, including the Olympus and Panasonic header variants. |
 | MOV / MP4 / M4V | The ISO 6709 location string (`+35.6812+139.7671/`) in the first or last megabyte. |
-| Google Takeout (Google Photos) | The `geoData` / `geoDataExif` in the JSON next to each photo, de-duplicated against the photo itself. |
-| Google Maps Timeline | Android `Timeline.json` (`"48.8584°, 2.2945°"`), iPhone `location-history.json` (`geo:48.8584,2.2945`), and the older `Records.json` (`latitudeE7`) and Semantic Location History. Read in 8 MB slices with a small overlap, so files of hundreds of megabytes are fine. |
+| Google Takeout (Google Photos) | The `geoData` / `geoDataExif` in the JSON next to each photo. A sidecar is skipped when a file with the same name already put the same country on the map. |
+| Google Maps Timeline | Android `Timeline.json` (`"48.8584°, 2.2945°"`), iPhone `location-history.json` (`geo:48.8584,2.2945`), and the older `Records.json` (`latitudeE7`) and Semantic Location History. Read in 8 MB slices, carrying over from the end of the last coordinate read, so files of hundreds of megabytes are fine. |
 
 Folders can be dropped whole; the page walks them with `webkitGetAsEntry`.
 
@@ -27,7 +27,7 @@ Folders can be dropped whole; the page walks them with `webkitGetAsEntry`.
 - **Lookup:** point-in-polygon (even–odd ray casting), features sorted smallest first so an enclave wins over the country around it, with a bounding-box test per feature and per polygon, and results cached per ~500 m cell.
 - **Coastlines:** photos from a beach, a pier or a ferry often land just outside a simplified coastline. A point that is in no country snaps to the nearest coast within 0.12° (about 13 km); anything further out is reported, not counted.
 - **The antimeridian:** rings that cross ±180° (Fiji, Russia, Kiribati) are split at build time, so neither the lookup nor the map draws a band across the world.
-- **What counts:** the headline counts the 193 UN member states plus Taiwan. Territories (Hong Kong, Puerto Rico, Greenland…) are listed separately, not counted.
+- **What counts:** the headline counts the 193 UN member states plus Taiwan. Other places (Vatican City, Kosovo, and territories such as Hong Kong, Puerto Rico or Greenland) are listed and filled in on the map, not counted. A few small outlying areas follow their parent in the border data (Christmas Island and the Cocos Islands with Australia, the UK Sovereign Base Areas with Cyprus).
 - **The map:** France's outline includes French Guiana and Réunion, so only parts within 1,500 km of an actual hit are painted — a trip to Paris does not paint South America.
 
 ## Run it
@@ -37,7 +37,9 @@ python3 -m http.server 8000   # then open http://localhost:8000
 node tests/run.mjs            # runs the page's own script against tests/fixtures (Node 20+)
 ```
 
-The fixtures are tiny synthetic files with the coordinates of public landmarks, one per format and edge case: HEIC, a video, a Takeout sidecar, all three Timeline formats, a photo just offshore, one in the mid-Atlantic, Vatican City inside Rome, Hong Kong, Singapore.
+The test also generates an old-style `Records.json` (with `timestampMs`) and 65 Timeline files just over one 8 MB slice, so a coordinate straddles the slice boundary at every possible offset.
+
+The fixtures in `tests/fixtures` are tiny synthetic files with the coordinates of public landmarks, one per format and edge case: HEIC, a video, a Takeout sidecar, all three Timeline formats, a photo just offshore, one in the mid-Atlantic, Vatican City inside Rome, Hong Kong, Singapore.
 
 ## Rebuild the border file
 
@@ -60,6 +62,6 @@ Aki Takashima ([Shiori Studio](https://driftlog-app.pages.dev)), a solo develope
 ## License
 
 - Code (`index.html`, `tools/`, `tests/`): MIT, see [LICENSE](LICENSE).
-- `countries50.json`: derived from [Natural Earth](https://www.naturalearthdata.com/) (public domain) via [world-atlas](https://github.com/topojson/world-atlas) (ISC), with ISO codes from [i18n-iso-countries](https://github.com/michaelwittig/node-i18n-iso-countries) (MIT).
+- `countries50.json`: derived from [Natural Earth](https://www.naturalearthdata.com/) (public domain) via [world-atlas](https://github.com/topojson/world-atlas) (ISC), with ISO codes from [i18n-iso-countries](https://github.com/michaelwittig/node-i18n-iso-countries) (MIT). Their notices are in [NOTICE](NOTICE).
 - Fonts: [Inter](https://github.com/rsms/inter) and [Fraunces](https://github.com/undercasetype/Fraunces), SIL Open Font License 1.1 (`fonts/OFL-*.txt`).
 - `app-demo.mp4`, `app-demo-poster.jpg` and `og.png` show the Driftlog app and are not covered by the MIT license.

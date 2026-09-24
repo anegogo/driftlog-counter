@@ -35,7 +35,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"How can I find out how many countries I have been to?","acceptedAnswer":{"@type":"Answer","text":"Photos taken with location services switched on store GPS coordinates inside the file. This page reads those coordinates, works out which country each one falls in, and counts the distinct countries for you. A Google Maps Timeline export or a Google Takeout folder works the same way."}},
-{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself, its fonts and its map file, which you can verify in the network tab."}},
+{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself, its fonts, its map file and a short demo video of the app, which you can verify in the network tab. Once the page has loaded, it keeps working with the network switched off."}},
 {"@type":"Question","name":"Which files work?","acceptedAnswer":{"@type":"Answer","text":"JPEG and HEIC photos, TIFF-based raw files such as DNG, iPhone and Android videos, the JSON files in a Google Takeout (Google Photos) export, and Google Maps Timeline exports (Timeline.json, Records.json and Semantic Location History). Photos taken with location turned off contain no coordinates and cannot be counted."}},
 {"@type":"Question","name":"Can I use it on my iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tap Choose photos, pick from your Photo Library and leave Location Is Included switched on, which is the default on recent iOS versions. For a whole library at once, the Driftlog app reads the location in your photo library directly. Android browsers remove the location from photos, so on Android use a Google Maps Timeline export instead."}},
 {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the page is free and needs no account. It is made by the developer of Driftlog, an iPhone app that keeps the same map up to date on its own."}}]}
@@ -169,8 +169,8 @@
     <dl>
       <div><dt>Photos</dt><dd>A photo taken with location on carries GPS coordinates in its EXIF metadata. The page reads only the start of each JPEG, the metadata box of each HEIC, and the header of each video — never the picture itself — then tests each coordinate against country borders.</dd></div>
       <div><dt>Google Takeout and Timeline</dt><dd>Google Photos exports keep a location in a small JSON file next to each photo; Maps Timeline exports (the newer on-device <code>Timeline.json</code>, older <code>Records.json</code> and Semantic Location History) are read in slices, so large files work too. The Driftlog app itself does not import these files — this page is the only part of Driftlog that does.</dd></div>
-      <div><dt>What counts as a country</dt><dd>The headline uses the same list as the passport stamps in Driftlog: the 193 UN member states plus Taiwan. Territories such as Hong Kong, Puerto Rico or Greenland are listed underneath, not counted. Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side.</dd></div>
-      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML, fonts, map file and demo video, all fetched as the page loads, so it works with the network switched off afterwards. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
+      <div><dt>What counts as a country</dt><dd>The headline counts the 193 UN member states plus Taiwan. Other places, such as Vatican City and Kosovo or territories like Hong Kong, Puerto Rico and Greenland, are named underneath and filled in on the map, but not counted. (The Driftlog app counts territories separately, so its number can be higher.) Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side.</dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML, fonts, map file and demo video, all fetched within a second or two of the page opening, so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
     </dl>
   </section>
 
@@ -290,7 +290,8 @@ function readTiff(v, tiff){
   try {
     const bom = v.getUint16(tiff), le = bom === 0x4949;
     if (!le && bom !== 0x4D4D) return null;
-    if (v.getUint16(tiff + 2, le) !== 42) return null;
+    const magic = v.getUint16(tiff + 2, le);
+    if (magic !== 42 && magic !== 0x4F52 && magic !== 0x5352 && magic !== 0x0055) return null;   // TIFF, Olympus ORF, Panasonic RW2
     const ifd = off => {
       const m = new Map();
       if (off + 2 > v.byteLength) return m;
@@ -439,16 +440,18 @@ async function scanLocationFile(file, onPoint, onProgress){
     const text = carry + dec.decode(await file.slice(pos, end).arrayBuffer(), { stream: !last });
     const cut = last ? text.length : text.length - OV;
     LOC_RE.lastIndex = 0;
-    let m;
+    let m, lastEnd = 0;
     while ((m = LOC_RE.exec(text)) !== null){
       if (m.index >= cut) break;
+      lastEnd = LOC_RE.lastIndex;
       if (m[7]){ year = +m[7]; continue; }
       if (m[8]){ year = new Date(+m[8]).getUTCFullYear(); continue; }
       let lat, lon;
       if (m[1] !== undefined){
-        // Records.json puts the timestamp after the coordinates in the same object.
-        const ahead = /"timestamp(Ms)?"\s*:\s*"(\d{4}|\d{12,13})/.exec(text.slice(m.index, m.index + 400));
-        if (ahead) year = ahead[1] ? new Date(+ahead[2]).getUTCFullYear() : +ahead[2].slice(0, 4);
+        // Newer Records.json puts the ISO timestamp after the coordinates in the same object.
+        // (Older exports put "timestampMs" first; LOC_RE has already read that one.)
+        const ahead = /"timestamp"\s*:\s*"(\d{4})-/.exec(text.slice(m.index, m.index + 400));
+        if (ahead) year = +ahead[1];
         lat = +m[1]; lon = +m[2];
         if (lat > 900000000) lat -= 4294967296;
         if (lon > 1800000000) lon -= 4294967296;
@@ -457,7 +460,8 @@ async function scanLocationFile(file, onPoint, onProgress){
       else { lat = +m[5]; lon = +m[6]; }
       onPoint([lon, lat], year); n++;
     }
-    carry = last ? '' : text.slice(cut);
+    // A match that started before the cut may run past it; carrying from inside it would read its tail as a new point.
+    carry = last ? '' : text.slice(Math.max(cut, lastEnd));
     pos = end;
     onProgress(pos / file.size);
     await tick();
@@ -518,7 +522,10 @@ async function handle(files){
       if (year){ if (a.y0 === null || year < a.y0) a.y0 = year; if (a.y1 === null || year > a.y1) a.y1 = year; }
     };
     const stats = { media: media.length, withLoc: 0, sidecars: 0, points: 0, unmatched: 0, timelineFiles: 0 };
-    const located = new Set();
+    // File name -> countries it was already counted in. A Takeout sidecar is skipped only when its own photo
+    // (or another file with the same name) already put that country on the map.
+    const located = new Map();
+    const mark = (name, fi) => { let set = located.get(name); if (!set) located.set(name, set = new Set()); set.add(fi); };
     let done = 0;
     const total = media.length + jsons.length;
     const worker = async queue => {
@@ -534,8 +541,8 @@ async function handle(files){
         } catch (e){ r = null; }
         if (r && r.point){
           stats.withLoc++;
-          located.add(f.name.toLowerCase());
           const code = countryIndex(r.point[0], r.point[1]);
+          mark(f.name.toLowerCase(), code >= 0 ? Math.floor(code / 10000) : -1);
           if (code >= 0) add(code, r.year, 'photos'); else stats.unmatched++;
         }
         done++;
@@ -551,11 +558,12 @@ async function handle(files){
         try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
         if (o && (o.geoData || o.geoDataExif) && typeof o.title === 'string'){
           const p = sidecarPoint(o);
-          if (p && !located.has(o.title.toLowerCase())){
+          const code = p ? countryIndex(p[0], p[1]) : -1, fi = code >= 0 ? Math.floor(code / 10000) : -1;
+          const seen = located.get(o.title.toLowerCase());
+          if (p && !(seen && seen.has(fi))){
             stats.sidecars++;
-            located.add(o.title.toLowerCase());
+            mark(o.title.toLowerCase(), fi);
             const ts = o.photoTakenTime && +o.photoTakenTime.timestamp;
-            const code = countryIndex(p[0], p[1]);
             if (code >= 0) add(code, ts ? new Date(ts * 1000).getUTCFullYear() : null, 'photos'); else stats.unmatched++;
           }
           done++;
@@ -566,7 +574,7 @@ async function handle(files){
       await scanLocationFile(f, (p, year) => {
         stats.points++;
         const code = countryIndex(p[0], p[1]);
-        if (code >= 0) add(code, year, 'points');
+        if (code >= 0) add(code, year, 'points'); else stats.unmatched++;
       }, frac => { setStatus(`Reading ${f.name} · ${Math.round(frac * 100)}% · ${fmt(stats.points)} location points`); setProgress(frac); });
       if (stats.points > before) stats.timelineFiles++;
       done++;
@@ -608,11 +616,12 @@ function render(run){
   if (stats.media) bits.push(`${fmt(stats.media)} photos and videos read, ${fmt(stats.withLoc)} with a location`);
   if (stats.sidecars) bits.push(`${fmt(stats.sidecars)} Google Photos location${stats.sidecars === 1 ? '' : 's'}`);
   if (stats.points) bits.push(`${fmt(stats.points)} Timeline point${stats.points === 1 ? '' : 's'}`);
-  if (stats.unmatched) bits.push(`${fmt(stats.unmatched)} too far from any border to place`);
+  if (stats.unmatched) bits.push(`${fmt(stats.unmatched)} too far from land to place`);
   $('#stats').textContent = example ? 'Example data: a made-up set of trips, not anyone\'s real photos.' : bits.join(' · ');
-  const fromTimeline = !example && !stats.withLoc && !stats.sidecars && stats.points > 0;
-  drawMap(new Map([...agg.entries()].map(([fi, a]) => [fi, a.hit || new Set()])), n, example, fromTimeline);
-  prepareShare(n, example, fromTimeline);
+  const fromPhotos = stats.withLoc + stats.sidecars > 0, fromTimeline = stats.points > 0;
+  const src = example ? 'example' : fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos';
+  drawMap(new Map([...agg.entries()].map(([fi, a]) => [fi, a.hit || new Set()])), n, example, src);
+  prepareShare(n, src);
   const res = $('#result');
   res.classList.toggle('example', !!example);
   res.classList.add('on');
@@ -623,7 +632,7 @@ function render(run){
 // ---------- map drawing ----------
 const W = 1200, H = 1150, MAP_TOP = 330, MAP_H = 620;
 const project = (lon, lat) => [(lon + 180) / 360 * W, MAP_TOP + (85 - lat) / 145 * MAP_H];
-function drawMap(visited, n, example, fromTimeline){
+function drawMap(visited, n, example, src){
   const cv = $('#map'), c = cv.getContext('2d');
   c.fillStyle = '#FCF7F0'; c.fillRect(0, 0, W, H);
   c.fillStyle = '#FDF6EE'; c.fillRect(0, MAP_TOP - 40, W, MAP_H + 80);
@@ -683,7 +692,7 @@ function drawMap(visited, n, example, fromTimeline){
   c.fillStyle = '#7A6555'; c.font = '300 38px Inter, sans-serif';
   c.fillText(n === 1 ? 'country' : 'countries', W / 2, 286);
   c.fillStyle = '#7A6555'; c.font = '300 27px Inter, sans-serif';
-  c.fillText(example ? 'example data, not real photos' : fromTimeline ? 'counted from my own location history, in my own browser' : 'counted from my own photos, in my own browser', W / 2, MAP_TOP + MAP_H + 88);
+  c.fillText({ example: 'example data, not real photos', timeline: 'counted from my own location history, in my own browser', both: 'counted from my own photos and location history, in my own browser' }[src] || 'counted from my own photos, in my own browser', W / 2, MAP_TOP + MAP_H + 88);
   c.fillStyle = '#8F7765'; c.font = '400 24px Inter, sans-serif';
   c.fillText('driftlog-counter.pages.dev', W / 2, MAP_TOP + MAP_H + 140);
 }
@@ -693,19 +702,29 @@ function drawMap(visited, n, example, fromTimeline){
 const PAGE_URL = 'https://driftlog-counter.pages.dev/';
 let share = null;
 const CAN_SHARE = !!navigator.share;
-function prepareShare(n, example, fromTimeline){
-  const text = example
+function prepareShare(n, src){
+  const from = { timeline: 'Google Maps Timeline', both: 'photos and Google Maps Timeline' }[src] || 'photos';
+  const text = src === 'example' || n === 0
     ? 'A free page that counts the countries you have been to from your own photos. Nothing gets uploaded.'
-    : `I have been to ${n} ${n === 1 ? 'country' : 'countries'}, counted from my own ${fromTimeline ? 'Google Maps Timeline' : 'photos'}. Nothing gets uploaded.`;
+    : `I have been to ${n} ${n === 1 ? 'country' : 'countries'}, counted from my own ${from}. Nothing gets uploaded.`;
   share = { text, file: null };
   const btn = $('#share');
   btn.hidden = false;
   btn.textContent = CAN_SHARE ? 'Share' : 'Copy link';
-  $('#map').toBlob(b => { if (b && share && share.text === text) share.file = new File([b], example ? 'countries-example.png' : 'my-countries.png', { type: 'image/png' }); }, 'image/png');
+  $('#map').toBlob(b => { if (b && share && share.text === text) share.file = new File([b], src === 'example' ? 'countries-example.png' : 'my-countries.png', { type: 'image/png' }); }, 'image/png');
 }
+// The status line is scrolled out of view by the time the button is pressed, so the button itself says what happened.
 async function copyLink(text){
-  try { await navigator.clipboard.writeText(`${text} ${PAGE_URL}`); setStatus('Copied a line and the link. Paste it anywhere.'); }
-  catch (e){ setStatus(`Link to this page: ${PAGE_URL}`); }
+  const btn = $('#share'), label = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(`${text} ${PAGE_URL}`);
+    setStatus('Copied a line and the link. Paste it anywhere.');
+    btn.textContent = 'Copied';
+    setTimeout(() => { if (btn.textContent === 'Copied') btn.textContent = label; }, 2000);
+  } catch (e){
+    setStatus(`Link to this page: ${PAGE_URL}`);
+    window.prompt('Copy this link:', PAGE_URL);
+  }
 }
 $('#share').addEventListener('click', async () => {
   if (!share) return;
