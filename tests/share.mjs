@@ -194,6 +194,83 @@ await sleep(20);
 pass = passOf('#cmpPassport');
 check(pass && pass.codes.size === 15 && pass.src === 'both' && pass.years && pass.years.size === 15, 'receiver counting photos: the passport link carries your 15 with their years');
 
+// 10. Where the countries came from, on the images (on canvases that record the text). An edited list says "photos"
+// only if it was counted from photos: a Timeline count that is then edited says "location history", on the result
+// image and on the comparison card alike.
+function recorder(){
+  const texts = [];
+  const ctx = new Proxy({}, {
+    get(t, k){
+      if (k in t) return t[k];
+      if (k === 'measureText') return s => ({ width: String(s).length * 12 });
+      if (k === 'fillText') return s => { texts.push(String(s)); };
+      return () => {};
+    },
+    set(t, k, v){ t[k] = v; return true; },
+  });
+  return { ctx, texts };
+}
+const fixture = (...p) => new File([readFileSync(join(ROOT, 'tests', 'fixtures', ...p))], p[p.length - 1]);
+const captionOf = texts => texts.find(t => /^(My list: )?(counted|picked|example)/.test(t));
+const onCanvas = (pg, sel) => { const rec = recorder(); pg.document.querySelector(sel).getContext = () => rec.ctx; return rec; };
+for (const [files, src, counted, editedCap] of [
+  [[fixture('Timeline.json')], 'timeline', 'counted from my own location history, in my own browser', 'counted from my own location history, then edited by hand'],
+  [walk(join(ROOT, 'tests', 'fixtures', 'trip')), 'photos', 'counted from my own photos, in my own browser', 'counted from my own photos, then edited by hand'],
+  [walk(join(ROOT, 'tests', 'fixtures')), 'both', 'counted from my own photos and location history, in my own browser', 'counted from my own photos and location history, then edited by hand'],
+]){
+  page = loadPage();
+  const card = onCanvas(page, '#map');
+  await page.T.handle(files);
+  check(page.T.lastRun.src === src && captionOf(card.texts) === counted, `${src} count: the image says "${captionOf(card.texts)}"`);
+  card.texts.length = 0;
+  const more = new Set([...page.T.lastRun.codes, 'PE']), ed = page.T.edited(page.T.lastRun, more);
+  await page.T.renderPicked(more, ed.src, ed);
+  check(ed.src === 'edited' && ed.base === src && captionOf(card.texts) === editedCap, `${src} count, edited: the image says "${captionOf(card.texts)}"`);
+  if (src === 'timeline') check(!card.texts.some(t => /photo/i.test(t)), `timeline count, edited: no "photos" anywhere on the image (${card.texts.join(' | ')})`);
+  // The receiving end: the same list counted, then changed, on the comparison card.
+  page = loadPage({ hash: '#' + Kit.linkHash(theirs) });
+  await sleep(50);
+  const cmpCard = onCanvas(page, '#cmpMap');
+  await page.T.handle(files);
+  await sleep(20);
+  check(captionOf(cmpCard.texts) === 'My list: ' + counted, `receiver, ${src} count: the comparison card says "${captionOf(cmpCard.texts)}"`);
+  cmpCard.texts.length = 0;
+  page.T.MINE = page.T.edited(page.T.MINE, new Set([...page.T.MINE.codes, 'DE']));
+  await page.T.showCompare(true);
+  check(page.T.MINE.base === src && captionOf(cmpCard.texts) === 'My list: ' + editedCap, `receiver, ${src} count, changed: the comparison card says "${captionOf(cmpCard.texts)}"`);
+  if (src === 'timeline') check(!cmpCard.texts.some(t => /photo/i.test(t)), `receiver, timeline count, changed: no "photos" on the comparison card (${cmpCard.texts.join(' | ')})`);
+}
+{
+  page = loadPage({ hash: '#' + Kit.linkHash(theirs) });
+  await sleep(50);
+  const cmpCard = onCanvas(page, '#cmpMap');
+  page.T.MINE = { codes: tapped, src: 'tap' };
+  await page.T.showCompare(true);
+  check(captionOf(cmpCard.texts) === 'My list: picked by hand · 194 = the 193 UN member states plus Taiwan', `receiver, tapped: "${captionOf(cmpCard.texts)}"`);
+  check(typeof Kit.resultCaption === 'function' && Kit.resultCaption('edited') === 'counted from my own files, then edited by hand' && Kit.resultCaption('edited', 'tap') === Kit.resultCaption('edited'), 'edited, source unknown: "files", never "photos"');
+}
+
+// 11. Comparing with none of your own (nothing picked, or only Hong Kong): no passport page and no video, as under
+// the result; sending back still works (/c/0/). With a country, both come back.
+page = loadPage({ hash: '#' + Kit.linkHash(theirs) });
+await sleep(50);
+const shown = () => [page.document.querySelector('#cmpPassRow').hidden === true, page.document.querySelector('#cmpVid').hidden === true, !!page.T.cmpVideo.list].join();
+page.T.MINE = { codes: new Set(), src: 'tap' };
+await page.T.showCompare(true);
+check(shown() === 'true,true,false' && page.T.cmpShare.url === 'https://driftlog-counter.pages.dev/c/0/#v=1.', `receiver, none picked: passport and video hidden (${shown()}), sends back /c/0/`);
+page.T.MINE = { codes: new Set(['JP']), src: 'tap' };
+await page.T.showCompare(true);
+check(shown() === 'false,false,true', `receiver, one picked: passport and video shown (${shown()})`);
+await page.T.handle([fixture('trip', 'hongkong.jpg')]);
+await sleep(20);
+check(page.T.MINE && page.T.MINE.codes.size === 0 && shown() === 'true,true,false', `receiver, Hong Kong only: passport and video hidden (${shown()})`);
+
+// 12. The notes under both links say who can read the list: whoever gets the link, and the app it is sent with.
+{
+  const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  check((html.match(/and the app you send it with, can read the list/g) || []).length === 2, 'both link notes name the app the link is sent with');
+}
+
 if (failures.length){ console.error('FAIL\n- ' + failures.join('\n- ')); process.exit(1); }
 console.log('PASS');
 process.exit(0);

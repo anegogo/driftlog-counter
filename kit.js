@@ -1,6 +1,7 @@
 // Driftlog Counter kit: what the counter page shares with the pages built on it (result links, the passport
-// page, the video). Plain script, no dependencies, no requests of its own, and nothing runs against the page
-// when it loads: drawing takes a canvas, the picker takes a container. Notes: counter-tools/DESIGN-share.md
+// page, the video). Plain script, no dependencies. Nothing runs against the page when it loads (drawing takes a
+// canvas, the picker takes a container), and nothing is fetched until a page calls loadFeats() or loadStamps(),
+// and then only the site's own fixed files, the same for everyone. Notes: counter-tools/DESIGN-share.md
 (function (root){
 'use strict';
 
@@ -445,18 +446,24 @@ function drawWorld(c, FEATS, box, layerOf, opts = {}){
 }
 
 // ---------- images ----------
-// The line under the map says where the countries came from. Picked by hand never says "photos".
+// The line under the map says where the countries came from. Picked by hand never says "photos", and an edited
+// list says "photos" only if it was counted from photos: base is what it was counted from (as passportCaption).
 const CAPTIONS = {
   example: 'example data, not real photos',
   photos: 'counted from my own photos, in my own browser',
   timeline: 'counted from my own location history, in my own browser',
   both: 'counted from my own photos and location history, in my own browser',
-  edited: 'counted from my own photos, then edited by hand',
+  edited: 'counted from my own files, then edited by hand',
   tap: 'picked by hand · 194 = the 193 UN member states plus Taiwan',
 };
+const EDITED_FROM = { photos: 'photos', timeline: 'location history', both: 'photos and location history' };
+function resultCaption(src, base){
+  if (src === 'edited') return EDITED_FROM[base] ? `counted from my own ${EDITED_FROM[base]}, then edited by hand` : CAPTIONS.edited;
+  return CAPTIONS[src] || CAPTIONS.photos;
+}
 const spaced = (c, px) => { if ('letterSpacing' in c) c.letterSpacing = px; };
-// The counter's result image: 1200 × 1150. src: a CAPTIONS key.
-function drawResultCard(canvas, FEATS, { hits, n, src }){
+// The counter's result image: 1200 × 1150. src: a CAPTIONS key; base: what an edited list was counted from.
+function drawResultCard(canvas, FEATS, { hits, n, src, base }){
   const W = 1200, H = 1150, MAP_TOP = 330, MAP_H = 620, c = canvas.getContext('2d');
   c.fillStyle = '#FCF7F0'; c.fillRect(0, 0, W, H);
   c.fillStyle = '#FDF6EE'; c.fillRect(0, MAP_TOP - 40, W, MAP_H + 80);
@@ -471,7 +478,7 @@ function drawResultCard(canvas, FEATS, { hits, n, src }){
   c.fillStyle = '#7A6555'; c.font = '300 38px Inter, sans-serif';
   c.fillText(n === 1 ? 'country' : 'countries', W / 2, 286);
   c.fillStyle = '#7A6555'; c.font = '300 27px Inter, sans-serif';
-  c.fillText(CAPTIONS[src] || CAPTIONS.photos, W / 2, MAP_TOP + MAP_H + 88);
+  c.fillText(resultCaption(src, base), W / 2, MAP_TOP + MAP_H + 88);
   c.fillStyle = '#8F7765'; c.font = '400 24px Inter, sans-serif';
   c.fillText('driftlog-counter.pages.dev', W / 2, MAP_TOP + MAP_H + 140);
 }
@@ -482,8 +489,9 @@ function drawSharedMap(canvas, FEATS, codes){
   drawWorld(c, FEATS, { x: 0, y: 40, w: 1200, h: 620 }, layers(FEATS, hitsFromCodes(FEATS, codes)));
 }
 // Two lists on one map, 1200 × 1500 (4:5). Written by the person who compared, for the person who sent the link:
-// "only me" is the comparer, "only you" the sender. cmp: compare(mine, theirs). mineSrc: a CAPTIONS key.
-function drawCompareCard(canvas, FEATS, { cmp, mineSrc }){
+// "only me" is the comparer, "only you" the sender. cmp: compare(mine, theirs). mineSrc, mineBase: as src and base
+// of drawResultCard, for the comparer's list.
+function drawCompareCard(canvas, FEATS, { cmp, mineSrc, mineBase }){
   const W = 1200, H = 1500, MAP_TOP = 470, MAP_H = 620, c = canvas.getContext('2d');
   const col = new Map();
   cmp.both.forEach(k => col.set(k, COLORS.both)); cmp.onlyMine.forEach(k => col.set(k, COLORS.mine)); cmp.onlyTheirs.forEach(k => col.set(k, COLORS.theirs));
@@ -508,8 +516,11 @@ function drawCompareCard(canvas, FEATS, { cmp, mineSrc }){
   const cs = k => `${k} ${k === 1 ? 'country' : 'countries'}`;
   c.fillStyle = '#322014'; c.font = '300 34px Inter, sans-serif';
   c.fillText(`I've been to ${cs(mine)}, you've been to ${cs(theirs)}`, W / 2, MAP_TOP + MAP_H + 120);
-  c.fillStyle = '#7A6555'; c.font = '300 26px Inter, sans-serif';
-  c.fillText('mine ' + (CAPTIONS[mineSrc] || CAPTIONS.photos), W / 2, MAP_TOP + MAP_H + 172);
+  const line = 'My list: ' + resultCaption(mineSrc, mineBase);
+  let px = 26;
+  do { c.font = `300 ${px}px Inter, sans-serif`; } while (c.measureText(line).width > W - 120 && --px > 18);
+  c.fillStyle = '#7A6555';
+  c.fillText(line, W / 2, MAP_TOP + MAP_H + 172);
   c.fillStyle = '#8F7765'; c.font = '400 24px Inter, sans-serif';
   c.fillText('driftlog-counter.pages.dev', W / 2, H - 70);
 }
@@ -665,29 +676,31 @@ const CSS = `
 .kp-q:focus{outline:2px solid var(--accent,#D6692E);outline-offset:1px}
 .kp-chips{display:flex;flex-wrap:wrap;gap:8px}
 .kp-hits{margin-top:12px}
-.kp-hint{font-size:13px;color:var(--muted2,#8F7765);margin-top:8px;min-height:1px}
+.kp-hint{font-size:13px;color:var(--muted2,#7D6656);margin-top:8px;min-height:1px}
 .kp-c{font:inherit;font-size:14px;line-height:1.3;border:1px solid var(--line,#EAD9C9);background:var(--card,#FFFDFB);color:var(--ink,#322014);border-radius:999px;padding:7px 13px;cursor:pointer;text-align:left}
 .kp-c:hover{border-color:var(--accent,#D6692E)}
-.kp-c[aria-pressed="true"]{background:var(--accent,#D6692E);border-color:var(--accent,#D6692E);color:#fff}
+.kp-c[aria-pressed="true"]{background:var(--accent-d,#B9561F);border-color:var(--accent-d,#B9561F);color:#fff}
 .kp-c:focus-visible,.kp-b:focus-visible,.kp-alt button:focus-visible,.kp-r summary:focus-visible{outline:2px solid var(--accent,#D6692E);outline-offset:2px}
 .kp-f{margin-right:6px}
 .kp-sel{margin-top:18px}
 .kp-sel h3,.kp-r summary{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted,#7A6555)}
 .kp-sel h3{margin-bottom:10px}
-.kp-empty{font-size:14px;color:var(--muted2,#8F7765)}
+.kp-empty{font-size:14px;color:var(--muted2,#7D6656)}
 .kp-rs{margin-top:22px;border-top:1px solid var(--line,#EAD9C9)}
 .kp-r{border-bottom:1px solid var(--line,#EAD9C9)}
 .kp-r summary{cursor:pointer;padding:14px 2px;list-style-position:inside}
-.kp-r summary small{font-size:12px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--muted2,#8F7765);margin-left:6px}
+.kp-r summary small{font-size:12px;letter-spacing:0;text-transform:none;font-weight:400;color:var(--muted2,#7D6656);margin-left:6px}
 .kp-r .kp-chips{padding:2px 0 16px}
 .kp-alt{text-align:center;margin-top:16px}
-.kp-alt button{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-d,#B9561F);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.kp-alt button{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-t,#A84D1B);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .kp-bar{position:sticky;bottom:0;z-index:2;display:flex;align-items:center;gap:10px;margin:18px -20px 0;padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));
   background:var(--card,#FFFDFB);border-top:1px solid var(--line,#EAD9C9);border-radius:0 0 20px 20px}
 .kp-count{margin-right:auto;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
 .kp-b{font:inherit;font-weight:500;font-size:15px;padding:11px 17px;white-space:nowrap;border-radius:999px;cursor:pointer;border:1px solid var(--line,#EAD9C9);background:var(--card,#FFFDFB);color:var(--ink,#322014)}
-.kp-b.pri{background:var(--accent,#D6692E);border-color:var(--accent,#D6692E);color:#fff}
-.kp-b.pri:hover{background:var(--accent-d,#B9561F)}
+.kp-b.pri{background:var(--accent-d,#B9561F);border-color:var(--accent-d,#B9561F);color:#fff}
+.kp-b.pri:hover{background:var(--accent-t,#A84D1B);border-color:var(--accent-t,#A84D1B)}
+/* Phones: the count, Cancel and "Update the map" do not fit on one line below ~415 px, so Done gets a row of its own. */
+@media (max-width:440px){ .kp-bar{flex-wrap:wrap} .kp-ok{flex:1 0 100%} }
 `;
 function injectCss(){
   if (document.getElementById('kit-css')) return;
@@ -737,7 +750,18 @@ function picker(host, opts){
   const toggle = code => { if (picked.has(code)) picked.delete(code); else picked.add(code); sync(); };
   el.addEventListener('click', e => {
     const t = e.target, b = t.closest('.kp-c');
-    if (b){ toggle(b.dataset.c); return; }
+    if (b){
+      // "Your countries" sits above the regions and is rebuilt on every tap, so it grows or shrinks by a row now and
+      // then. Any other chip stays where it was on the screen (Safari has no scroll anchoring, and Chrome anchors to
+      // the list that grew), so the next country stays under the finger. A chip in "Your countries" is gone after the
+      // tap: the keyboard moves to the one that took its place, or to the search box.
+      const selc = el.querySelector('.kp-selc'), inSel = selc.contains(b), top = b.getBoundingClientRect().top;
+      const at = inSel ? [...selc.children].indexOf(b) : -1, focused = document.activeElement === b;
+      toggle(b.dataset.c);
+      if (!inSel){ const dy = b.getBoundingClientRect().top - top; if (dy) window.scrollBy(0, dy); }
+      else if (focused){ const rest = selc.querySelectorAll('.kp-c'); (rest[Math.min(at, rest.length - 1)] || q).focus({ preventScroll: true }); }
+      return;
+    }
     if (t.closest('.kp-ok')){ if (o.onDone) o.onDone(new Set(COUNTRIES.filter(c => picked.has(c.code)).map(c => c.code))); return; }
     if (t.closest('.kp-x')){ if (o.onCancel) o.onCancel(); return; }
     if (t.closest('.kp-altb') && o.alt) o.alt.onClick();
@@ -759,7 +783,7 @@ root.DriftlogKit = {
   SITE, COUNTRIES, REGIONS, BY_CODE, OTHER_PLACES, COLORS, CAPTIONS, MASK_LEN, MAX_FRAGMENT, YEAR_BASE,
   nameOf, byName, countOf, flag, search, otherPlace, esc,
   encodeMask, decodeMask, linkHash, resultUrl, readLink, compare, revealOrder, storeUrl, xPostUrl,
-  decodeFeats, loadFeats, hitsFromCodes, layers, drawWorld, drawResultCard, drawSharedMap, drawCompareCard,
+  decodeFeats, loadFeats, hitsFromCodes, layers, drawWorld, resultCaption, drawResultCard, drawSharedMap, drawCompareCard,
   prepareShare, share, copy, canShare, saveCanvas, chips, picker,
   PASSPORT, PASSPORT_SRC, passportHash, readPassport, passportCaption, passportGrid, drawPassport, loadStamps, stampTilt,
 };

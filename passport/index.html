@@ -32,21 +32,22 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   [hidden]{display:none!important}
+  /* As on the counter: --muted2 and --accent-t for small text, --accent-d under white text (WCAG AA on cream2). */
   :root{
-    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#8F7765;
-    --accent:#D6692E; --accent-d:#B9561F; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#7D6656;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
   }
   html{-webkit-text-size-adjust:100%}
   body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
     color:var(--ink);min-height:100vh;line-height:1.6}
   .wrap{max-width:760px;margin:0 auto;padding:0 20px}
   header{text-align:center;padding:56px 0 6px}
-  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent);text-transform:uppercase}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent-t);text-transform:uppercase}
   .kicker a{color:inherit;text-decoration:none}
   h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,56px);line-height:1.14;margin-top:18px;letter-spacing:-.015em;text-wrap:balance}
   .lead{font-weight:300;color:var(--muted);margin:18px auto 0;max-width:560px;font-size:clamp(15px,2.1vw,18px)}
   .alt{text-align:center;font-size:14px;color:var(--muted);margin-top:16px}
-  .alt a,.note a,.how a{color:var(--accent-d)}
+  .alt a,.note a,.how a{color:var(--accent-t)}
   #status{text-align:center;color:var(--muted);font-size:14px;margin-top:18px;min-height:22px}
   .out{margin-top:34px;text-align:center}
   .out h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(26px,4.4vw,34px);text-wrap:balance}
@@ -56,8 +57,8 @@
   .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
   .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
     border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;display:inline-block}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-  .btn.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t);border-color:var(--accent-t)}
   .btn:hover{border-color:var(--accent)}
   .btn:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .note{font-size:12.5px;color:var(--muted2);margin:14px auto 0;max-width:560px}
@@ -66,7 +67,7 @@
   details.list ol{margin:12px 0 0 1.6em;columns:2;column-gap:28px}
   details.list li{break-inside:avoid}
   .appline{text-align:center;font-size:14px;color:var(--muted);margin:30px auto 0;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-  .appline a{color:var(--accent-d);font-weight:500}
+  .appline a{color:var(--accent-t);font-weight:500}
   .how{margin:48px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
   .how h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
   .how dl{display:grid;gap:14px}
@@ -170,7 +171,7 @@ function openPicker(editing){
     title: editing ? 'Change your countries' : 'Which countries have you been to?',
     doneLabel: editing ? 'Update my page' : 'Make my page',
     cancelLabel: editing ? 'Cancel' : null,
-    onCancel: () => { closePicker(); $('#out').scrollIntoView({ block: 'start' }); },
+    onCancel: () => { closePicker(); $('#out').scrollIntoView({ block: 'start' }); $('#edit').focus({ preventScroll: true }); },
     onDone: codes => {
       if (!state) state = { codes, years: null, src: 'tap', base: null };
       else if (!sameSet(codes, state.codes)){
@@ -181,6 +182,10 @@ function openPicker(editing){
       closePicker();
       remember(state);
       make(true);
+      // The picker's buttons are gone: the keyboard goes to the page's heading ("My passport page · 37 of 194").
+      const h = $('#outTitle');
+      if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
+      h.focus({ preventScroll: true });
     },
   });
 }

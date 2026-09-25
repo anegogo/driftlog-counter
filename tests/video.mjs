@@ -230,6 +230,46 @@ check(await routesWith({ MediaRecorder: recorderSupporting(t => t === 'video/mp4
 check(await routesWith({ MediaRecorder: function MediaRecorder(){} }) === 'recorder: still', 'MediaRecorder without isTypeSupported: the browser\'s own format');
 check(await routesWith({}) === 'still', 'neither: the image only');
 
+// 6b. An encoder that stops without an error, taking frames and handing nothing back or never finishing flush(),
+// counts as failed after LIMITS and the next route makes the clip (here the image: there is no MediaRecorder). One
+// that is slow but keeps handing frames back is waited for.
+async function makeWith(mode){
+  const avcC = new Uint8Array([1, 100, 0, 40, 255, 225, 0, 4, 103, 100, 0, 40, 1, 0, 4, 104, 238, 60, 128]);
+  class VideoEncoder {
+    constructor(o){ this.o = o; this.state = 'unconfigured'; this.encodeQueueSize = 0; this.pending = 0; }
+    static async isConfigSupported(cfg){ return { supported: cfg.codec === 'avc1.640028' }; }
+    configure(){ this.state = 'configured'; }
+    encode(frame, opt){
+      this.encodeQueueSize++;
+      if (mode === 'silent') return;
+      const out = () => { this.encodeQueueSize--; this.o.output({ byteLength: 5, type: opt.keyFrame ? 'key' : 'delta', timestamp: frame.ts, copyTo: d => d.set([0, 0, 0, 1, 101]) }, { decoderConfig: { description: avcC } }); };
+      if (mode === 'no-flush') out(); else { this.pending++; setTimeout(() => { out(); this.pending--; }, 8); }
+    }
+    flush(){ return mode === 'slow' ? new Promise(res => { const t = setInterval(() => { if (!this.pending){ clearInterval(t); res(); } }, 5); }) : new Promise(() => {}); }
+    close(){ this.state = 'closed'; }
+  }
+  const ctx = vm.createContext({ console, Map, Set, Promise, Math, JSON, Number, String, Array, Object, Error, RegExp, Uint8Array, ArrayBuffer, Blob, Date,
+    setTimeout, clearTimeout, setInterval, clearInterval, VideoEncoder, VideoFrame: function (c, o){ this.ts = o.timestamp; this.close = () => {}; },
+    document: { createElement: () => recorder(MAP.w, MAP.h + 48) } });
+  ctx.window = ctx;
+  vm.runInContext(kitSource, ctx); vm.runInContext(videoSource, ctx);
+  Object.assign(ctx.DriftlogVideo.LIMITS || {}, { stall: 150, flush: 300 });
+  const canvas = Object.assign(recorder(W, H), { toBlob: cb => cb(new Blob(['png'], { type: 'image/png' })) });
+  const t = Date.now();
+  try {
+    let stop = true;   // a make() that never returns is the bug itself: give up on it after 10 s and say so
+    const r = await Promise.race([ctx.DriftlogVideo.make(canvas, FEATS, { codes: new Set(['JP', 'FR', 'PE']), src: 'tap' }, () => stop),
+      sleep(10000).then(() => { stop = false; return { route: 'still making it after 10 s' }; })]);
+    return { route: r.route, ms: Date.now() - t };
+  } catch (e){ return { route: 'threw ' + e.message, ms: Date.now() - t }; }
+}
+{
+  const silent = await makeWith('silent'), noFlush = await makeWith('no-flush'), slow = await makeWith('slow');
+  check(silent.route === 'still' && silent.ms < 3000, `an encoder that hands nothing back: given up after the stall limit, the image instead (${silent.route}, ${silent.ms} ms)`);
+  check(noFlush.route === 'still' && noFlush.ms < 3000, `an encoder whose flush() never ends: given up after the flush limit, the image instead (${noFlush.route}, ${noFlush.ms} ms)`);
+  check(slow.route === 'webcodecs', `a slow encoder that keeps handing frames back is waited for (${slow.route}, ${slow.ms} ms)`);
+}
+
 // 7. The pages. "Save video" gets a real list only: the counter's result (photos with their years and polygons, a
 // pick, an edit), your own list on the receiving end (never theirs), and the passport page's list. Not the example.
 const walk = dir => readdirSync(dir).flatMap(n => { const p = join(dir, n); return statSync(p).isDirectory() ? walk(p) : [new File([readFileSync(p)], n)]; });

@@ -5,7 +5,7 @@
 Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-counter.pages.dev
 
 - No dependencies, no build step, no framework. One HTML file, two scripts (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing; `video.js`: the 9:16 video and the MP4 file it is saved in) and one 890 KB border file.
-- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its scripts, its fonts, the border file and a short demo video of the app. The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
+- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its scripts, its fonts, the border file and a short demo video of the app (opened from a result link, the page fetches the demo only once it is scrolled into view, so the shared map loads first). The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
 - Works in iPhone Safari: the iOS photo picker passes the location along while it shows “Location Is Included”.
 
 ## What it reads
@@ -59,9 +59,10 @@ A result can be shared as a link that carries the countries, and whoever opens i
 https://driftlog-counter.pages.dev/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
 ```
 
-- **What the server sees.** Only the number is in the path (`/c/37/`), so the host, and any link preview, sees that number. The country list is after the `#`, which browsers never send to any server; the page reads it in the browser. Anyone who has the link can read the list.
+- **What the server sees.** Only the number is in the path (`/c/37/`), so the host, and any link preview, sees that number. The country list is after the `#`, which browsers never send to any server; the page reads it in the browser. Anyone who has the link can read the list, including the app it is sent with.
 - **The list.** One bit per country for the 193 UN member states plus Taiwan, in ISO 3166-1 alpha-2 order, six bits per base64url character, trailing zero characters dropped: 33 characters at most. `v=1` is the version; a link with another version, bad characters or bits past the 194th country, or a `#` longer than 512 characters, is ignored and the plain counter opens. An optional `&y=` carries a first-visit year per country (one character each, 1976–2038); the share buttons do not add it. Unknown `key=value` parts are ignored.
 - **The `/c/<N>/` pages** (N = 0–194) exist only for link previews, which fetch the page without the `#` and run no scripts: each has its own Open Graph tags and image (`/c/og/<N>.png`) and forwards to the counter with the `#`. They are `noindex` with a canonical to the top page and are not in the sitemap. They are generated, not committed: `python3 tools/build_share_pages.py .` (Pillow; uses `fonts/` and `countries50.json`).
+- **The images** (the result and the comparison) say where the list came from: “photos” only when it was counted from photos. A Timeline count says “location history”, also once it has been edited by hand, and a pick says “picked by hand”.
 - **The order is fixed.** Links already shared depend on the order of the table in `kit.js` (generated from `countries50.json` by `tools/build_kit_table.py`), so it never changes within version 1. `tests/share.mjs` pins it.
 
 ## The passport page
@@ -80,7 +81,7 @@ https://driftlog-counter.pages.dev/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
 **Save video**, under a result (yours, or your own list when you compare with someone's), and on the passport page, makes a 9:16 clip for Reels, TikTok or Stories: the world map filling in country by country while the count goes from 0 to N, then the page's address, large, for the last two seconds.
 
 - **1080 × 1920, 30 fps, 6–15 seconds** (longer with more countries), no sound. The order is the first year each country turns up in your files, otherwise region by region; the years only set the order and are never shown.
-- **Made on the device.** Where the browser has WebCodecs with an H.264 encoder, each frame is drawn on a canvas and encoded faster than real time, and `video.js` writes the MP4 itself (ftyp, moov, mdat, one video track; no library, about 100 lines). Otherwise MediaRecorder records the canvas as it animates, as MP4 where the browser can and WebM where it can't. With neither, you get the last frame as a 9:16 PNG. The panel says which one it used. WebCodecs needs a secure context (https, or localhost when testing).
+- **Made on the device.** Where the browser has WebCodecs with an H.264 encoder, each frame is drawn on a canvas and encoded faster than real time, and `video.js` writes the MP4 itself (ftyp, moov, mdat, one video track; no library, about 100 lines). Otherwise MediaRecorder records the canvas as it animates, as MP4 where the browser can and WebM where it can't. With neither, you get the last frame as a 9:16 PNG. An encoder that stops without an error (no frame back for 5 s of waiting, or a flush that does not finish in 10 s) counts as failed, and the next of these is tried. The panel says which one it used. WebCodecs needs a secure context (https, or localhost when testing).
 - **Where the text goes:** the map sits above the column of buttons TikTok and Instagram put down the right-hand side, and every line of text stays between y 260 and 1480 and within x 140–940, clear of their top tabs and bottom captions.
 - **The caption** follows the result image: "counted from my own photos" (or location history) only when the list was counted that way; a list picked by hand says "picked by hand". The last frame says `194 = 193 UN members + Taiwan`.
 - **Saving:** the share sheet with the video file where the browser has one (on an iPhone, that is where "Save Video" is), otherwise a download.

@@ -263,6 +263,14 @@ function mp4(chunks, { width, height, fps, avcC, colorSpace }){
 // ---------- making it: WebCodecs, else MediaRecorder, else one image ----------
 const ABORT = { aborted: true };                    // thrown when the list changed while a clip was being made
 const wait = ms => new Promise(r => setTimeout(r, ms));
+// An encoder can stop without an error: frames go in and nothing comes out, or flush() never settles. After this long
+// with nothing back (ms), it counts as failed and make() tries the next route. Tests shorten them.
+const LIMITS = { stall: 5000, flush: 10000 };
+// p, failing with message if it has not settled within ms. p may still settle later; nothing listens then.
+function within(p, ms, message){
+  let timer;
+  return Promise.race([p, new Promise((res, rej) => { timer = setTimeout(() => rej(new Error(message)), ms); })]).finally(() => clearTimeout(timer));
+}
 // Level 4.0 is the lowest that holds 1080 × 1920; High, then Main, then Baseline.
 const H264 = ['avc1.640028', 'avc1.4d0028', 'avc1.420028', 'avc1.640032'];
 async function h264Config(){
@@ -291,9 +299,12 @@ async function routes(canvas){
 // Faster than real time: each frame is drawn, handed to the encoder and dropped.
 async function encodeH264(canvas, s, cfg, tick){
   const p = s.p, c = canvas.getContext('2d'), chunks = [];
-  let avcC = null, colorSpace = null, failed = null;
+  // idle: ms spent waiting on a full queue since the last frame came out. Each wait counts for at most 50 ms, so a tab
+  // that was suspended in the background (iOS) does not look like a stuck encoder when it comes back.
+  let avcC = null, colorSpace = null, failed = null, idle = 0;
   const encoder = new VideoEncoder({
     output: (chunk, meta) => {
+      idle = 0;
       const data = new Uint8Array(chunk.byteLength);
       chunk.copyTo(data);
       chunks.push({ data, key: chunk.type === 'key', ts: chunk.timestamp });
@@ -313,10 +324,15 @@ async function encodeH264(canvas, s, cfg, tick){
       const frame = new VideoFrame(canvas, { timestamp: Math.round(i * us), duration: Math.round(us) });
       encoder.encode(frame, { keyFrame: i % (VIDEO.FPS * 2) === 0 });   // a key frame every 2 s, for editors
       frame.close();
-      while (encoder.encodeQueueSize > 3 && !failed) await wait(4);
+      while (encoder.encodeQueueSize > 3 && !failed){
+        if (idle > LIMITS.stall) throw new Error('The video encoder stopped responding.');
+        const t = Date.now();
+        await wait(4);
+        idle += Math.min(Date.now() - t, 50);
+      }
       if (i % 5 === 4) await wait(0);                                    // let the page show the progress
     }
-    await encoder.flush();
+    await within(encoder.flush(), LIMITS.flush, 'The video encoder did not finish.');
     if (failed) throw failed;
   } finally { if (encoder.state !== 'closed') try { encoder.close(); } catch (e){} }
   return mp4(chunks, { width: VIDEO.W, height: VIDEO.H, fps: VIDEO.FPS, avcC, colorSpace });
@@ -381,7 +397,7 @@ async function make(canvas, FEATS, list, tick){
 const CSS = `
 .vk{text-align:center;margin-top:16px}
 .vk [hidden]{display:none!important}
-.vk-row span{display:block;font-size:13px;color:var(--muted2,#8F7765);margin:8px auto 0;max-width:520px}
+.vk-row span{display:block;font-size:13px;color:var(--muted2,#7D6656);margin:8px auto 0;max-width:520px}
 .vk-out{margin-top:14px}
 .vk-status{font-size:14px;color:var(--muted,#7A6555);min-height:22px}
 .vk-bar{height:4px;background:var(--line,#EAD9C9);border-radius:4px;overflow:hidden;max-width:280px;margin:8px auto 0}
@@ -389,7 +405,7 @@ const CSS = `
 .vk-stage canvas,.vk-stage video{display:block;width:min(100%,270px);height:auto;aspect-ratio:9/16;margin:14px auto 0;border-radius:14px;
   border:1px solid var(--line,#EAD9C9);background:#FCF7F0;box-shadow:0 10px 28px rgba(50,32,20,.10)}
 .vk-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
-.vk-route{font-size:12.5px;color:var(--muted2,#8F7765);margin:12px auto 0;max-width:520px}
+.vk-route{font-size:12.5px;color:var(--muted2,#7D6656);margin:12px auto 0;max-width:520px}
 `;
 function injectCss(){
   if (document.getElementById('vk-css')) return;
@@ -518,5 +534,5 @@ function panel(host, opts){
   return { set, get list(){ return list; }, get made(){ return made; }, get busy(){ return busy; } };
 }
 
-root.DriftlogVideo = { VIDEO, NOTE, ADDRESS, FONTS, plan, textAt, videoCaption, scene, drawFrame, mp4, fromAnnexB, isAvcc, routes, make, panel };
+root.DriftlogVideo = { VIDEO, NOTE, ADDRESS, FONTS, LIMITS, plan, textAt, videoCaption, scene, drawFrame, mp4, fromAnnexB, isAvcc, routes, make, panel };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -10,6 +10,7 @@
 <link rel="alternate" hreflang="ja" href="https://zubotabi-counter.pages.dev/" />
 <link rel="alternate" hreflang="x-default" href="https://driftlog-counter.pages.dev/" />
 <meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=en_counter_sb" />
+<script>/* Opened from a result link (/c/<N>/ forwards here with #v=1.…): the Smart App Banner is the receiving end too, like every App Store link on that screen. Set while the page is still being read; not checked on a real iPhone. */ if (/(?:^#|&|%26)v(?:=|%3D)/i.test(location.hash)) document.querySelector('meta[name="apple-itunes-app"]').content = 'app-id=6785328399, affiliate-data=pt=129098692&ct=en_share_recv';</script>
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftlog" />
 <meta property="og:url" content="https://driftlog-counter.pages.dev/" />
@@ -43,16 +44,18 @@
 <link rel="stylesheet" href="/fonts.css" />
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
+  /* Text contrast (WCAG AA, 4.5:1 on cream2, the darkest background): --muted2 for small notes, --accent-t for small
+     orange text and links, --accent-d under white text (buttons, picked chips). --accent is for large numbers and lines. */
   :root{
-    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#8F7765;
-    --accent:#D6692E; --accent-d:#B9561F; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#7D6656;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
   }
   html{-webkit-text-size-adjust:100%}
   body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
     color:var(--ink);min-height:100vh;line-height:1.6}
   .wrap{max-width:960px;margin:0 auto;padding:0 20px}
   header{text-align:center;padding:60px 0 22px}
-  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent);text-transform:uppercase}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent-t);text-transform:uppercase}
   h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,60px);line-height:1.14;margin-top:20px;letter-spacing:-.015em;text-wrap:balance}
   .lead{font-weight:300;color:var(--muted);margin:20px auto 0;max-width:580px;font-size:clamp(15px,2.1vw,18px)}
   .drop{margin:32px 0 0;background:var(--card);border:1.5px dashed var(--line);border-radius:20px;padding:44px 24px 36px;text-align:center;
@@ -63,23 +66,23 @@
   .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
   .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
     border:1px solid var(--line);background:var(--card);color:var(--ink)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-  .btn.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t);border-color:var(--accent-t)}
   .btn:hover{border-color:var(--accent)}
   .btn:focus-visible,.linkbtn:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-d);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:16px}
+  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-t);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:16px}
   .note{font-size:12.5px;color:var(--muted2);margin-top:14px}
   .mobile-note{display:none;margin:16px auto 0;max-width:520px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left}
   .is-mobile .mobile-note{display:block}
   .is-mobile #pickDir{display:none}
   #status{text-align:center;color:var(--muted);font-size:14px;margin-top:18px;min-height:22px}
-  #status a{color:var(--accent-d)}
+  #status a{color:var(--accent-t)}
   .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
   .bar.on{display:block}
   .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
   .result{display:none;margin-top:30px}
   .result.on{display:block}
-  .example-flag{display:none;text-align:center;margin-bottom:12px;font-size:12px;letter-spacing:.2em;font-weight:600;text-transform:uppercase;color:var(--accent-d)}
+  .example-flag{display:none;text-align:center;margin-bottom:12px;font-size:12px;letter-spacing:.2em;font-weight:600;text-transform:uppercase;color:var(--accent-t)}
   .result.example .example-flag{display:block}
   .count{text-align:center;margin-bottom:12px}
   .count .n{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(56px,13vw,110px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
@@ -95,8 +98,8 @@
   .pitch{margin:56px 0 0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:34px 28px;text-align:center}
   .pitch h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:26px;text-wrap:balance}
   .pitch p{color:var(--muted);font-weight:300;margin-top:14px;max-width:540px;margin-inline:auto}
-  .pitch .cta{display:inline-block;margin-top:22px;background:var(--accent);color:#fff;font-weight:500;padding:14px 30px;border-radius:999px;text-decoration:none}
-  .pitch .cta:hover{background:var(--accent-d)}
+  .pitch .cta{display:inline-block;margin-top:22px;background:var(--accent-d);color:#fff;font-weight:500;padding:14px 30px;border-radius:999px;text-decoration:none}
+  .pitch .cta:hover{background:var(--accent-t)}
   .pitch .sub{font-size:12.5px;color:var(--muted2);margin-top:14px}
   .demo{margin-top:26px}
   .demo video{width:100%;max-width:264px;aspect-ratio:9/16;display:block;margin:0 auto;background:#fff;
@@ -107,7 +110,7 @@
   .how dl{display:grid;gap:14px}
   .how dt{color:var(--ink);font-weight:500}
   .how dd{margin-top:2px}
-  .how a{color:var(--accent-d)}
+  .how a{color:var(--accent-t)}
   footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
   footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
   .alts{display:flex;gap:4px 20px;justify-content:center;flex-wrap:wrap;margin-top:14px}
@@ -121,8 +124,8 @@
   .recv canvas{margin-top:26px}
   .recv-mode header{display:none}
   .appline{text-align:center;font-size:14px;color:var(--muted);margin-top:16px}
-  .appline a{color:var(--accent-d)}
-  .sharemore a{color:var(--accent-d)}
+  .appline a{color:var(--accent-t)}
+  .sharemore a{color:var(--accent-t)}
   .cmp{margin-top:30px}
   .cmp h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(26px,4.4vw,34px);text-align:center;text-wrap:balance}
   .cmp-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px auto 22px;max-width:620px;text-align:center}
@@ -196,16 +199,16 @@
       <div><h3>Only them <span id="hTheirs"></span></h3><div class="list" id="lTheirs"></div></div>
     </div>
     <h2 class="reply">Your reply</h2>
-    <p class="reply-sub">An image of both maps, written from you to them (“only me” is you), with your own link.</p>
+    <p class="reply-sub">An image of both maps for them, with your link. On it, “only me” means you.</p>
     <canvas id="cmpMap" width="1200" height="1500" role="img" aria-label="World map: countries you have both been to, only you, and only them, in three colours"></canvas>
     <div class="actions">
       <button class="btn primary" id="cmpShare" type="button">Send it back</button>
       <button class="btn" id="cmpSave" type="button">Save this image</button>
       <button class="btn" id="cmpEdit" type="button">Change your countries</button>
     </div>
-    <p class="passrow"><a class="btn" id="cmpPassport" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
+    <p class="passrow" id="cmpPassRow"><a class="btn" id="cmpPassport" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
     <div id="cmpVid"></div>
-    <p class="note linknote">Sending it back shares this image and your own link, <code id="cmpLink"></code>. Only your number is in its path; your country list sits after the #, which browsers never send to any server, including ours.</p>
+    <p class="note linknote">Sending it back shares this image and your own link, <code id="cmpLink"></code>. Only your number is in its path; your country list sits after the #, which browsers never send to any server, including ours. Whoever gets the link, and the app you send it with, can read the list.</p>
     <p class="appline">Driftlog, an iPhone app, keeps a map like this up to date on its own. <a id="cmpApp" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share_recv&amp;mt=8" rel="noopener">See it on the App Store</a></p>
   </section>
 
@@ -225,7 +228,7 @@
     <p class="passrow" id="passRow" hidden><a class="btn" id="passLink" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
     <div id="vidRow" hidden></div>
     <div class="sharemore" id="shareMore" hidden>
-      <p class="note linknote">Your link: <code id="linkTail"></code><br>Only the number is in the link's path. Your country list sits after the #, which browsers never send to any server, including ours. Anyone you send the link to can read the list.</p>
+      <p class="note linknote">Your link: <code id="linkTail"></code><br>Only the number is in the link's path. Your country list sits after the #, which browsers never send to any server, including ours. Anyone you send the link to, and the app you send it with, can read the list.</p>
       <p class="note"><a id="xpost" href="https://x.com/" target="_blank" rel="noopener">Post it on X</a> · this hands X the whole link, country list included.</p>
     </div>
     <p class="appline" id="appline" hidden>Driftlog, an iPhone app, keeps this map up to date on its own. <a href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share&amp;mt=8" rel="noopener">See it on the App Store</a></p>
@@ -236,7 +239,7 @@
     <p>Driftlog is an iPhone app that keeps this map up to date on its own. No check-ins, no journaling — you carry your phone and the map fills in. It reads your old photos the way this page just did, then keeps going from there.</p>
     <div class="demo">
       <video id="demo" src="/app-demo.mp4" poster="/app-demo-poster.jpg"
-             muted loop playsinline autoplay preload="metadata"
+             muted loop playsinline preload="none"
              aria-label="The Driftlog app importing a camera roll: 22 trips found, the counter reaching 22 countries, and the world map filling in."></video>
       <p class="cap">The app importing a camera roll — 6,432 photos in, 22 countries out, map filled. 9 seconds, no sound, loops.</p>
     </div>
@@ -250,8 +253,8 @@
       <div><dt>Photos</dt><dd>A photo taken with location on carries GPS coordinates in its EXIF metadata. The page reads only the start of each JPEG, the metadata box of each HEIC, and the header of each video — never the picture itself — then tests each coordinate against country borders.</dd></div>
       <div><dt>Google Takeout and Timeline</dt><dd>Google Photos exports keep a location in a small JSON file next to each photo; Maps Timeline exports (the newer on-device <code>Timeline.json</code>, older <code>Records.json</code> and Semantic Location History) are read in slices, so large files work too. The Driftlog app itself does not import these files — this page is the only part of Driftlog that does.</dd></div>
       <div><dt>What counts as a country</dt><dd>The headline counts the 193 UN member states plus Taiwan. Other places, such as Vatican City and Kosovo or territories like Hong Kong, Puerto Rico and Greenland, are named underneath and filled in on the map, but not counted. (The Driftlog app counts territories separately, so its number can be higher.) Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side.</dd></div>
-      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML and scripts, fonts, map file and demo video, all fetched within a second or two of the page opening, so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
-      <div><dt>Shared links</dt><dd>A shared result looks like <code>driftlog-counter.pages.dev/c/37/#v=1.…</code> Only the number is in the link's path, so Cloudflare, which hosts this page, sees that number when the link is opened or previewed. The country list sits after the #, which browsers never send to any server, including ours; the page reads it in the browser. Anyone who has the link can read the list, and <b>Post it on X</b> hands X the whole link. Picking countries by hand uses the same 194 as the photo count.</dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML and scripts, fonts, map file and demo video, all fetched within a second or two of the page opening (on a page opened from a shared link, the demo video waits until you scroll to it), so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
+      <div><dt>Shared links</dt><dd>A shared result looks like <code>driftlog-counter.pages.dev/c/37/#v=1.…</code> Only the number is in the link's path, so Cloudflare, which hosts this page, sees that number when the link is opened or previewed. The country list sits after the #, which browsers never send to any server, including ours; the page reads it in the browser. Anyone who has the link can read the list, including the app you send it with, and <b>Post it on X</b> hands X the whole link. Picking countries by hand uses the same 194 as the photo count.</dd></div>
       <div><dt>Video</dt><dd><b>Save video</b> makes a 9:16 clip of your map filling in, from 0 to your count, for Reels, TikTok or Stories: in order of first visit when your files have dates, region by region otherwise. It never shows the dates. The clip is drawn and encoded on your device, as an MP4 with WebCodecs where the browser has it, otherwise by recording the drawing (MediaRecorder); where neither works, you get the last frame as an image. It ends on this page's address.</dd></div>
     </dl>
   </section>
@@ -294,10 +297,13 @@ const CANVAS_FONTS = ['600 132px Fraunces', '300 38px Inter', '400 24px Inter', 
 });
 async function loadCountries(){
   if (FEATS) return;
-  // The map image is drawn on a canvas, which silently falls back to Georgia (old-style digits) if Fraunces is not loaded yet.
+  // The map file is asked for first and downloads while the fonts load: the map image is drawn on a canvas, which
+  // silently falls back to Georgia (old-style digits) if Fraunces is not loaded yet.
+  const req = fetchMap();
+  req.catch(() => {});
   if (document.fonts && document.fonts.load) await Promise.all(CANVAS_FONTS.map(f => document.fonts.load(f))).catch(() => {});
   setStatus('Loading the world map…');
-  const raw = await fetchMap().catch(() => { throw new Error('The map file did not load. Reload the page and try again.'); });
+  const raw = await req.catch(() => { throw new Error('The map file did not load. Reload the page and try again.'); });
   FEATS = Kit.decodeFeats(raw);
 }
 function inRing(x, y, r){
@@ -698,6 +704,7 @@ function render(run){
   // The polygons the photos landed in, for the video to paint the same parts as the image (France without Guiana...).
   run.hits = new Map([...agg].filter(([fi]) => FEATS[fi].k && FEATS[fi].a).map(([fi, a]) => [fi, a.hit]));
   Kit.drawResultCard($('#map'), FEATS, { hits: new Map([...agg.entries()].map(([fi, a]) => [fi, a.hit || new Set()])), n, src });
+  $('#map').setAttribute('aria-label', mapLabel(n, src));
   prepareShare(n, src, codes);
   preparePassport(run);
   prepareVideo(run);
@@ -710,6 +717,21 @@ function render(run){
   else scrollToEl(res);
 }
 const scrollToEl = el => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+// The picker's buttons are gone once it closes, which would drop the keyboard back at the top of the page: move it to
+// what the picker led to (the count or a heading). The page scrolls there itself.
+function focusOn(el){
+  if (!el) return;
+  if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+  el.focus({ preventScroll: true });
+}
+// The result image for screen readers; the image itself says where the countries came from under the map.
+function mapLabel(n, src){
+  const cs = `${n} ${n === 1 ? 'country' : 'countries'}`;
+  return src === 'example' ? `Example world map with ${cs} filled in`
+    : src === 'tap' ? `World map with the ${cs} you picked filled in`
+    : src === 'edited' ? `World map with your ${cs} filled in, counted from your files and then edited by hand`
+    : `World map with the ${cs} found in your files filled in`;
+}
 // The 194 counted countries in a run (codes as in /kit.js), with the first year each one turned up.
 function codesOf(agg){
   const codes = new Set(), years = new Map();
@@ -733,7 +755,8 @@ async function renderPicked(codes, src, extra = {}){
   $('#list').innerHTML = Kit.chips(codes);
   $('#also').textContent = '';
   $('#stats').textContent = src === 'tap' ? 'Picked by hand from the 193 UN member states plus Taiwan.' : 'Counted from your files, then edited by hand.';
-  Kit.drawResultCard($('#map'), FEATS, { hits: Kit.hitsFromCodes(FEATS, codes), n, src });
+  Kit.drawResultCard($('#map'), FEATS, { hits: Kit.hitsFromCodes(FEATS, codes), n, src, base: lastRun.base });
+  $('#map').setAttribute('aria-label', mapLabel(n, src));
   prepareShare(n, src, codes);
   preparePassport(lastRun);
   prepareVideo(lastRun);
@@ -742,14 +765,16 @@ async function renderPicked(codes, src, extra = {}){
   res.classList.add('on');
   setStatus(n ? 'Your map is ready.' : 'No countries picked. Pick some to fill in the map.');
   // Opened from someone's link: editing the counted result keeps the comparison in step.
-  if (RECV){ MINE = { codes, src, years: lastRun.years, base: lastRun.base }; showCompare(); }
-  else scrollToEl(res);
+  if (RECV){ MINE = { codes, src, years: lastRun.years, base: lastRun.base }; showCompare(true); }
+  else { scrollToEl(res); focusOn($('#result .count')); }
 }
 const pickerEl = $('#picker');
-let pickerFrom = null;
-// opts as for Kit.picker; `from` is where to scroll back to on Cancel.
+let pickerFrom = null, pickerOpener = null;
+// opts as for Kit.picker; `from` is where to scroll back to on Cancel, and the button that opened it gets the keyboard back.
 function openPicker(opts){
   pickerFrom = opts.from || null;
+  const a = document.activeElement;
+  pickerOpener = a && a !== document.body ? a : null;
   Kit.picker(pickerEl, Object.assign({}, opts, {
     onCancel: () => closePicker(true),
     onDone: codes => { closePicker(false); opts.onDone(codes); },
@@ -761,6 +786,7 @@ function closePicker(back){
   pickerEl.hidden = true;
   pickerEl.innerHTML = '';
   if (back && pickerFrom) scrollToEl(pickerFrom);
+  if (back && pickerOpener && pickerOpener.isConnected && pickerOpener.getClientRects().length) pickerOpener.focus({ preventScroll: true });
 }
 const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
 // A list changed by hand: a pick stays a pick, a count becomes "edited" and remembers what it was counted from
@@ -817,7 +843,7 @@ $('#edit').addEventListener('click', () => {
   const run = lastRun;
   if (!run || run.example || !run.codes) return;
   openPicker({ initial: run.codes, from: $('#result'), doneLabel: 'Update the map', onDone: codes => {
-    if (sameSet(codes, run.codes)) return scrollToEl($('#result'));
+    if (sameSet(codes, run.codes)){ scrollToEl($('#result')); return focusOn($('#result .count')); }
     const e = edited(run, codes);
     renderPicked(codes, e.src, e);
   } });
@@ -847,7 +873,7 @@ function pickMine(){
     alt: { label: 'Count mine from photos or a Google Maps Timeline file instead', onClick: showPhotoRoute },
     onDone: codes => {
       if (!MINE || !sameSet(codes, MINE.codes)) MINE = edited(MINE, codes);
-      showCompare();
+      showCompare(true);
     },
   });
 }
@@ -856,25 +882,32 @@ function showPhotoRoute(){
   $('#drop').hidden = false;
   scrollToEl($('#drop'));
 }
-async function showCompare(){
+// focus: true when it follows the picker (whose buttons are gone), so the keyboard lands on the comparison.
+async function showCompare(focus){
   try { await loadCountries(); } catch (e){ setStatus(e.message); return; }
-  setStatus('');
   const cmp = Kit.compare(MINE.codes, RECV.codes);
   for (const [key, list] of [['Both', cmp.both], ['Mine', cmp.onlyMine], ['Theirs', cmp.onlyTheirs]]){
     $('#n' + key).textContent = list.length;
     $('#h' + key).textContent = `(${list.length})`;
     $('#l' + key).innerHTML = list.length ? Kit.chips(list) : '<p class="none">None</p>';
   }
-  Kit.drawCompareCard($('#cmpMap'), FEATS, { cmp, mineSrc: MINE.src });
+  Kit.drawCompareCard($('#cmpMap'), FEATS, { cmp, mineSrc: MINE.src, mineBase: MINE.base });
   const url = Kit.resultUrl(MINE.codes);
   cmpShare = Kit.prepareShare($('#cmpMap'), { fileName: 'our-countries.png', url,
     text: `Both of us: ${cmp.both.length}. Only me: ${cmp.onlyMine.length}. Only you: ${cmp.onlyTheirs.length}. My map, to compare back:` });
   $('#cmpShare').textContent = Kit.canShare() ? 'Send it back' : 'Copy your link';
   $('#cmpLink').textContent = url.replace(/^https:\/\//, '');
-  $('#cmpPassport').href = passportHref(MINE);
-  cmpVideo.set(MINE);
+  // None of yours (nothing picked, or only places outside the 194 such as Hong Kong): as under the result, no
+  // passport page and no video. Sending back an empty map still works; it opens /c/0/.
+  const real = Kit.countOf(MINE.codes) > 0;
+  $('#cmpPassRow').hidden = !real;
+  $('#cmpVid').hidden = !real;
+  if (real) $('#cmpPassport').href = passportHref(MINE);
+  cmpVideo.set(real ? MINE : null);
   $('#cmp').hidden = false;
+  setStatus(`Compared: ${cmp.both.length} in both lists, ${cmp.onlyMine.length} only yours, ${cmp.onlyTheirs.length} only theirs.`);
   scrollToEl($('#cmp'));
+  if (focus) focusOn($('#cmp h2'));
 }
 $('#cmpBtn').addEventListener('click', pickMine);
 $('#recvPhotos').addEventListener('click', showPhotoRoute);
@@ -884,7 +917,7 @@ $('#cmpEdit').addEventListener('click', () => {
   if (!MINE) return;
   openPicker({ initial: MINE.codes, from: $('#cmp'), doneLabel: 'Compare', onDone: codes => {
     if (!sameSet(codes, MINE.codes)) MINE = edited(MINE, codes);
-    showCompare();
+    showCompare(true);
   } });
 });
 
@@ -962,9 +995,18 @@ document.addEventListener('click', e => {
   else if (link) setStatus('The list in that link could not be read, so here is the counter on its own.');
   window.addEventListener('hashchange', () => { const l = Kit.readLink(location.hash); if (l && l.codes) openShared(l); });
 }
+// The app demo below the fold is started from here (muted, looping), not by an autoplay attribute. On a page opened
+// from a result link the shared map comes first: the clip waits until it is nearly in view, so it does not share the
+// connection with the map file. With reduced motion it stays on its poster, with controls, and loads nothing.
 (() => {
   const v = $('#demo');
-  if (v && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ v.removeAttribute('autoplay'); v.loop = false; v.controls = true; v.pause(); }
+  if (!v) return;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches){ v.loop = false; v.controls = true; return; }
+  const play = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  if (!RECV) return play();
+  if (typeof IntersectionObserver !== 'function') return window.addEventListener('load', play, { once: true });
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)){ io.disconnect(); play(); } }, { rootMargin: '300px 0px' });
+  io.observe(v);
 })();
 </script>
 </body>
