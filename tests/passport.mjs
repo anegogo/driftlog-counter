@@ -24,6 +24,12 @@ if (existsSync(join(ROOT, 'stamps', 'index.json'))){
   check(idx.countries.map(c => c.code).join() === ALL.join(), 'stamps/index.json is in the table order');
   check(idx.countries.every((c, i) => c.sheet === Math.floor(i / 49) && c.x === (i % 49) % 7 * 240 && c.y === Math.floor((i % 49) / 7) * 240), 'every stamp sits where the formula puts it');
   check(idx.countries.every(c => c.appRotateDeg === Kit.stampTilt(c.code)), 'the export\'s appRotateDeg = stampTilt for all 194');
+  // Plain for now (frame, ink colour and name, no drawing) while their drawings are reviewed. When that list changes,
+  // change it here, in "about", on the page ("The stamps") and in README.md ("The stamps" and the license note).
+  const plain = idx.countries.filter(c => c.plain === true).map(c => c.code).join();
+  check(plain === 'AM,IL,KP' && /Armenia, Israel and North Korea are plain/.test(idx.about), `plain stamps: exactly AM, IL and KP, and "about" says so (${plain || 'none'})`);
+  const about = (readFileSync(join(ROOT, 'passport', 'index.html'), 'utf8').match(/<dt>The stamps<\/dt><dd>([\s\S]*?)<\/dd>/) || [])[1] || '';
+  check(/Armenia, Israel and North Korea are plain/.test(about), 'the page\'s "The stamps" says which stamps are plain');
 }
 
 // 2. The grid: at most 240 px (the stamps' size), room for every stamp plus an empty slot, inside the page.
