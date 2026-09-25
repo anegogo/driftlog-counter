@@ -1,5 +1,5 @@
 {
- "about": "Driftlog country stamps for the passport page (https://driftlog-counter.pages.dev/passport/). The landmark drawings, frame shapes and ink colours are the ones in the Driftlog iPhone app; the layout (English name in capitals, no date) is the one on the 194-stamp poster at https://driftlog-app.pages.dev/stamps/.",
+ "about": "Driftlog country stamps for the passport page (https://driftlog-counter.pages.dev/passport/). The landmark drawings, frame shapes and ink colours are the ones in the Driftlog iPhone app; the layout (English name in capitals, no date) is the one on the 194-stamp poster at https://driftlog-app.pages.dev/stamps/. For now the stamps of Armenia, Israel and North Korea are plain, with the same frame, ink colour and name but no drawing, while their drawings are being reviewed (\"plain\": true below).",
  "definition": "194 = the 193 UN member states + Taiwan, the same set the counter counts. This set has no stamp for Vatican City, Kosovo, Palestine, Western Sahara or territories such as Hong Kong.",
  "count": 194,
  "image": {
@@ -24,7 +24,8 @@
    "The 160pt stamp frame is centred in a 168pt square cell, so the frame is stampRatio of the cell side.",
    "Rotation is not baked in. appRotateDeg is the tilt the app's passport screen uses (-8 to +8, positive = clockwise, the same sign as canvas ctx.rotate() and CSS rotate()); rotateDeg is the poster's (-3 to +3). Rotate about the cell centre; a square turned by t needs a box of side x (|cos t| + |sin t|), about 1.13x at 8 degrees.",
    "The faint fill inside the frame is the ink at 7% alpha, not an opaque colour, so it tints whatever it is drawn on. On the poster paper (#FAF6EF) it looks the same as the poster.",
-   "bbox = measured extent of non-transparent pixels, as fractions of the cell side [x0, y0, x1, y1]."
+   "bbox = measured extent of non-transparent pixels, as fractions of the cell side [x0, y0, x1, y1].",
+   "\"plain\": true marks a stamp without its landmark drawing: the frame, ink colour and name are drawn as for the others, with the name in the middle between two short lines."
   ]
  },
  "shapes": {
@@ -51,7 +52,7 @@
   {"code":"AF","sheet":0,"x":480,"y":0,"label":"AFGHANISTAN","name":"Afghanistan","shape":"circle","continent":"Asia","ink":"#1D9E75","rotateDeg":-1,"appRotateDeg":8,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"AG","sheet":0,"x":720,"y":0,"label":"ANTIGUA & BARBUDA","name":"Antigua & Barbuda","shape":"roundedRect","continent":"North America","ink":"#534AB7","rotateDeg":0,"appRotateDeg":-8,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"AL","sheet":0,"x":960,"y":0,"label":"ALBANIA","name":"Albania","shape":"circle","continent":"Europe","ink":"#D85A30","rotateDeg":-2,"appRotateDeg":-3,"bbox":[0.0125,0.0125,0.9875,0.9875]},
-  {"code":"AM","sheet":0,"x":1200,"y":0,"label":"ARMENIA","name":"Armenia","shape":"roundedRect","continent":"Asia","ink":"#1D9E75","rotateDeg":-1,"appRotateDeg":-2,"bbox":[0.0125,0.0125,0.9875,0.9875]},
+  {"code":"AM","sheet":0,"x":1200,"y":0,"label":"ARMENIA","name":"Armenia","shape":"roundedRect","continent":"Asia","ink":"#1D9E75","rotateDeg":-1,"appRotateDeg":-2,"bbox":[0.0125,0.0125,0.9875,0.9875],"plain":true},
   {"code":"AO","sheet":0,"x":1440,"y":0,"label":"ANGOLA","name":"Angola","shape":"circle","continent":"Africa","ink":"#BA7517","rotateDeg":1,"appRotateDeg":0,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"AR","sheet":0,"x":0,"y":240,"label":"ARGENTINA","name":"Argentina","shape":"circle","continent":"South America","ink":"#639922","rotateDeg":-3,"appRotateDeg":3,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"AT","sheet":0,"x":240,"y":240,"label":"AUSTRIA","name":"Austria","shape":"hexagon","continent":"Europe","ink":"#D85A30","rotateDeg":-1,"appRotateDeg":5,"bbox":[0.0771,0.0125,0.9229,0.9875]},
@@ -123,7 +124,7 @@
   {"code":"HU","sheet":1,"x":960,"y":720,"label":"HUNGARY","name":"Hungary","shape":"roundedRect","continent":"Europe","ink":"#D85A30","rotateDeg":0,"appRotateDeg":-4,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"ID","sheet":1,"x":1200,"y":720,"label":"INDONESIA","name":"Indonesia","shape":"circle","continent":"Asia","ink":"#1D9E75","rotateDeg":-2,"appRotateDeg":-3,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"IE","sheet":1,"x":1440,"y":720,"label":"IRELAND","name":"Ireland","shape":"roundedRect","continent":"Europe","ink":"#D85A30","rotateDeg":-1,"appRotateDeg":-2,"bbox":[0.0125,0.0125,0.9875,0.9875]},
-  {"code":"IL","sheet":1,"x":0,"y":960,"label":"ISRAEL","name":"Israel","shape":"hexagon","continent":"Asia","ink":"#1D9E75","rotateDeg":-1,"appRotateDeg":5,"bbox":[0.0771,0.0125,0.9229,0.9875]},
+  {"code":"IL","sheet":1,"x":0,"y":960,"label":"ISRAEL","name":"Israel","shape":"hexagon","continent":"Asia","ink":"#1D9E75","rotateDeg":-1,"appRotateDeg":5,"bbox":[0.0771,0.0125,0.9229,0.9875],"plain":true},
   {"code":"IN","sheet":1,"x":240,"y":960,"label":"INDIA","name":"India","shape":"roundedRect","continent":"Asia","ink":"#1D9E75","rotateDeg":1,"appRotateDeg":7,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"IQ","sheet":1,"x":480,"y":960,"label":"IRAQ","name":"Iraq","shape":"roundedRect","continent":"Asia","ink":"#1D9E75","rotateDeg":-3,"appRotateDeg":-7,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"IR","sheet":1,"x":720,"y":960,"label":"IRAN","name":"Iran","shape":"hexagon","continent":"Asia","ink":"#1D9E75","rotateDeg":-2,"appRotateDeg":-6,"bbox":[0.0771,0.0125,0.9229,0.9875]},
@@ -138,7 +139,7 @@
   {"code":"KI","sheet":1,"x":1200,"y":1200,"label":"KIRIBATI","name":"Kiribati","shape":"roundedRect","continent":"Oceania","ink":"#D4537E","rotateDeg":-2,"appRotateDeg":4,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"KM","sheet":1,"x":1440,"y":1200,"label":"COMOROS","name":"Comoros","shape":"hexagon","continent":"Africa","ink":"#BA7517","rotateDeg":2,"appRotateDeg":8,"bbox":[0.0771,0.0125,0.9229,0.9875]},
   {"code":"KN","sheet":1,"x":0,"y":1440,"label":"ST KITTS & NEVIS","name":"St Kitts & Nevis","shape":"circle","continent":"North America","ink":"#534AB7","rotateDeg":3,"appRotateDeg":-8,"bbox":[0.0125,0.0125,0.9875,0.9875]},
-  {"code":"KP","sheet":1,"x":240,"y":1440,"label":"NORTH KOREA","name":"North Korea","shape":"hexagon","continent":"Asia","ink":"#1D9E75","rotateDeg":-2,"appRotateDeg":-6,"bbox":[0.0771,0.0125,0.9229,0.9875]},
+  {"code":"KP","sheet":1,"x":240,"y":1440,"label":"NORTH KOREA","name":"North Korea","shape":"hexagon","continent":"Asia","ink":"#1D9E75","rotateDeg":-2,"appRotateDeg":-6,"bbox":[0.0771,0.0125,0.9229,0.9875],"plain":true},
   {"code":"KR","sheet":1,"x":480,"y":1440,"label":"SOUTH KOREA","name":"South Korea","shape":"roundedRect","continent":"Asia","ink":"#1D9E75","rotateDeg":0,"appRotateDeg":-4,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"KW","sheet":1,"x":720,"y":1440,"label":"KUWAIT","name":"Kuwait","shape":"circle","continent":"Asia","ink":"#1D9E75","rotateDeg":-2,"appRotateDeg":1,"bbox":[0.0125,0.0125,0.9875,0.9875]},
   {"code":"KZ","sheet":1,"x":960,"y":1440,"label":"KAZAKHSTAN","name":"Kazakhstan","shape":"circle","continent":"Asia","ink":"#1D9E75","rotateDeg":1,"appRotateDeg":4,"bbox":[0.0125,0.0125,0.9875,0.9875]},
