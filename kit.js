@@ -514,6 +514,103 @@ function drawCompareCard(canvas, FEATS, { cmp, mineSrc }){
   c.fillText('driftlog-counter.pages.dev', W / 2, H - 70);
 }
 
+// ---------- the passport page (/passport/) ----------
+// Stamps: the app's stamp drawings, 240 px each, on four 7 × 7 sheets (stamps/sheet-<k>.webp, built by
+// counter-tools/stamp-export) in table order: country i is on sheet floor(i/49), column (i%49)%7, row floor((i%49)/7).
+// A page always loads all four, whichever countries it shows: one file per country would put the list in the
+// request paths, which the host sees. The tilt is the app's PassportView.rotation(for:), -8° to +8°.
+const STAMP_PX = 240, STAMP_COLS = 7, STAMP_PER = 49, STAMP_SHEETS = Math.ceil(COUNTRIES.length / STAMP_PER);
+const stampTilt = code => [...code].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 17 - 8;
+let stampsReq = null;
+// Resolves to the four sheets (an Image, or null for one that did not load; drawn as a plain ring instead).
+const loadStamps = () => stampsReq || (stampsReq = Promise.all([...Array(STAMP_SHEETS)].map((_, k) => new Promise(res => {
+  const im = new Image();
+  im.onload = () => (im.decode ? im.decode() : Promise.resolve()).then(() => res(im), () => res(im));
+  im.onerror = () => res(null);
+  im.src = `/stamps/sheet-${k}.webp`;
+}))).then(sheets => { if (sheets.includes(null)) stampsReq = null; return sheets; }));   // try again next time
+
+// The link from the counter: the result link's # plus where the list came from (s=). Same-tab, so the # (and the
+// years in it) never reaches a server; the page keeps only v= in the address bar once it has read the rest.
+// b= is what an edited list was counted from (photos, timeline, both), so its caption can still say so.
+const PASSPORT_SRC = ['photos', 'timeline', 'both', 'edited', 'tap'];
+const passportHash = (codes, years, src, base) => linkHash(codes, years) + (PASSPORT_SRC.includes(src) ? '&s=' + src : '')
+  + (src === 'edited' && PASSPORT_SRC.indexOf(base) >= 0 && PASSPORT_SRC.indexOf(base) < 3 ? '&b=' + base : '');
+function readPassport(hash){
+  const link = readLink(hash);
+  if (!link || link.error) return link;
+  let h = String(hash || '').replace(/^#/, '');
+  if (/%[0-9A-Fa-f]{2}/.test(h)){ try { h = decodeURIComponent(h); } catch (e){} }
+  const key = k => { const m = new RegExp(`(?:^|&)${k}=([a-z]+)(?:&|$)`).exec(h); return m ? m[1] : null; };
+  const src = PASSPORT_SRC.includes(key('s')) ? key('s') : null, base = key('b');
+  return Object.assign(link, { src, base: src === 'edited' && PASSPORT_SRC.indexOf(base) >= 0 && PASSPORT_SRC.indexOf(base) < 3 ? base : null });
+}
+// The small line on the image. "photos" only when the list was counted from photos; picked by hand says nothing
+// about where it came from. base: what an edited list was counted from, when known.
+function passportCaption(src, base){
+  const from = { photos: 'my photos', timeline: 'my location history', both: 'my photos and location history' };
+  const what = src === 'edited' ? `counted from ${from[base] || 'my files'}, then edited by hand` : from[src] ? `counted from ${from[src]}` : '';
+  return [what, '194 = 193 UN members + Taiwan'].filter(Boolean).join(' · ');
+}
+// 1080 × 1920 (9:16). The grid is the biggest square cell, at most the stamps' own 240 px, that holds the stamps and
+// at least one empty slot (none at 194), centred in the space between the heading and the footer.
+const PASSPORT = { W: 1080, H: 1920, gx: 60, gy: 350, gw: 960, gh: 1200 };
+function passportGrid(n){
+  const need = Math.min(n + 1, COUNTRIES.length);
+  let s = STAMP_PX;
+  while (s > 24 && Math.floor(PASSPORT.gw / s) * Math.floor(PASSPORT.gh / s) < need) s--;
+  // Empty slots fill the grid below the stamps; with all 194 there are none, so only the rows in use count.
+  const cols = Math.floor(PASSPORT.gw / s), rows = n >= COUNTRIES.length ? Math.ceil(n / cols) : Math.floor(PASSPORT.gh / s);
+  return { s, cols, rows, x: PASSPORT.gx + (PASSPORT.gw - cols * s) / 2, y: PASSPORT.gy + (PASSPORT.gh - rows * s) / 2 };
+}
+function roundRect(c, x, y, w, h, r){
+  c.beginPath();
+  c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+  c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+// Draws the whole page into canvas (1080 × 1920; the only canvas the page needs). order: codes in stamping order
+// (revealOrder). sheets: from loadStamps(), or null when there are no stamps to draw. Returns the text it drew.
+function drawPassport(canvas, { order, sheets, src, base }){
+  const { W, H } = PASSPORT, c = canvas.getContext('2d'), n = order.length, total = COUNTRIES.length, g = passportGrid(n);
+  const text = { title: `My passport page · ${n} of ${total}`, toGo: n < total ? `${total - n} to go` : `All ${total}`, caption: passportCaption(src, base), url: 'driftlog-counter.pages.dev/passport' };
+  c.fillStyle = '#FAF6EF'; c.fillRect(0, 0, W, H);                    // the poster's paper: the stamps' faint fill is tuned to it
+  c.strokeStyle = '#E6D8C6'; c.lineWidth = 2; roundRect(c, 34, 34, W - 68, H - 68, 30); c.stroke();
+  c.textAlign = 'center';
+  const fit = (str, weight, px, family, maxW) => { do { c.font = `${weight} ${px}px ${family}`; } while (c.measureText(str).width > maxW && --px > 10); };
+  c.fillStyle = '#D6692E'; c.font = '600 24px Inter, sans-serif'; spaced(c, '6px');
+  c.fillText('DRIFTLOG', W / 2, 206); spaced(c, '0px');
+  c.fillStyle = '#322014'; fit(text.title, 600, 62, 'Fraunces, Georgia, serif', 940);
+  c.fillText(text.title, W / 2, 284);
+  const d = g.s * 0.88, slot = d * 160 / 168;                         // the frame is 160 of the stamp's 168 pt
+  c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+  for (let k = 0; k < g.cols * g.rows; k++){
+    const cx = g.x + (k % g.cols + 0.5) * g.s, cy = g.y + (((k / g.cols) | 0) + 0.5) * g.s, code = order[k];
+    if (!code){
+      if (k >= total) break;
+      c.strokeStyle = '#D9CAB7'; c.lineWidth = Math.max(1.5, g.s * 0.012); c.setLineDash([g.s * 0.05, g.s * 0.035]);
+      roundRect(c, cx - slot / 2, cy - slot / 2, slot, slot, slot * 0.08); c.stroke(); c.setLineDash([]);
+      continue;
+    }
+    const i = BY_CODE.get(code).i, sheet = sheets && sheets[(i / STAMP_PER) | 0], j = i % STAMP_PER;
+    c.save(); c.translate(cx, cy); c.rotate(stampTilt(code) * Math.PI / 180);
+    if (sheet) c.drawImage(sheet, (j % STAMP_COLS) * STAMP_PX, ((j / STAMP_COLS) | 0) * STAMP_PX, STAMP_PX, STAMP_PX, -d / 2, -d / 2, d, d);
+    else {                                                            // the sheet did not load: a plain ring with the name
+      c.strokeStyle = '#D6692E'; c.lineWidth = Math.max(1.5, g.s * 0.02);
+      c.beginPath(); c.arc(0, 0, slot / 2, 0, Math.PI * 2); c.stroke();
+      c.fillStyle = '#D6692E'; fit(nameOf(code).toUpperCase(), 600, Math.round(g.s * 0.1), 'Inter, sans-serif', slot * 0.8);
+      c.textBaseline = 'middle'; c.fillText(nameOf(code).toUpperCase(), 0, 0); c.textBaseline = 'alphabetic';
+    }
+    c.restore();
+  }
+  c.fillStyle = '#D6692E'; c.font = '600 54px Fraunces, Georgia, serif';
+  c.fillText(text.toGo, W / 2, 1640);
+  c.fillStyle = '#7A6555'; fit(text.caption, 400, 26, 'Inter, sans-serif', 940);
+  c.fillText(text.caption, W / 2, 1694);
+  c.fillStyle = '#8F7765'; c.font = '500 26px Inter, sans-serif';
+  c.fillText(text.url, W / 2, 1740);
+  return text;
+}
+
 // ---------- sharing ----------
 // iOS only opens the share sheet if share() runs straight from the tap, so the image file is made ahead of time.
 // Returns the object to pass to share(); its file appears once the PNG is encoded.
@@ -598,8 +695,9 @@ function injectCss(){
   st.id = 'kit-css'; st.textContent = CSS;
   document.head.appendChild(st);
 }
-// Renders the picker into host (replacing what is there). opts: initial (codes), title, doneLabel, cancelLabel,
-// onDone(Set of codes), onCancel(), alt: { label, onClick } for a second way in (photos). Returns { root, picked }.
+// Renders the picker into host (replacing what is there). opts: initial (codes), title, doneLabel, cancelLabel
+// (null: no Cancel button, for a page where the picker is the way in), onDone(Set of codes), onCancel(),
+// alt: { label, onClick } for a second way in (photos). Returns { root, picked }.
 function picker(host, opts){
   injectCss();
   const o = Object.assign({ initial: [], title: 'Which countries have you been to?', doneLabel: 'Done', cancelLabel: 'Cancel' }, opts);
@@ -615,7 +713,7 @@ function picker(host, opts){
     <div class="kp-sel"><h3>Your countries <span class="kp-sn"></span></h3><div class="kp-chips kp-selc"></div></div>
     <div class="kp-rs">${REGIONS.map(([r, label]) => `<details class="kp-r"><summary>${label}<small data-rn="${r}"></small></summary><div class="kp-chips">${regionList(r).map(chip).join('')}</div></details>`).join('')}</div>
     ${o.alt ? `<p class="kp-alt"><button type="button" class="kp-altb">${esc(o.alt.label)}</button></p>` : ''}
-    <div class="kp-bar"><span class="kp-count" aria-live="polite"></span><button type="button" class="kp-b kp-x">${esc(o.cancelLabel)}</button><button type="button" class="kp-b pri kp-ok">${esc(o.doneLabel)}</button></div>
+    <div class="kp-bar"><span class="kp-count" aria-live="polite"></span>${o.cancelLabel ? `<button type="button" class="kp-b kp-x">${esc(o.cancelLabel)}</button>` : ''}<button type="button" class="kp-b pri kp-ok">${esc(o.doneLabel)}</button></div>
   </div>`;
   const el = host.firstElementChild, q = el.querySelector('.kp-q'), hitsEl = el.querySelector('.kp-hits'), hint = el.querySelector('.kp-hint');
   const sync = () => {
@@ -663,5 +761,6 @@ root.DriftlogKit = {
   encodeMask, decodeMask, linkHash, resultUrl, readLink, compare, revealOrder, storeUrl, xPostUrl,
   decodeFeats, loadFeats, hitsFromCodes, layers, drawWorld, drawResultCard, drawSharedMap, drawCompareCard,
   prepareShare, share, copy, canShare, saveCanvas, chips, picker,
+  PASSPORT, PASSPORT_SRC, passportHash, readPassport, passportCaption, passportGrid, drawPassport, loadStamps, stampTilt,
 };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My passport page: a stamp for every country you've been to</title>
+<meta name="description" content="Pick the countries you've been to and get a 9:16 page of passport-style stamps, one per country, to save or post as a story. Free, no account, and it runs in your browser: nothing is uploaded." />
+<link rel="canonical" href="https://driftlog-counter.pages.dev/passport/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftlog" />
+<meta property="og:url" content="https://driftlog-counter.pages.dev/passport/" />
+<meta property="og:title" content="Make your passport page" />
+<meta property="og:description" content="A stamp for every country you've been to, out of 194, on one page for your story. Pick them in a minute; nothing is uploaded." />
+<meta property="og:image" content="https://driftlog-counter.pages.dev/passport/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Make your passport page: a stamp for every country you've been to. driftlog-counter.pages.dev/passport" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Make your passport page" />
+<meta name="twitter:description" content="A stamp for every country you've been to, out of 194, on one page for your story. Pick them in a minute; nothing is uploaded." />
+<meta name="twitter:image" content="https://driftlog-counter.pages.dev/passport/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Driftlog passport page",
+"url":"https://driftlog-counter.pages.dev/passport/","applicationCategory":"TravelApplication",
+"operatingSystem":"Any (runs in the browser)",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"description":"Makes a 9:16 image with a passport-style stamp for each country you have been to, out of the 193 UN member states plus Taiwan. Pick the countries by hand, or bring them from the photo counter. Runs entirely in the browser: no upload, no account.",
+"author":{"@type":"Person","name":"Akira Takashima"},
+"publisher":{"@type":"Organization","name":"Shiori Studio"}}
+</script>
+<link rel="stylesheet" href="/fonts.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#8F7765;
+    --accent:#D6692E; --accent-d:#B9561F; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
+    color:var(--ink);min-height:100vh;line-height:1.6}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{text-align:center;padding:56px 0 6px}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent);text-transform:uppercase}
+  .kicker a{color:inherit;text-decoration:none}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,56px);line-height:1.14;margin-top:18px;letter-spacing:-.015em;text-wrap:balance}
+  .lead{font-weight:300;color:var(--muted);margin:18px auto 0;max-width:560px;font-size:clamp(15px,2.1vw,18px)}
+  .alt{text-align:center;font-size:14px;color:var(--muted);margin-top:16px}
+  .alt a,.note a,.how a{color:var(--accent-d)}
+  #status{text-align:center;color:var(--muted);font-size:14px;margin-top:18px;min-height:22px}
+  .out{margin-top:34px;text-align:center}
+  .out h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(26px,4.4vw,34px);text-wrap:balance}
+  .order{color:var(--muted);font-size:14px;margin:10px auto 0;max-width:540px}
+  #page{display:block;width:min(100%,400px);height:auto;aspect-ratio:9/16;margin:22px auto 0;border-radius:16px;
+    background:#FAF6EF;border:1px solid var(--line);box-shadow:0 14px 36px rgba(50,32,20,.12)}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;display:inline-block}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-d);border-color:var(--accent-d)}
+  .btn:hover{border-color:var(--accent)}
+  .btn:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .note{font-size:12.5px;color:var(--muted2);margin:14px auto 0;max-width:560px}
+  details.list{margin:22px auto 0;max-width:560px;text-align:left;font-size:14px;color:var(--muted)}
+  details.list summary{cursor:pointer;text-align:center;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+  details.list ol{margin:12px 0 0 1.6em;columns:2;column-gap:28px}
+  details.list li{break-inside:avoid}
+  .appline{text-align:center;font-size:14px;color:var(--muted);margin:30px auto 0;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .appline a{color:var(--accent-d);font-weight:500}
+  .how{margin:48px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
+  .how h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
+  .how dl{display:grid;gap:14px}
+  .how dt{color:var(--ink);font-weight:500}
+  .how dd{margin-top:2px}
+  footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  @media (max-width:520px){ details.list ol{columns:1} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker"><a href="/">Driftlog</a></div>
+    <h1>Your passport page</h1>
+    <p class="lead">A stamp for every country you've been to, on one 9:16 page to save or post as a story. Pick your countries below. It all runs in your browser; nothing is uploaded.</p>
+  </header>
+
+  <section id="picker" aria-label="Pick countries"></section>
+  <p class="alt" id="alt">Rather count them from your photos? <a href="/">Use the counter</a>, then tap <b>Make my passport page</b> under your map.</p>
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <section class="out" id="out" hidden aria-label="Your passport page">
+    <h2 id="outTitle">My passport page</h2>
+    <p class="order" id="order"></p>
+    <canvas id="page" width="1080" height="1920" role="img" aria-label="Your passport page"></canvas>
+    <div class="btns">
+      <button class="btn primary" id="share" type="button">Share</button>
+      <button class="btn" id="save" type="button">Save image</button>
+      <button class="btn" id="edit" type="button">Edit countries</button>
+    </div>
+    <p class="note">194 = 193 UN members + Taiwan. Vatican City, Kosovo, Palestine, Western Sahara and territories such as Hong Kong have no stamp here.</p>
+    <details class="list"><summary>Stamp order</summary><ol id="orderList"></ol></details>
+    <p class="appline">In the app, stamps are added automatically from your photos and location. <a id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=web_passport&amp;mt=8" rel="noopener">Driftlog on the App Store</a></p>
+  </section>
+
+  <section class="how" aria-label="How this page works">
+    <h3>How this works</h3>
+    <dl>
+      <div><dt>The stamps</dt><dd>One stamp per country, drawn for the Driftlog iPhone app: the same landmark drawings, frames and ink colours, and the same tilt each country gets in the app's passport. They are also on a <a href="https://driftlog-app.pages.dev/stamps/">194-stamp poster</a> that is free to use.</dd></div>
+      <div><dt>What counts as a country</dt><dd>The 193 UN member states plus Taiwan, the same 194 the <a href="/">photo counter</a> counts. Vatican City, Kosovo, Palestine, Western Sahara and territories such as Hong Kong, Puerto Rico and Greenland have no stamp in this set. (The Driftlog app counts territories separately, so its number can be higher.)</dd></div>
+      <div><dt>The order</dt><dd>Countries counted from your photos or a Google Maps Timeline file are stamped by the first year each one turns up. Photo dates only give a year, so within a year, and for countries without one, the order is by region (Europe, Asia, North America, South America, Africa, Oceania), then by name. Picked by hand, there are no years, so it is region, then name.</dd></div>
+      <div><dt>Privacy</dt><dd>The page is drawn in your browser. Your list of countries is not sent anywhere: the stamps come as four fixed image sheets that load in full whichever countries you pick, so even the requests say nothing about your list. There are no analytics and no cookies. A list brought over from the counter travels after the # in the address, which browsers never send to a server.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    Made by <a href="https://driftlog-app.pages.dev" rel="noopener">Driftlog</a> — a travel map that fills itself in. · <a href="/">Count your countries from photos</a> · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT)
+  </footer>
+</div>
+
+<script src="/kit.js"></script>
+<script>
+'use strict';
+const Kit = window.DriftlogKit;   // countries, the picker, the stamp sheets and the page drawing: /kit.js
+const $ = s => document.querySelector(s);
+const statusEl = $('#status'), canvas = $('#page');
+const setStatus = t => { statusEl.textContent = t; };
+const PAGE_URL = 'https://driftlog-counter.pages.dev/passport/';
+const STORE_KEY = 'driftlog-passport';
+const FONTS = ['600 62px Fraunces', '600 54px Fraunces', '600 24px Inter', '500 26px Inter', '400 26px Inter'];
+const REGION_ORDER = Kit.REGIONS.map(r => r[1]).join(', ');
+
+// The list on the page: codes, first years (Map, or null), where it came from (Kit.PASSPORT_SRC or null) and, for an
+// edited list, what it was counted from before the edit.
+let state = null, prepared = null, drawing = 0;
+
+// ---------- the list in the address bar and in this tab's storage ----------
+// The counter hands over v= (the list), y= (first years) and s= (where it came from) after the #. Only v= stays in
+// the address bar, so a copied address carries the list but not the years; the rest is kept for a reload in this
+// tab's sessionStorage, which may be missing or blocked (then a reload just loses the years and the source).
+function remember(st){
+  try { history.replaceState(null, '', '/passport/#' + Kit.linkHash(st.codes)); } catch (e){}
+  try { sessionStorage.setItem(STORE_KEY, JSON.stringify({ v: Kit.linkHash(st.codes), years: st.years ? [...st.years] : null, src: st.src, base: st.base || null })); } catch (e){}
+}
+function recall(codes){
+  try {
+    const o = JSON.parse(sessionStorage.getItem(STORE_KEY) || 'null');
+    if (!o || o.v !== Kit.linkHash(codes)) return null;
+    const years = Array.isArray(o.years) ? new Map(o.years.filter(([c, y]) => codes.has(c) && Number.isInteger(y))) : null;
+    return { years: years && years.size ? years : null, src: Kit.PASSPORT_SRC.includes(o.src) ? o.src : null, base: o.base || null };
+  } catch (e){ return null; }
+}
+function fromHash(hash){
+  const link = Kit.readPassport(hash);
+  if (!link) return null;
+  if (link.error) return { error: link.error };
+  const brought = link.src || link.years ? null : recall(link.codes);
+  return brought ? Object.assign({ codes: link.codes }, brought) : { codes: link.codes, years: link.years, src: link.src, base: link.base };
+}
+
+// ---------- picking ----------
+function openPicker(editing){
+  $('#picker').hidden = false; $('#alt').hidden = editing;
+  Kit.picker($('#picker'), {
+    initial: state ? state.codes : [],
+    title: editing ? 'Change your countries' : 'Which countries have you been to?',
+    doneLabel: editing ? 'Update my page' : 'Make my page',
+    cancelLabel: editing ? 'Cancel' : null,
+    onCancel: () => { closePicker(); $('#out').scrollIntoView({ block: 'start' }); },
+    onDone: codes => {
+      if (!state) state = { codes, years: null, src: 'tap', base: null };
+      else if (!sameSet(codes, state.codes)){
+        const hand = !state.src || state.src === 'tap';
+        const years = state.years ? new Map([...state.years].filter(([c]) => codes.has(c))) : null;
+        state = { codes, years: years && years.size ? years : null, src: hand ? 'tap' : 'edited', base: hand ? null : state.src === 'edited' ? state.base : state.src };
+      }
+      closePicker();
+      remember(state);
+      make(true);
+    },
+  });
+}
+function closePicker(){ $('#picker').hidden = true; $('#picker').innerHTML = ''; $('#alt').hidden = true; }
+const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+// The stamps are needed as soon as someone starts picking, and fetching them then means the page still works if
+// the network goes away before "Make my page". Nobody who only reads the page downloads them.
+$('#picker').addEventListener('click', e => { if (e.target.closest && e.target.closest('.kp-c')) Kit.loadStamps(); });
+
+// ---------- the page ----------
+async function make(scroll){
+  const run = ++drawing, st = state, order = Kit.revealOrder(st.codes, st.years);
+  prepared = null;
+  const n = order.length;
+  $('#out').hidden = false;
+  $('#outTitle').textContent = `My passport page · ${n} of 194`;
+  const dated = st.years && order.some(c => st.years.get(c));
+  $('#order').textContent = dated
+    ? `Stamped in order of first visit, by the first year each country turns up in your files. Within a year, and for countries without one (at the end), by region (${REGION_ORDER}), then by name.`
+    : st.src === 'tap' ? `Picked by hand, so there are no dates: stamps go by region (${REGION_ORDER}), then by name.`
+    : `No dates came with this list, so stamps go by region (${REGION_ORDER}), then by name.`;
+  $('#orderList').innerHTML = order.map(c => `<li>${Kit.esc(Kit.nameOf(c))}${dated && st.years.get(c) ? ` · ${st.years.get(c)}` : ''}</li>`).join('');
+  if (scroll) $('#out').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  // The page is drawn once the fonts (canvas text falls back to Georgia otherwise) and, with any stamps, the sheets are in.
+  if (n) setStatus('Loading the stamps…');
+  const [sheets] = await Promise.all([
+    n ? Kit.loadStamps() : Promise.resolve(null),
+    document.fonts && document.fonts.load ? Promise.all(FONTS.map(f => document.fonts.load(f))).catch(() => {}) : null,
+  ]);
+  if (run !== drawing) return;                                   // a newer list came in while this one was loading
+  const text = Kit.drawPassport(canvas, { order, sheets, src: st.src, base: st.base });
+  canvas.setAttribute('aria-label', `${text.title}. ${text.toGo}. ${text.caption}.`);
+  setStatus(sheets && sheets.includes(null) ? 'Some stamps did not load, so those countries show as plain rings. Reload to try again.' : '');
+  prepared = Kit.prepareShare(canvas, { fileName: 'my-passport-page.png', url: PAGE_URL, text: `My passport page: ${n} of 194 countries. Make yours:` });
+  $('#share').textContent = canShareFiles() ? 'Share' : 'Save image';
+  $('#save').hidden = !canShareFiles();
+}
+
+// ---------- saving and sharing: the share sheet with the image where there is one, otherwise a download ----------
+const canShareFiles = () => !!(navigator.share && navigator.canShare && typeof File === 'function' && navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] }));
+function download(){
+  const go = blob => {
+    const a = document.createElement('a');
+    a.download = 'my-passport-page.png'; a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+  };
+  if (prepared && prepared.file) go(prepared.file);
+  else canvas.toBlob(b => { if (b) go(b); }, 'image/png');
+}
+// iOS opens the share sheet only when share() runs straight from the tap, with the file already made (prepareShare).
+async function shareOrSave(){
+  const s = prepared;
+  if (!s) return;                                                // still drawing
+  if (s.file && navigator.share && navigator.canShare && navigator.canShare({ files: [s.file] })){
+    try { await navigator.share({ files: [s.file], text: `${s.text} ${s.url}` }); return; }
+    catch (e){ if (e && e.name === 'AbortError') return; }
+  }
+  download();
+}
+$('#share').addEventListener('click', shareOrSave);
+$('#save').addEventListener('click', download);
+$('#edit').addEventListener('click', () => { openPicker(true); $('#picker').scrollIntoView({ block: 'start' }); });
+
+// ---------- start ----------
+function start(){
+  const got = fromHash(location.hash);
+  if (got && got.codes){
+    state = got;
+    remember(state);
+    closePicker();
+    make(false);
+    return;
+  }
+  if (got && got.error) setStatus('The list in that link could not be read, so pick your countries here.');
+  state = null;
+  $('#out').hidden = true;
+  openPicker(false);
+}
+start();
+window.addEventListener('hashchange', () => { const got = fromHash(location.hash); if (got && got.codes && !(state && sameSet(got.codes, state.codes))) start(); });
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => { if (document.fonts && document.fonts.load) FONTS.forEach(f => document.fonts.load(f).catch(() => {})); });
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
-// Result links, the country table and comparing two lists: /kit.js on its own, then the page opened from a link.
+// Result links, the country table and comparing two lists: /kit.js on its own, then the page opened from a link,
+// and the counter's links to the passport page.
 // Same stubbed DOM as run.mjs (tests/harness.mjs). `node tests/share.mjs` (Node 20+).
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -159,6 +160,39 @@ await page.T.renderPicked(edited, 'edited');
 await sleep(20);
 check(page.T.MINE && sameSet(page.T.MINE.codes, edited) && page.T.MINE.src === 'edited' && nums() === want(edited) && want(edited) !== want(counted15),
   `editing the counted result updates the comparison: ${nums()} = ${want(edited)}`);
+
+// 9. "Make my passport page": /passport/# + the list, its first years and where it came from (same tab, so none of
+// it reaches a server). Not for the example. On the receiving end it carries your own list, never theirs.
+const passOf = sel => { const h = href(sel); return h.startsWith('/passport/#') ? Kit.readPassport(h.slice(h.indexOf('#'))) : null; };
+page = loadPage();
+await page.T.handle(walk(join(ROOT, 'tests', 'fixtures')));
+let pass = passOf('#passLink');
+const firstYears = page.T.codesOf(page.T.lastRun.agg).years;
+check(pass && sameSet(pass.codes, page.T.lastRun.codes) && pass.src === 'both' && pass.base === null, `photo count: passport link has the 15 and s=both: ${href('#passLink')}`);
+check(pass && pass.years && firstYears.size === 15 && [...firstYears].every(([c, y]) => pass.years.get(c) === y), 'photo count: passport link has each country\'s first year');
+check(page.document.querySelector('#passRow').hidden === false, 'photo count: the passport link is shown');
+const fewer = new Set([...page.T.lastRun.codes].filter(c => c !== 'JP')), e = page.T.edited(page.T.lastRun, fewer);
+check(e.src === 'edited' && e.base === 'both' && e.years.size === 14 && !e.years.has('JP'), `edited(): ${JSON.stringify({ src: e.src, base: e.base, years: e.years && e.years.size })}`);
+await page.T.renderPicked(fewer, e.src, e);
+pass = passOf('#passLink');
+check(pass && pass.codes.size === 14 && pass.src === 'edited' && pass.base === 'both' && !!pass.years && pass.years.size === 14, `edited count: s=edited&b=both with 14 years: ${href('#passLink').slice(-12)}`);
+const e2 = page.T.edited(page.T.lastRun, new Set([...fewer, 'NZ']));
+check(e2.src === 'edited' && e2.base === 'both' && e2.years.size === 14 && !e2.years.has('NZ'), 'edited twice: still counted from both; the added country has no year');
+await page.T.renderPicked(new Set(['JP', 'PE']), 'tap');
+pass = passOf('#passLink');
+check(pass && pass.codes.size === 2 && pass.src === 'tap' && pass.years === null && !href('#passLink').includes('&y='), `picked by hand: s=tap, no years: ${href('#passLink')}`);
+await page.T.showExample();
+check(page.document.querySelector('#passRow').hidden === true, 'the example: no passport link');
+page = loadPage({ hash: '#' + Kit.linkHash(theirs) });
+await sleep(50);
+page.T.MINE = { codes: tapped, src: 'tap' };
+await page.T.showCompare();
+pass = passOf('#cmpPassport');
+check(pass && sameSet(pass.codes, tapped) && pass.src === 'tap', 'receiver: "Make my passport page" carries your own tapped list');
+await page.T.handle(walk(join(ROOT, 'tests', 'fixtures')));
+await sleep(20);
+pass = passOf('#cmpPassport');
+check(pass && pass.codes.size === 15 && pass.src === 'both' && pass.years && pass.years.size === 15, 'receiver counting photos: the passport link carries your 15 with their years');
 
 if (failures.length){ console.error('FAIL\n- ' + failures.join('\n- ')); process.exit(1); }
 console.log('PASS');

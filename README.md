@@ -4,7 +4,7 @@
 
 Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-counter.pages.dev
 
-- No dependencies, no build step, no framework. One HTML file, one script (`kit.js`: the country list, result links, map drawing, sharing and the country picker) and one 890 KB border file.
+- No dependencies, no build step, no framework. One HTML file, one script (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing) and one 890 KB border file.
 - No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its script, its fonts, the border file and a short demo video of the app. The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
 - Works in iPhone Safari: the iOS photo picker passes the location along while it shows “Location Is Included”.
 
@@ -36,6 +36,7 @@ Folders can be dropped whole; the page walks them with `webkitGetAsEntry`.
 python3 -m http.server 8000   # then open http://localhost:8000
 node tests/run.mjs            # runs the page's own script against tests/fixtures (Node 20+)
 node tests/share.mjs          # result links, the country table and comparing two lists
+node tests/passport.mjs       # the passport page: stamps, grid, captions, links and the page's own script
 ```
 
 The test also generates an old-style `Records.json` (with `timestampMs`) and 65 Timeline files just over one 8 MB slice, so a coordinate straddles the slice boundary at every possible offset.
@@ -62,6 +63,17 @@ https://driftlog-counter.pages.dev/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
 - **The `/c/<N>/` pages** (N = 0–194) exist only for link previews, which fetch the page without the `#` and run no scripts: each has its own Open Graph tags and image (`/c/og/<N>.png`) and forwards to the counter with the `#`. They are `noindex` with a canonical to the top page and are not in the sitemap. They are generated, not committed: `python3 tools/build_share_pages.py .` (Pillow; uses `fonts/` and `countries50.json`).
 - **The order is fixed.** Links already shared depend on the order of the table in `kit.js` (generated from `countries50.json` by `tools/build_kit_table.py`), so it never changes within version 1. `tests/share.mjs` pins it.
 
+## The passport page
+
+`/passport/` makes a 9:16 image (1080 × 1920) with a passport-style stamp for each country, for a story or a camera roll.
+
+- **The way in** is the same country picker (search, or tap through the regions). From the counter, **Make my passport page** under a result opens it with the list after the `#`: `/passport/#v=1.<mask>&y=<years>&s=<where it came from>`. It opens in the same tab, so none of that reaches a server; the page then keeps only `v=` in the address bar and holds the years and the source in this tab's `sessionStorage` for a reload.
+- **The order** is the first year each country turns up in the photos or Timeline file; within a year, and without one, by region (Europe, Asia, North America, South America, Africa, Oceania), then by name. Picked by hand, there are no years.
+- **The caption** says "counted from my photos" (or location history) only when the list was counted that way. A list picked by hand says only `194 = 193 UN members + Taiwan`.
+- **The stamps** are four 7 × 7 sheets (`stamps/sheet-<k>.webp`, 240 px per stamp, about 520 KB in all) in the order of the table in `kit.js`. The page fetches all four once someone starts picking or arrives with a list, whichever countries they pick, so the requests say nothing about the list. They are drawn onto the one canvas the page has; the tilt of each stamp is the one the app gives it.
+- **Saving:** the share sheet with the PNG where the browser has one, otherwise a download.
+- `tools/build_passport_og.py` draws `passport/og.png` from the sheets and the site's fonts.
+
 ## Limits
 
 - Borders are accurate to roughly a kilometre; a photo taken right on a border can land on the wrong side.
@@ -79,3 +91,4 @@ Aki Takashima ([Shiori Studio](https://driftlog-app.pages.dev)), a solo develope
 - `countries50.json`: derived from [Natural Earth](https://www.naturalearthdata.com/) (public domain) via [world-atlas](https://github.com/topojson/world-atlas) (ISC), with ISO codes from [i18n-iso-countries](https://github.com/michaelwittig/node-i18n-iso-countries) (MIT). Their notices are in [NOTICE](NOTICE).
 - Fonts: [Inter](https://github.com/rsms/inter) and [Fraunces](https://github.com/undercasetype/Fraunces), SIL Open Font License 1.1 (`fonts/OFL-*.txt`).
 - `app-demo.mp4`, `app-demo-poster.jpg` and `og.png` show the Driftlog app and are not covered by the MIT license.
+- `stamps/` and `passport/og.png`: the Driftlog app's stamp drawings, not covered by the MIT license. They are the stamps of the [194-stamp poster](https://driftlog-app.pages.dev/stamps/), which is free to use and to republish, credit optional.

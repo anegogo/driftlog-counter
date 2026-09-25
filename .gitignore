@@ -2,3 +2,4 @@ tools/data/*.json
 .wrangler/
 .DS_Store
 c/
+__pycache__/

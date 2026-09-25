@@ -138,6 +138,9 @@
   .cmp-lists .none{text-align:center;font-size:14px;color:var(--muted2);margin-top:8px}
   .cmp h2.reply{margin-top:44px;font-size:clamp(22px,3.6vw,27px)}
   .reply-sub{text-align:center;color:var(--muted);font-size:14px;margin:8px auto 18px;max-width:520px}
+  .passrow{text-align:center;margin-top:16px}
+  .passrow a.btn{display:inline-block;text-decoration:none}
+  .passrow span{display:block;font-size:13px;color:var(--muted2);margin-top:8px}
   @media (prefers-reduced-motion: reduce){ .bar i{transition:none} }
 </style>
 </head>
@@ -200,6 +203,7 @@
       <button class="btn" id="cmpSave" type="button">Save this image</button>
       <button class="btn" id="cmpEdit" type="button">Change your countries</button>
     </div>
+    <p class="passrow"><a class="btn" id="cmpPassport" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
     <p class="note linknote">Sending it back shares this image and your own link, <code id="cmpLink"></code>. Only your number is in its path; your country list sits after the #, which browsers never send to any server, including ours.</p>
     <p class="appline">Driftlog, an iPhone app, keeps a map like this up to date on its own. <a id="cmpApp" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share_recv&amp;mt=8" rel="noopener">See it on the App Store</a></p>
   </section>
@@ -217,6 +221,7 @@
       <button class="btn" id="edit" type="button" hidden>Edit countries</button>
       <button class="btn" id="again" type="button">Start over</button>
     </div>
+    <p class="passrow" id="passRow" hidden><a class="btn" id="passLink" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
     <div class="sharemore" id="shareMore" hidden>
       <p class="note linknote">Your link: <code id="linkTail"></code><br>Only the number is in the link's path. Your country list sits after the #, which browsers never send to any server, including ours. Anyone you send the link to can read the list.</p>
       <p class="note"><a id="xpost" href="https://x.com/" target="_blank" rel="noopener">Post it on X</a> · this hands X the whole link, country list included.</p>
@@ -249,7 +254,7 @@
   </section>
 
   <footer>
-    Made by <a href="https://driftlog-app.pages.dev" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT) · <a href="https://zubotabi-counter.pages.dev/" hreflang="ja" lang="ja">日本語</a>
+    Made by <a href="https://driftlog-app.pages.dev" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT) · <a href="/passport/">Passport page</a> · <a href="https://zubotabi-counter.pages.dev/" hreflang="ja" lang="ja">日本語</a>
   </footer>
 </div>
 
@@ -683,16 +688,17 @@ function render(run){
   $('#stats').textContent = example ? 'Example data: a made-up set of trips, not anyone\'s real photos.' : bits.join(' · ');
   const fromPhotos = stats.withLoc + stats.sidecars > 0, fromTimeline = stats.points > 0;
   const src = example ? 'example' : fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos';
-  const { codes } = codesOf(agg);
-  run.codes = codes; run.src = src;
+  const { codes, years: firstYears } = codesOf(agg);
+  run.codes = codes; run.src = src; run.years = firstYears;
   Kit.drawResultCard($('#map'), FEATS, { hits: new Map([...agg.entries()].map(([fi, a]) => [fi, a.hit || new Set()])), n, src });
   prepareShare(n, src, codes);
+  preparePassport(run);
   const res = $('#result');
   res.classList.toggle('example', !!example);
   res.classList.add('on');
   setStatus(example ? 'This is an example. Drop your own photos above to see yours.' : 'Done. Nothing left your browser.');
   // Opened from someone's link: counting your own photos goes straight on to the comparison.
-  if (RECV && !example){ MINE = { codes, src }; showCompare(); }
+  if (RECV && !example){ MINE = { codes, src, years: firstYears }; showCompare(); }
   else scrollToEl(res);
 }
 const scrollToEl = el => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
@@ -709,10 +715,11 @@ function codesOf(agg){
 }
 
 // ---------- picked by hand (the picker itself is in /kit.js) ----------
-async function renderPicked(codes, src){
+// extra: { years, base } of a counted list edited by hand (see edited()).
+async function renderPicked(codes, src, extra = {}){
   try { await loadCountries(); } catch (e){ setStatus(e.message); return; }
   const n = codes.size;
-  lastRun = { picked: true, codes, src, example: false };
+  lastRun = { picked: true, codes, src, years: extra.years || null, base: extra.base || null, example: false };
   $('#num').textContent = n;
   $('#lbl').textContent = (n === 1 ? 'country' : 'countries') + (src === 'tap' ? ', picked by hand' : ', from your files, edited by hand');
   $('#list').innerHTML = Kit.chips(codes);
@@ -720,12 +727,13 @@ async function renderPicked(codes, src){
   $('#stats').textContent = src === 'tap' ? 'Picked by hand from the 193 UN member states plus Taiwan.' : 'Counted from your files, then edited by hand.';
   Kit.drawResultCard($('#map'), FEATS, { hits: Kit.hitsFromCodes(FEATS, codes), n, src });
   prepareShare(n, src, codes);
+  preparePassport(lastRun);
   const res = $('#result');
   res.classList.remove('example');
   res.classList.add('on');
   setStatus(n ? 'Your map is ready.' : 'No countries picked. Pick some to fill in the map.');
   // Opened from someone's link: editing the counted result keeps the comparison in step.
-  if (RECV){ MINE = { codes, src }; showCompare(); }
+  if (RECV){ MINE = { codes, src, years: lastRun.years, base: lastRun.base }; showCompare(); }
   else scrollToEl(res);
 }
 const pickerEl = $('#picker');
@@ -746,6 +754,13 @@ function closePicker(back){
   if (back && pickerFrom) scrollToEl(pickerFrom);
 }
 const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+// A list changed by hand: a pick stays a pick, a count becomes "edited" and remembers what it was counted from
+// (base), and the first years of the countries still in it are kept for the passport page's order.
+function edited(prev, codes){
+  const hand = !prev || prev.src === 'tap';
+  const years = prev && prev.years ? new Map([...prev.years].filter(([c]) => codes.has(c))) : null;
+  return { codes, src: hand ? 'tap' : 'edited', years: years && years.size ? years : null, base: hand ? null : prev.src === 'edited' ? prev.base : prev.src };
+}
 
 // ---------- sharing ----------
 // A real result shares a link with its countries after the # (/kit.js); the example and empty results share the page.
@@ -771,13 +786,22 @@ function prepareShare(n, src, codes){
   edit.hidden = src === 'example';
   edit.textContent = src === 'tap' || src === 'edited' ? 'Edit countries' : 'Add or remove countries';
 }
+// The passport page (/passport/) takes the list, its first years and where it came from after the #. It opens in
+// this tab, so none of that reaches a server; the example and an empty result get no link.
+const passportHref = list => '/passport/#' + Kit.passportHash(list.codes, list.years, list.src, list.base);
+function preparePassport(run){
+  const real = !run.example && run.codes && run.codes.size > 0;
+  $('#passRow').hidden = !real;
+  if (real) $('#passLink').href = passportHref(run);
+}
 $('#share').addEventListener('click', () => Kit.share(share, { button: $('#share'), setStatus }));
 $('#edit').addEventListener('click', () => {
   const run = lastRun;
   if (!run || run.example || !run.codes) return;
   openPicker({ initial: run.codes, from: $('#result'), doneLabel: 'Update the map', onDone: codes => {
     if (sameSet(codes, run.codes)) return scrollToEl($('#result'));
-    renderPicked(codes, run.picked ? run.src : 'edited');
+    const e = edited(run, codes);
+    renderPicked(codes, e.src, e);
   } });
 });
 
@@ -804,7 +828,7 @@ function pickMine(){
     initial: MINE ? MINE.codes : [], from: $('#recv'), doneLabel: 'Compare',
     alt: { label: 'Count mine from photos or a Google Maps Timeline file instead', onClick: showPhotoRoute },
     onDone: codes => {
-      if (!MINE || !sameSet(codes, MINE.codes)) MINE = { codes, src: MINE && MINE.src !== 'tap' ? 'edited' : 'tap' };
+      if (!MINE || !sameSet(codes, MINE.codes)) MINE = edited(MINE, codes);
       showCompare();
     },
   });
@@ -829,6 +853,7 @@ async function showCompare(){
     text: `Both of us: ${cmp.both.length}. Only me: ${cmp.onlyMine.length}. Only you: ${cmp.onlyTheirs.length}. My map, to compare back:` });
   $('#cmpShare').textContent = Kit.canShare() ? 'Send it back' : 'Copy your link';
   $('#cmpLink').textContent = url.replace(/^https:\/\//, '');
+  $('#cmpPassport').href = passportHref(MINE);
   $('#cmp').hidden = false;
   scrollToEl($('#cmp'));
 }
@@ -839,7 +864,7 @@ $('#cmpSave').addEventListener('click', () => Kit.saveCanvas($('#cmpMap'), 'our-
 $('#cmpEdit').addEventListener('click', () => {
   if (!MINE) return;
   openPicker({ initial: MINE.codes, from: $('#cmp'), doneLabel: 'Compare', onDone: codes => {
-    if (!sameSet(codes, MINE.codes)) MINE = { codes, src: MINE.src === 'tap' ? 'tap' : 'edited' };
+    if (!sameSet(codes, MINE.codes)) MINE = edited(MINE, codes);
     showCompare();
   } });
 });
@@ -900,7 +925,7 @@ $('#save').addEventListener('click', () => {
 });
 $('#again').addEventListener('click', () => {
   $('#result').classList.remove('on', 'example'); setStatus(''); setProgress(null); share = null; $('#share').hidden = true;
-  $('#shareMore').hidden = true; $('#appline').hidden = true; $('#edit').hidden = true;
+  $('#shareMore').hidden = true; $('#appline').hidden = true; $('#edit').hidden = true; $('#passRow').hidden = true;
   $('#fileInput').value = ''; $('#dirInput').value = '';
   (drop.hidden ? $('#recv') : drop).scrollIntoView({ block: 'center' });
 });

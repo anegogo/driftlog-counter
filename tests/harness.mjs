@@ -11,7 +11,7 @@ const script = html.slice(html.indexOf('<script>\n') + 9, html.lastIndexOf('</sc
 export const kitSource = readFileSync(join(ROOT, 'kit.js'), 'utf8');
 
 // Anything the page touches on an element or a canvas context: accept every call, remember what is set.
-const stub = () => new Proxy(function () {}, {
+export const stub = () => new Proxy(function () {}, {
   get(t, k) {
     if (k in t) return t[k];
     if (k === 'classList') return { add() {}, remove() {}, toggle() {}, contains: () => false };
@@ -56,7 +56,7 @@ export function loadPage({ hash = '' } = {}) {
   context.window = context;
   vm.runInContext(kitSource, context, { filename: 'kit.js' });
   vm.runInContext(script + `
-;globalThis.__t = { handle, showExample, prepareShare, codesOf, openShared, renderPicked, showCompare,
+;globalThis.__t = { handle, showExample, prepareShare, codesOf, openShared, renderPicked, showCompare, edited,
   get lastRun(){ return lastRun; }, get FEATS(){ return FEATS; }, get RECV(){ return RECV; }, get share(){ return share; },
   get MINE(){ return MINE; }, set MINE(v){ MINE = v; }, get cmpShare(){ return cmpShare; } };`,
   context, { filename: 'index.html' });
