@@ -31,6 +31,7 @@
 <link rel="stylesheet" href="/fonts.css" />
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
   :root{
     --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#8F7765;
     --accent:#D6692E; --accent-d:#B9561F; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
@@ -97,6 +98,7 @@
       <button class="btn" id="save" type="button">Save image</button>
       <button class="btn" id="edit" type="button">Edit countries</button>
     </div>
+    <div id="vid"></div>
     <p class="note">194 = 193 UN members + Taiwan. Vatican City, Kosovo, Palestine, Western Sahara and territories such as Hong Kong have no stamp here.</p>
     <details class="list"><summary>Stamp order</summary><ol id="orderList"></ol></details>
     <p class="appline">In the app, stamps are added automatically from your photos and location. <a id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=web_passport&amp;mt=8" rel="noopener">Driftlog on the App Store</a></p>
@@ -108,7 +110,7 @@
       <div><dt>The stamps</dt><dd>One stamp per country, drawn for the Driftlog iPhone app: the same landmark drawings, frames and ink colours, and the same tilt each country gets in the app's passport. They are also on a <a href="https://driftlog-app.pages.dev/stamps/">194-stamp poster</a> that is free to use.</dd></div>
       <div><dt>What counts as a country</dt><dd>The 193 UN member states plus Taiwan, the same 194 the <a href="/">photo counter</a> counts. Vatican City, Kosovo, Palestine, Western Sahara and territories such as Hong Kong, Puerto Rico and Greenland have no stamp in this set. (The Driftlog app counts territories separately, so its number can be higher.)</dd></div>
       <div><dt>The order</dt><dd>Countries counted from your photos or a Google Maps Timeline file are stamped by the first year each one turns up. Photo dates only give a year, so within a year, and for countries without one, the order is by region (Europe, Asia, North America, South America, Africa, Oceania), then by name. Picked by hand, there are no years, so it is region, then name.</dd></div>
-      <div><dt>Privacy</dt><dd>The page is drawn in your browser. Your list of countries is not sent anywhere: the stamps come as four fixed image sheets that load in full whichever countries you pick, so even the requests say nothing about your list. There are no analytics and no cookies. A list brought over from the counter travels after the # in the address, which browsers never send to a server.</dd></div>
+      <div><dt>Privacy</dt><dd>The page is drawn in your browser. Your list of countries is not sent anywhere: the stamps come as four fixed image sheets that load in full whichever countries you pick, so even the requests say nothing about your list. <b>Save video</b> also loads the photo counter's border file, the same fixed file for everyone, and makes the clip on your device. There are no analytics and no cookies. A list brought over from the counter travels after the # in the address, which browsers never send to a server.</dd></div>
     </dl>
   </section>
 
@@ -118,11 +120,14 @@
 </div>
 
 <script src="/kit.js"></script>
+<script src="/video.js"></script>
 <script>
 'use strict';
 const Kit = window.DriftlogKit;   // countries, the picker, the stamp sheets and the page drawing: /kit.js
 const $ = s => document.querySelector(s);
 const statusEl = $('#status'), canvas = $('#page');
+// The same list as a 9:16 video of the world map filling in (/video.js). The borders load only when it is made.
+const video = window.DriftlogVideo.panel($('#vid'), { feats: Kit.loadFeats });
 const setStatus = t => { statusEl.textContent = t; };
 const PAGE_URL = 'https://driftlog-counter.pages.dev/passport/';
 const STORE_KEY = 'driftlog-passport';
@@ -198,6 +203,8 @@ async function make(scroll){
     : st.src === 'tap' ? `Picked by hand, so there are no dates: stamps go by region (${REGION_ORDER}), then by name.`
     : `No dates came with this list, so stamps go by region (${REGION_ORDER}), then by name.`;
   $('#orderList').innerHTML = order.map(c => `<li>${Kit.esc(Kit.nameOf(c))}${dated && st.years.get(c) ? ` · ${st.years.get(c)}` : ''}</li>`).join('');
+  $('#vid').hidden = !n;
+  video.set(n ? { codes: st.codes, years: st.years, src: st.src, base: st.base } : null);
   if (scroll) $('#out').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   // The page is drawn once the fonts (canvas text falls back to Georgia otherwise) and, with any stamps, the sheets are in.
   if (n) setStatus('Loading the stamps…');

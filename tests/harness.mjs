@@ -1,5 +1,6 @@
-// Loads the page's own scripts (/kit.js, then the inline <script> of index.html) into a VM with a stubbed DOM.
-// No browser and no dependencies. Used by run.mjs (reading files) and share.mjs (result links and comparing).
+// Loads the page's own scripts (/kit.js, /video.js, then the inline <script> of index.html) into a VM with a stubbed
+// DOM. No browser and no dependencies. Used by run.mjs (reading files), share.mjs (result links and comparing),
+// passport.mjs and video.mjs.
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,6 +10,7 @@ export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const script = html.slice(html.indexOf('<script>\n') + 9, html.lastIndexOf('</script>'));
 export const kitSource = readFileSync(join(ROOT, 'kit.js'), 'utf8');
+export const videoSource = readFileSync(join(ROOT, 'video.js'), 'utf8');
 
 // Anything the page touches on an element or a canvas context: accept every call, remember what is set.
 export const stub = () => new Proxy(function () {}, {
@@ -55,11 +57,13 @@ export function loadPage({ hash = '' } = {}) {
   });
   context.window = context;
   vm.runInContext(kitSource, context, { filename: 'kit.js' });
+  vm.runInContext(videoSource, context, { filename: 'video.js' });
   vm.runInContext(script + `
 ;globalThis.__t = { handle, showExample, prepareShare, codesOf, openShared, renderPicked, showCompare, edited,
   get lastRun(){ return lastRun; }, get FEATS(){ return FEATS; }, get RECV(){ return RECV; }, get share(){ return share; },
-  get MINE(){ return MINE; }, set MINE(v){ MINE = v; }, get cmpShare(){ return cmpShare; } };`,
+  get MINE(){ return MINE; }, set MINE(v){ MINE = v; }, get cmpShare(){ return cmpShare; },
+  get resultVideo(){ return resultVideo; }, get cmpVideo(){ return cmpVideo; } };`,
   context, { filename: 'index.html' });
   const text = sel => { const v = elements.has(sel) ? elements.get(sel).textContent : undefined; return typeof v === 'string' ? v : ''; };
-  return { T: context.__t, Kit: context.DriftlogKit, document, replaced, text, context };
+  return { T: context.__t, Kit: context.DriftlogKit, Video: context.DriftlogVideo, document, replaced, text, context };
 }

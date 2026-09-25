@@ -4,8 +4,8 @@
 
 Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-counter.pages.dev
 
-- No dependencies, no build step, no framework. One HTML file, one script (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing) and one 890 KB border file.
-- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its script, its fonts, the border file and a short demo video of the app. The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
+- No dependencies, no build step, no framework. One HTML file, two scripts (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing; `video.js`: the 9:16 video and the MP4 file it is saved in) and one 890 KB border file.
+- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its scripts, its fonts, the border file and a short demo video of the app. The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
 - Works in iPhone Safari: the iOS photo picker passes the location along while it shows “Location Is Included”.
 
 ## What it reads
@@ -37,6 +37,7 @@ python3 -m http.server 8000   # then open http://localhost:8000
 node tests/run.mjs            # runs the page's own script against tests/fixtures (Node 20+)
 node tests/share.mjs          # result links, the country table and comparing two lists
 node tests/passport.mjs       # the passport page: stamps, grid, captions, links and the page's own script
+node tests/video.mjs          # the video: timing, drawing, the MP4 writer (checked with ffmpeg when installed), routes
 ```
 
 The test also generates an old-style `Records.json` (with `timestampMs`) and 65 Timeline files just over one 8 MB slice, so a coordinate straddles the slice boundary at every possible offset.
@@ -74,6 +75,16 @@ https://driftlog-counter.pages.dev/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
 - **Saving:** the share sheet with the PNG where the browser has one, otherwise a download.
 - `tools/build_passport_og.py` draws `passport/og.png` from the sheets and the site's fonts.
 
+## The video
+
+**Save video**, under a result (yours, or your own list when you compare with someone's), and on the passport page, makes a 9:16 clip for Reels, TikTok or Stories: the world map filling in country by country while the count goes from 0 to N, then the page's address, large, for the last two seconds.
+
+- **1080 × 1920, 30 fps, 6–15 seconds** (longer with more countries), no sound. The order is the first year each country turns up in your files, otherwise region by region; the years only set the order and are never shown.
+- **Made on the device.** Where the browser has WebCodecs with an H.264 encoder, each frame is drawn on a canvas and encoded faster than real time, and `video.js` writes the MP4 itself (ftyp, moov, mdat, one video track; no library, about 100 lines). Otherwise MediaRecorder records the canvas as it animates, as MP4 where the browser can and WebM where it can't. With neither, you get the last frame as a 9:16 PNG. The panel says which one it used. WebCodecs needs a secure context (https, or localhost when testing).
+- **Where the text goes:** the map sits above the column of buttons TikTok and Instagram put down the right-hand side, and every line of text stays between y 260 and 1480 and within x 140–940, clear of their top tabs and bottom captions.
+- **The caption** follows the result image: "counted from my own photos" (or location history) only when the list was counted that way; a list picked by hand says "picked by hand". The last frame says `194 = 193 UN members + Taiwan`.
+- **Saving:** the share sheet with the video file where the browser has one (on an iPhone, that is where "Save Video" is), otherwise a download.
+
 ## Limits
 
 - Borders are accurate to roughly a kilometre; a photo taken right on a border can land on the wrong side.
@@ -87,7 +98,7 @@ Aki Takashima ([Shiori Studio](https://driftlog-app.pages.dev)), a solo develope
 
 ## License
 
-- Code (`index.html`, `kit.js`, `tools/`, `tests/`): MIT, see [LICENSE](LICENSE).
+- Code (`index.html`, `kit.js`, `video.js`, `passport/index.html`, `tools/`, `tests/`): MIT, see [LICENSE](LICENSE).
 - `countries50.json`: derived from [Natural Earth](https://www.naturalearthdata.com/) (public domain) via [world-atlas](https://github.com/topojson/world-atlas) (ISC), with ISO codes from [i18n-iso-countries](https://github.com/michaelwittig/node-i18n-iso-countries) (MIT). Their notices are in [NOTICE](NOTICE).
 - Fonts: [Inter](https://github.com/rsms/inter) and [Fraunces](https://github.com/undercasetype/Fraunces), SIL Open Font License 1.1 (`fonts/OFL-*.txt`).
 - `app-demo.mp4`, `app-demo-poster.jpg` and `og.png` show the Driftlog app and are not covered by the MIT license.

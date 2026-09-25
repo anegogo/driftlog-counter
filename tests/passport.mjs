@@ -3,7 +3,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import vm from 'node:vm';
-import { ROOT, loadPage, stub, kitSource } from './harness.mjs';
+import { ROOT, loadPage, stub, kitSource, videoSource } from './harness.mjs';
 
 const failures = [];
 const check = (cond, msg) => { if (!cond) failures.push(msg); };
@@ -127,7 +127,8 @@ function openPage({ hash = '', storage = new Map(), blocked = false } = {}){
   });
   context.window = context;
   vm.runInContext(kitSource, context, { filename: 'kit.js' });
-  vm.runInContext(script + '\n;globalThis.__p = { get state(){ return state; } };', context, { filename: 'passport/index.html' });
+  vm.runInContext(videoSource, context, { filename: 'video.js' });
+  vm.runInContext(script + '\n;globalThis.__p = { get state(){ return state; }, get video(){ return video; } };', context, { filename: 'passport/index.html' });
   const text = sel => { const v = elements.has(sel) ? elements.get(sel).textContent : undefined; return typeof v === 'string' ? v : ''; };
   const attr = sel => { const e = elements.get(sel); return e && e.__label; };
   return { P: context.__p, replaced, images, storage, text, elements };

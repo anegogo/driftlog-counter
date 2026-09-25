@@ -35,7 +35,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"How can I find out how many countries I have been to?","acceptedAnswer":{"@type":"Answer","text":"Photos taken with location services switched on store GPS coordinates inside the file. This page reads those coordinates, works out which country each one falls in, and counts the distinct countries for you. A Google Maps Timeline export or a Google Takeout folder works the same way."}},
-{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself and its script, its fonts, its map file and a short demo video of the app, which you can verify in the network tab. Once the page has loaded, it keeps working with the network switched off."}},
+{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself and its scripts, its fonts, its map file and a short demo video of the app, which you can verify in the network tab. Once the page has loaded, it keeps working with the network switched off."}},
 {"@type":"Question","name":"Which files work?","acceptedAnswer":{"@type":"Answer","text":"JPEG and HEIC photos, TIFF-based raw files such as DNG, iPhone and Android videos, the JSON files in a Google Takeout (Google Photos) export, and Google Maps Timeline exports (Timeline.json, Records.json and Semantic Location History). Photos taken with location turned off contain no coordinates and cannot be counted."}},
 {"@type":"Question","name":"Can I use it on my iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tap Choose photos, pick from your Photo Library and leave Location Is Included switched on, which is the default on recent iOS versions. For a whole library at once, the Driftlog app reads the location in your photo library directly. Android browsers remove the location from photos, so on Android use a Google Maps Timeline export instead."}},
 {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the page is free and needs no account. It is made by the developer of Driftlog, an iPhone app that keeps the same map up to date on its own."}}]}
@@ -204,6 +204,7 @@
       <button class="btn" id="cmpEdit" type="button">Change your countries</button>
     </div>
     <p class="passrow"><a class="btn" id="cmpPassport" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
+    <div id="cmpVid"></div>
     <p class="note linknote">Sending it back shares this image and your own link, <code id="cmpLink"></code>. Only your number is in its path; your country list sits after the #, which browsers never send to any server, including ours.</p>
     <p class="appline">Driftlog, an iPhone app, keeps a map like this up to date on its own. <a id="cmpApp" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share_recv&amp;mt=8" rel="noopener">See it on the App Store</a></p>
   </section>
@@ -222,6 +223,7 @@
       <button class="btn" id="again" type="button">Start over</button>
     </div>
     <p class="passrow" id="passRow" hidden><a class="btn" id="passLink" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
+    <div id="vidRow" hidden></div>
     <div class="sharemore" id="shareMore" hidden>
       <p class="note linknote">Your link: <code id="linkTail"></code><br>Only the number is in the link's path. Your country list sits after the #, which browsers never send to any server, including ours. Anyone you send the link to can read the list.</p>
       <p class="note"><a id="xpost" href="https://x.com/" target="_blank" rel="noopener">Post it on X</a> · this hands X the whole link, country list included.</p>
@@ -248,8 +250,9 @@
       <div><dt>Photos</dt><dd>A photo taken with location on carries GPS coordinates in its EXIF metadata. The page reads only the start of each JPEG, the metadata box of each HEIC, and the header of each video — never the picture itself — then tests each coordinate against country borders.</dd></div>
       <div><dt>Google Takeout and Timeline</dt><dd>Google Photos exports keep a location in a small JSON file next to each photo; Maps Timeline exports (the newer on-device <code>Timeline.json</code>, older <code>Records.json</code> and Semantic Location History) are read in slices, so large files work too. The Driftlog app itself does not import these files — this page is the only part of Driftlog that does.</dd></div>
       <div><dt>What counts as a country</dt><dd>The headline counts the 193 UN member states plus Taiwan. Other places, such as Vatican City and Kosovo or territories like Hong Kong, Puerto Rico and Greenland, are named underneath and filled in on the map, but not counted. (The Driftlog app counts territories separately, so its number can be higher.) Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side.</dd></div>
-      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML and script, fonts, map file and demo video, all fetched within a second or two of the page opening, so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML and scripts, fonts, map file and demo video, all fetched within a second or two of the page opening, so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
       <div><dt>Shared links</dt><dd>A shared result looks like <code>driftlog-counter.pages.dev/c/37/#v=1.…</code> Only the number is in the link's path, so Cloudflare, which hosts this page, sees that number when the link is opened or previewed. The country list sits after the #, which browsers never send to any server, including ours; the page reads it in the browser. Anyone who has the link can read the list, and <b>Post it on X</b> hands X the whole link. Picking countries by hand uses the same 194 as the photo count.</dd></div>
+      <div><dt>Video</dt><dd><b>Save video</b> makes a 9:16 clip of your map filling in, from 0 to your count, for Reels, TikTok or Stories: in order of first visit when your files have dates, region by region otherwise. It never shows the dates. The clip is drawn and encoded on your device, as an MP4 with WebCodecs where the browser has it, otherwise by recording the drawing (MediaRecorder); where neither works, you get the last frame as an image. It ends on this page's address.</dd></div>
     </dl>
   </section>
 
@@ -259,9 +262,11 @@
 </div>
 
 <script src="/kit.js"></script>
+<script src="/video.js"></script>
 <script>
 'use strict';
 const Kit = window.DriftlogKit;   // countries, result links, map and card drawing, sharing, the picker: /kit.js
+const Video = window.DriftlogVideo;   // the 9:16 clip of the map filling in, made on this device: /video.js
 const $ = s => document.querySelector(s);
 const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i');
 const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -690,15 +695,18 @@ function render(run){
   const src = example ? 'example' : fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos';
   const { codes, years: firstYears } = codesOf(agg);
   run.codes = codes; run.src = src; run.years = firstYears;
+  // The polygons the photos landed in, for the video to paint the same parts as the image (France without Guiana...).
+  run.hits = new Map([...agg].filter(([fi]) => FEATS[fi].k && FEATS[fi].a).map(([fi, a]) => [fi, a.hit]));
   Kit.drawResultCard($('#map'), FEATS, { hits: new Map([...agg.entries()].map(([fi, a]) => [fi, a.hit || new Set()])), n, src });
   prepareShare(n, src, codes);
   preparePassport(run);
+  prepareVideo(run);
   const res = $('#result');
   res.classList.toggle('example', !!example);
   res.classList.add('on');
   setStatus(example ? 'This is an example. Drop your own photos above to see yours.' : 'Done. Nothing left your browser.');
   // Opened from someone's link: counting your own photos goes straight on to the comparison.
-  if (RECV && !example){ MINE = { codes, src, years: firstYears }; showCompare(); }
+  if (RECV && !example){ MINE = { codes, src, years: firstYears, hits: run.hits }; showCompare(); }
   else scrollToEl(res);
 }
 const scrollToEl = el => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
@@ -728,6 +736,7 @@ async function renderPicked(codes, src, extra = {}){
   Kit.drawResultCard($('#map'), FEATS, { hits: Kit.hitsFromCodes(FEATS, codes), n, src });
   prepareShare(n, src, codes);
   preparePassport(lastRun);
+  prepareVideo(lastRun);
   const res = $('#result');
   res.classList.remove('example');
   res.classList.add('on');
@@ -794,6 +803,15 @@ function preparePassport(run){
   $('#passRow').hidden = !real;
   if (real) $('#passLink').href = passportHref(run);
 }
+// The 9:16 video: a real list only, as for the passport page. On the receiving end it is your own list, never theirs.
+const featsReady = () => loadCountries().then(() => FEATS);
+const resultVideo = Video.panel($('#vidRow'), { feats: featsReady });
+const cmpVideo = Video.panel($('#cmpVid'), { feats: featsReady });
+function prepareVideo(run){
+  const real = !run.example && run.codes && run.codes.size > 0;
+  $('#vidRow').hidden = !real;
+  resultVideo.set(real ? { codes: run.codes, years: run.years, src: run.src, base: run.base, hits: run.hits || null } : null);
+}
 $('#share').addEventListener('click', () => Kit.share(share, { button: $('#share'), setStatus }));
 $('#edit').addEventListener('click', () => {
   const run = lastRun;
@@ -854,6 +872,7 @@ async function showCompare(){
   $('#cmpShare').textContent = Kit.canShare() ? 'Send it back' : 'Copy your link';
   $('#cmpLink').textContent = url.replace(/^https:\/\//, '');
   $('#cmpPassport').href = passportHref(MINE);
+  cmpVideo.set(MINE);
   $('#cmp').hidden = false;
   scrollToEl($('#cmp'));
 }
@@ -926,6 +945,7 @@ $('#save').addEventListener('click', () => {
 $('#again').addEventListener('click', () => {
   $('#result').classList.remove('on', 'example'); setStatus(''); setProgress(null); share = null; $('#share').hidden = true;
   $('#shareMore').hidden = true; $('#appline').hidden = true; $('#edit').hidden = true; $('#passRow').hidden = true;
+  $('#vidRow').hidden = true; resultVideo.set(null);
   $('#fileInput').value = ''; $('#dirInput').value = '';
   (drop.hidden ? $('#recv') : drop).scrollIntoView({ block: 'center' });
 });
