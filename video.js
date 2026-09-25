@@ -142,11 +142,11 @@ function drawFrame(c, s, t){
   fit(c, x.note, 400, 32, 'Inter, sans-serif', maxW);
   text(x.note, 1340, '#7A6555', x.outro);
   fit(c, x.caption, 300, 30, 'Inter, sans-serif', maxW);
-  text(x.caption, 1392, '#7A6555', 1);
+  text(x.caption, 1386, '#7A6555', 1);
   c.font = '500 28px Inter, sans-serif';
-  text(x.address, 1452, '#8F7765', 1 - x.outro);
+  text(x.address, 1460, '#8F7765', 1 - x.outro);
   fit(c, x.address, 600, 64, 'Inter, sans-serif', maxW);
-  text(x.address, 1452, '#B9561F', x.outro);
+  text(x.address, 1460, '#B9561F', x.outro);
   c.globalAlpha = 1;
   return Object.assign(x, { drawn });
 }
