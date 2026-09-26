@@ -4,6 +4,8 @@
 
 Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-counter.pages.dev
 
+How it works, and what went wrong on the way: [Singapore does not exist at 1:110m](https://driftlog-app.pages.dev/notes/counting-countries-in-the-browser/).
+
 - No dependencies, no build step, no framework. One HTML file, two scripts (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing; `video.js`: the 9:16 video and the MP4 file it is saved in) and one 890 KB border file.
 - No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its scripts, its fonts, the border file and a short demo video of the app (opened from a result link, the page fetches the demo only once it is scrolled into view, so the shared map loads first). The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
 - Works in iPhone Safari: the iOS photo picker passes the location along while it shows “Location Is Included”.
