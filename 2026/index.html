@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your 2026 in travel: this year's countries on one card</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png" />
+<link rel="apple-touch-icon" href="/img/icon-180.png" />
+<meta name="description" content="Pick the countries you went to in 2026, or let your photos count them, and get a 9:16 card to save or post: how many countries, which ones, month by month, and which were new to you. Free, no account. It runs in your browser and nothing is uploaded." />
+<link rel="canonical" href="https://counter.getdriftlog.com/2026/" />
+<link rel="alternate" hreflang="en" href="https://counter.getdriftlog.com/2026/" />
+<link rel="alternate" hreflang="ja" href="https://ja-counter.getdriftlog.com/2026/" />
+<link rel="alternate" hreflang="x-default" href="https://counter.getdriftlog.com/2026/" />
+<meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=en_2026_sb" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftlog" />
+<meta property="og:url" content="https://counter.getdriftlog.com/2026/" />
+<meta property="og:title" content="Where did 2026 take you?" />
+<meta property="og:description" content="This year's countries on one card: how many, which ones, and which were new. Pick them in a minute or count them from your photos. Nothing is uploaded." />
+<meta property="og:image" content="https://counter.getdriftlog.com/2026/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Where did 2026 take you? An example card: a world map with one year's countries filled in. getdriftlog.com/2026" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Where did 2026 take you?" />
+<meta name="twitter:description" content="This year's countries on one card: how many, which ones, and which were new. Pick them in a minute or count them from your photos. Nothing is uploaded." />
+<meta name="twitter:image" content="https://counter.getdriftlog.com/2026/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Driftlog: your 2026 in travel",
+"url":"https://counter.getdriftlog.com/2026/","applicationCategory":"TravelApplication",
+"operatingSystem":"Any (runs in the browser)",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"description":"Makes a 9:16 image of one year of travel: the countries visited in 2026, the months each one turns up in, and which were new. Pick the countries by hand, or count them from the GPS coordinates and dates stored in your own photos or a Google Maps Timeline export. Runs entirely in the browser: no upload, no account.",
+"author":{"@type":"Person","name":"Akira Takashima"},
+"publisher":{"@type":"Organization","name":"Shiori Studio"}}
+</script>
+<link rel="stylesheet" href="/fonts.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  /* As on the counter: --muted2 and --accent-t for small text, --accent-d under white text (WCAG AA on cream2). */
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#7D6656;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
+    color:var(--ink);min-height:100vh;line-height:1.6}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{text-align:center;padding:56px 0 6px}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent-t);text-transform:uppercase}
+  .kicker a{color:inherit;text-decoration:none}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,56px);line-height:1.14;margin-top:18px;letter-spacing:-.015em;text-wrap:balance}
+  .lead{font-weight:300;color:var(--muted);margin:18px auto 0;max-width:580px;font-size:clamp(15px,2.1vw,18px)}
+  .switch{font-size:14px;color:var(--muted);margin-top:14px}
+  .switch a{color:var(--accent-t)}
+  .drop{margin:30px 0 0;background:var(--card);border:1.5px dashed var(--line);border-radius:20px;padding:30px 22px 28px;text-align:center;
+    transition:border-color .18s,background .18s}
+  .drop.over{border-color:var(--accent);background:var(--tint)}
+  .ways{display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left}
+  .way{border:1px solid var(--line);border-radius:16px;padding:20px 18px;background:#fff;display:flex;flex-direction:column}
+  .way h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px}
+  .way p{color:var(--muted);font-size:14px;margin:8px 0 16px;flex:1}
+  .way .btns{justify-content:flex-start;margin-top:0}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 22px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;display:inline-block}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t);border-color:var(--accent-t)}
+  .btn:hover{border-color:var(--accent)}
+  .btn:focus-visible,.linkbtn:focus-visible,a:focus-visible,summary:focus-visible,h2:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-t);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:18px}
+  .note{font-size:12.5px;color:var(--muted2);margin:14px auto 0;max-width:580px}
+  .note a,.how a,.also a,#status a,.mobile-note a{color:var(--accent-t)}
+  .mobile-note{display:none;margin:16px auto 0;max-width:540px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left}
+  .is-mobile .mobile-note{display:block}
+  .is-mobile #pickDir{display:none}
+  #status{text-align:center;color:var(--muted);font-size:14px;margin:18px auto 0;min-height:22px;max-width:600px}
+  .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
+  .bar.on{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .out{margin-top:34px;text-align:center}
+  .out h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(26px,4.4vw,34px);text-wrap:balance}
+  .example-flag{margin-bottom:10px;font-size:12px;letter-spacing:.2em;font-weight:600;text-transform:uppercase;color:var(--accent-t)}
+  .order{color:var(--muted);font-size:14px;margin:10px auto 0;max-width:560px}
+  #card{display:block;width:min(100%,400px);height:auto;aspect-ratio:9/16;margin:22px auto 0;border-radius:16px;
+    background:#FAF6EF;border:1px solid var(--line);box-shadow:0 14px 36px rgba(50,32,20,.12)}
+  .tog{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;color:var(--muted);cursor:pointer}
+  .tog input{width:18px;height:18px;accent-color:var(--accent-d)}
+  .year-list{list-style:none;margin:22px auto 0;max-width:520px;text-align:left;font-size:14.5px;border-top:1px solid var(--line)}
+  .year-list li{display:flex;gap:10px;align-items:baseline;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .year-list b{font-weight:500}
+  .year-list .mo{color:var(--muted);margin-left:auto;text-align:right;font-variant-numeric:tabular-nums}
+  .year-list .new{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-t);border:1px solid var(--line);border-radius:999px;padding:1px 8px;white-space:nowrap}
+  .also{font-size:13.5px;color:var(--muted);margin:14px auto 0;max-width:560px}
+  .appline{text-align:center;font-size:14px;color:var(--muted);margin:30px auto 0;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .appline a{color:var(--accent-t);font-weight:500}
+  .how{margin:48px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
+  .how h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
+  .how dl{display:grid;gap:14px}
+  .how dt{color:var(--ink);font-weight:500}
+  .how dd{margin-top:2px}
+  footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  @media (max-width:600px){ .ways{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion: reduce){ .bar i{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker"><a href="/">Driftlog</a></div>
+    <h1>Where did 2026 take you?</h1>
+    <p class="lead">This year's countries on one 9:16 card to save or post: how many, which ones, and which were new to you. Pick them yourself or let your photos count them. It all runs in your browser; nothing is uploaded.</p>
+    <p class="switch">Stayed in the States this year? <a href="/us/2026/">Count states instead</a>.</p>
+  </header>
+
+  <section class="drop" id="drop" aria-label="Make your card">
+    <div class="ways">
+      <div class="way">
+        <h2>Pick them</h2>
+        <p>Tap the countries you went to in 2026. It takes a minute and works on any phone.</p>
+        <div class="btns"><button class="btn primary" id="pickBtn" type="button">Pick this year's countries</button></div>
+      </div>
+      <div class="way">
+        <h2>Count them from photos</h2>
+        <p>Add photos or a Google Maps Timeline export and the page finds 2026 in them, month by month. Add older years as well and it can tell which countries were new.</p>
+        <div class="btns">
+          <button class="btn" id="pickFiles" type="button">Choose photos</button>
+          <button class="btn" id="pickDir" type="button">Choose a folder</button>
+        </div>
+      </div>
+    </div>
+    <button class="linkbtn" id="exampleBtn" type="button">See an example</button>
+    <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
+    <input type="file" id="dirInput" hidden webkitdirectory multiple />
+    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well, and each batch adds to the count (<b>Add more photos</b> under the card). Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://getdriftlog.com/google-maps-timeline-countries/">how to export it</a>).</p>
+    <p class="note">On a computer you can also drop photos or a whole folder on this box. Nothing is uploaded: files are read inside your browser. Check the network tab, or switch off Wi-Fi once the page has loaded. It keeps working.</p>
+  </section>
+  <section id="picker" hidden aria-label="Pick countries"></section>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="bar" id="bar"><i></i></div>
+
+  <section class="out" id="out" hidden aria-label="Your 2026 card">
+    <div class="example-flag" id="exFlag" hidden>Example — not your photos</div>
+    <h2 id="outTitle" tabindex="-1">Your 2026</h2>
+    <p class="order" id="outNote"></p>
+    <canvas id="card" width="1080" height="1920" role="img" aria-label="Your 2026 card"></canvas>
+    <div><label class="tog" id="newRow" hidden><input type="checkbox" id="showNew" checked /> Say which countries were new</label></div>
+    <div class="btns">
+      <button class="btn primary" id="share" type="button">Share</button>
+      <button class="btn" id="save" type="button">Save image</button>
+      <button class="btn" id="edit" type="button">Edit this year's countries</button>
+      <button class="btn" id="addMore" type="button" hidden>Add more photos</button>
+      <button class="btn" id="again" type="button">Start over</button>
+    </div>
+    <ul class="year-list" id="yearList"></ul>
+    <p class="also" id="also"></p>
+    <p class="note" id="stats"></p>
+    <p class="appline">Driftlog, an app for iPhone and Android, keeps this map up to date on its own, so next December there is nothing to remember. <a id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_2026&amp;mt=8" rel="noopener">See it on the App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.shioristudio.zubotabi" rel="noopener">Google Play</a></p>
+    <p class="also">Every year, not just this one? <a href="/">Count all your countries</a> or make a <a href="/passport/">passport page</a>.</p>
+  </section>
+
+  <section class="how" aria-label="How this page works">
+    <h3>How this works</h3>
+    <dl>
+      <div><dt>What goes on the card</dt><dd>The countries with a photo or a location point dated 2026, how many of them turn up in each month, and how many were new. No dates, no place names below the country, and no photo.</dd></div>
+      <div><dt>What makes a country new</dt><dd>Nothing you added from that country is dated before 2026. So the page reads every year in your files, not only this one, and when the files hold nothing older than 2026 it calls nothing new. A country you went to years ago without taking a located photo will look new; untick <b>Say which countries were new</b> and the card leaves that out.</dd></div>
+      <div><dt>Dates</dt><dd>A photo's date is the one its camera wrote, in whatever time zone the camera was set to. A video's is the creation time in its file, in UTC. A Timeline point takes the date of the stretch of the timeline it sits in. A trip over New Year can land a day on either side.</dd></div>
+      <div><dt>What counts as a country</dt><dd>The 193 UN member states plus Taiwan, the same 194 the <a href="/">photo counter</a> counts. Places such as Hong Kong, Puerto Rico and Vatican City are filled in on the map and named under the card, but not counted. Your own country counts too, if you took a located photo there this year; <b>Edit this year's countries</b> takes it out if you would rather count trips abroad only.</dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your device. The only requests the page makes are for its own HTML and scripts, fonts and map file, the same fixed files for everyone, so it keeps working with the network switched off once it has loaded. There are no analytics and no cookies. <b>Share</b> hands your share sheet the image and this page's address; the address carries nothing about your list.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    Made by <a href="https://getdriftlog.com" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="/">Count all your countries from photos</a> · <a href="/passport/">Passport page</a> · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT)
+  </footer>
+</div>
+
+<script src="/kit.js"></script>
+<script src="/scan.js"></script>
+<script src="/year.js"></script>
+<script>
+'use strict';
+const Kit = window.DriftlogKit;     // countries, the picker, the world map, sharing: /kit.js
+const Scan = window.DriftlogScan;   // a location and a date out of each file: /scan.js
+const Year = window.DriftlogYear;   // one year out of the count, and the card: /year.js
+const YEAR = 2026;                  // next year's page is this file with another number (and its own og.png)
+const $ = s => document.querySelector(s);
+const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i'), canvas = $('#card');
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_ANDROID) $('#mobileNote').innerHTML = 'On Android, the browser removes the location from photos you pick, so photos won’t count here. <b>Pick this year’s countries</b> by hand, choose a <b>Google Maps Timeline export</b> (Timeline.json), or open this page on a computer.';
+if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
+
+const PAGE_URL = `https://counter.getdriftlog.com/${YEAR}/`;
+const FONTS = ['600 66px Fraunces', '600 24px Inter', '300 44px Inter', '500 30px Inter', '400 24px Inter'];
+function setStatus(t, html){ if (html) statusEl.innerHTML = t; else statusEl.textContent = t; }
+function setProgress(f){ if (f == null){ barEl.classList.remove('on'); return; } barEl.classList.add('on'); barFill.style.width = Math.round(f * 100) + '%'; }
+const fmt = n => n.toLocaleString('en-US');
+const tick = () => new Promise(r => setTimeout(r, 0));
+const cs = n => `${n} ${n === 1 ? 'country' : 'countries'}`;
+const scrollToEl = el => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+
+// ---------- borders and fonts ----------
+let FEATS = null, locate = null;
+const loadFonts = () => document.fonts && document.fonts.load ? Promise.all(FONTS.map(f => document.fonts.load(f))).catch(() => {}) : Promise.resolve();
+async function ready(){
+  if (FEATS) return;
+  const req = Kit.loadFeats();
+  req.catch(() => {});
+  await loadFonts();               // the card is drawn on a canvas, which falls back to Georgia if Fraunces is not in yet
+  setStatus('Loading the world map…');
+  FEATS = await req.catch(() => { throw new Error('The map file did not load. Reload the page and try again.'); });
+  locate = Scan.locator(FEATS);
+  setStatus('');
+}
+// Fetched once the page is idle, so a card can still be made if the network goes away before the first tap.
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => { Kit.loadFeats().catch(() => {}); loadFonts(); });
+
+// ---------- what is on the page ----------
+// files: the count from files, every year of it: { tally, stats, keys, located }. It grows a batch at a time
+// ("Add more photos") and stays until Start over. edits: what was changed by hand in this year's list since,
+// { added, removed }, put back on top of every recount.
+// state: what the card shows: { view, src, base, example, showNew }.
+let files = null, edits = null, state = null, prepared = null, busy = false, drawing = 0;
+const fileKey = f => f.name + '\n' + f.size;
+
+// ---------- reading files ----------
+async function handle(list, { adding = false } = {}){
+  if (busy) return;
+  busy = true;
+  try {
+    await ready();
+    const prev = adding && files ? files : null;
+    const picked = [...list].filter(f => f && !f.name.startsWith('.'));
+    const all = prev ? picked.filter(f => !prev.keys.has(fileKey(f))) : picked;
+    if (prev && picked.length && !all.length){ setStatus(picked.length === 1 ? 'That file was counted already.' : `Those ${fmt(picked.length)} files were counted already.`); return; }
+    const media = all.filter(f => Scan.KIND(f.name) && Scan.KIND(f.name) !== 'json');
+    const jsons = all.filter(f => Scan.KIND(f.name) === 'json');
+    if (!media.length && !jsons.length){
+      setStatus(all.length ? `None of those ${fmt(all.length)} files are photos, videos or location exports I can read.` : 'Nothing to read in that selection.');
+      return;
+    }
+    const run = prev || { tally: Year.newTally(), stats: { media: 0, withLoc: 0, sidecars: 0, points: 0, unmatched: 0 }, keys: new Set(), located: new Map() };
+    if (!prev) edits = null;
+    const { tally, stats, located, keys } = run;
+    for (const f of all) keys.add(fileKey(f));
+    stats.media += media.length;
+    // File name -> countries it was already counted in: a Takeout sidecar is skipped only when its own photo
+    // (or another file with the same name) already put that country on the map.
+    const mark = (name, fi) => { let set = located.get(name); if (!set) located.set(name, set = new Set()); set.add(fi); };
+    let done = 0, loc = 0;
+    const total = media.length + jsons.length;
+    const worker = async queue => {
+      while (queue.length){
+        const f = queue.shift(), r = await Scan.readMedia(f);
+        if (r && r.point){
+          stats.withLoc++; loc++;
+          const code = locate(r.point[0], r.point[1]);
+          mark(f.name.toLowerCase(), code >= 0 ? Math.floor(code / 10000) : -1);
+          if (code >= 0) Year.tallyAdd(tally, code, r.year, r.month); else stats.unmatched++;
+        }
+        done++;
+        if (done % 20 === 0){ setStatus(`Reading ${fmt(done)} of ${fmt(total)} files · ${fmt(loc)} with a location`); setProgress(done / total); await tick(); }
+      }
+    };
+    const queue = media.slice();
+    await Promise.all([worker(queue), worker(queue), worker(queue), worker(queue)]);
+    for (const f of jsons){
+      if (f.size < 256 * 1024){
+        let o = null;
+        try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
+        const sc = Scan.sidecar(o);
+        if (sc){
+          const code = sc.point ? locate(sc.point[0], sc.point[1]) : -1, fi = code >= 0 ? Math.floor(code / 10000) : -1;
+          const seen = located.get(sc.title.toLowerCase());
+          if (sc.point && !(seen && seen.has(fi))){
+            stats.sidecars++;
+            mark(sc.title.toLowerCase(), fi);
+            if (code >= 0) Year.tallyAdd(tally, code, sc.year, sc.month); else stats.unmatched++;
+          }
+          done++;
+          continue;
+        }
+      }
+      await Scan.scanLocationFile(f, (p, year, month) => {
+        stats.points++;
+        const code = locate(p[0], p[1]);
+        if (code >= 0) Year.tallyAdd(tally, code, year, month); else stats.unmatched++;
+      }, frac => { setStatus(`Reading ${f.name} · ${Math.round(frac * 100)}% · ${fmt(stats.points)} location points`); setProgress(frac); });
+      done++;
+    }
+    setProgress(null);
+    files = run;
+    showCount();
+  } catch (e){
+    setProgress(null);
+    setStatus(e && e.message ? e.message : 'Something went wrong while reading those files.');
+  } finally { busy = false; }
+}
+
+// The year out of the count from files, with the edits made by hand since put back on top.
+function showCount(){
+  const { tally, stats } = files, any = stats.withLoc + stats.sidecars + stats.points;
+  let view = Year.yearView(tally, FEATS, YEAR);
+  const fromPhotos = stats.withLoc + stats.sidecars > 0, fromTimeline = stats.points > 0;
+  let src = fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos', base = null;
+  if (edits && (edits.added.size || edits.removed.size)){
+    const codes = new Set([...view.codes].filter(c => !edits.removed.has(c)));
+    edits.added.forEach(c => codes.add(c));
+    view = Year.editView(view, codes); base = src; src = 'edited';
+  }
+  if (!view.codes.size && !view.others.length){
+    state = null; $('#out').hidden = true;
+    if (!any){
+      if (IS_IOS) setStatus(`None of those ${fmt(stats.media)} photos had a location in them. In the photo picker, check that “Location Is Included” is on (switch it under Options), and that the camera had location turned on. Or pick this year's countries by hand.`);
+      else if (IS_ANDROID) setStatus(`None of those ${fmt(stats.media)} files had a location in them. Android removes it from photos picked in a browser. Pick this year's countries by hand, or use a Google Maps Timeline export.`);
+      else setStatus(`None of those ${fmt(stats.media)} files had a location saved in them. Photos taken with location turned off for the camera carry no coordinates.`);
+    }
+    else if (!tally.dated) setStatus(`Read ${fmt(any)} locations, but none of them carries a date, so none can be placed in ${YEAR}. Pick this year's countries by hand instead.`);
+    else setStatus(`Read ${fmt(any)} locations, but none is dated ${YEAR}: the latest year in those files is ${view.latest}. Add this year's photos as well (they add to the count), or pick this year's countries by hand.`);
+    return;
+  }
+  state = { view, src, base, example: false, showNew: state && !state.example ? state.showNew : true };
+  render(true);
+  setStatus('Done. Nothing left your browser.');
+}
+
+// ---------- picking by hand ----------
+const pickerEl = $('#picker');
+function closePicker(){ pickerEl.hidden = true; pickerEl.innerHTML = ''; }
+const focusOn = el => { if (el) el.focus({ preventScroll: true }); };
+// editing: a card is on screen and its list is being changed; otherwise the picker is the way in.
+function openPicker(editing){
+  const back = editing ? $('#out') : $('#drop');
+  Kit.picker(pickerEl, {
+    initial: editing && state ? state.view.codes : [],
+    title: `Which countries did you go to in ${YEAR}?`,
+    doneLabel: editing ? 'Update my card' : 'Make my card',
+    onCancel: () => { closePicker(); scrollToEl(back); },
+    onDone: async codes => {
+      closePicker();
+      try { await ready(); } catch (e){ setStatus(e.message); return; }
+      if (editing && files && state && !state.example){
+        // A count from files: keep what was changed, so the months and the earlier years stay and a later batch of
+        // photos does not undo it.
+        const counted = Year.yearView(files.tally, FEATS, YEAR).codes;
+        edits = { added: new Set([...codes].filter(c => !counted.has(c))), removed: new Set([...counted].filter(c => !codes.has(c))) };
+        showCount();
+      } else {
+        files = null; edits = null;
+        state = { view: Year.pickedView(YEAR, codes), src: 'tap', base: null, example: false, showNew: true };
+        render(true);
+        setStatus(codes.size ? 'Your card is ready.' : 'No countries picked. Pick some to fill in the card.');
+      }
+      focusOn($('#outTitle'));
+    },
+  });
+  pickerEl.hidden = false;
+  scrollToEl(pickerEl);
+}
+
+// ---------- the card ----------
+// The view as drawn: with "Say which countries were new" unticked, the card and the list leave that out.
+const shown = st => st.showNew || !st.view.newCodes ? st.view : Object.assign({}, st.view, { newCodes: null });
+function noteFor(st, v){
+  if (st.example) return 'A made-up year, to show what the card looks like.';
+  if (st.src === 'tap') return 'Picked by hand, so the card has no months and does not say which countries were new. Counting from photos adds both.';
+  const lead = st.src === 'edited' ? 'Counted from your files, then edited by hand. ' : '';
+  if (!st.view.newCodes) return `${lead}Nothing in your files is dated before ${YEAR}, so the card does not say which countries were new. Add older photos and it will.`;
+  const k = st.view.newCodes.size;
+  if (!st.showNew) return `${lead}The card leaves out which countries were new.`;
+  return lead + (k === 0 ? 'None of them is new: your files hold something earlier from every one.'
+    : k === 1 ? `One of them is new: nothing you added from it is dated before ${YEAR}.`
+    : `${k} of them are new: nothing you added from them is dated before ${YEAR}.`);
+}
+async function render(scroll){
+  const run = ++drawing, st = state, v = shown(st), n = v.codes.size;
+  prepared = null;
+  $('#out').hidden = false;
+  $('#exFlag').hidden = !st.example;
+  $('#outTitle').textContent = st.example ? `An example: ${cs(n)} in ${YEAR}` : `${cs(n)} in ${YEAR}`;
+  $('#outNote').textContent = noteFor(st, v);
+  $('#newRow').hidden = st.example || !(st.view.newCodes && st.view.newCodes.size);
+  $('#showNew').checked = st.showNew;
+  const months = Year.monthsKnown(v);
+  $('#yearList').innerHTML = Year.orderOf(v).map(code => {
+    const mask = v.months ? v.months.get(code) || 0 : 0;
+    return `<li><span aria-hidden="true">${Kit.flag(code)}</span><b>${Kit.esc(Kit.nameOf(code))}</b>${v.newCodes && v.newCodes.has(code) ? '<span class="new">new</span>' : ''}${months ? `<span class="mo">${mask ? Year.monthNames(mask).join(', ') : 'added by hand'}</span>` : ''}</li>`;
+  }).join('');
+  $('#also').textContent = v.others.length ? `Also in ${YEAR}: ${v.others.join(', ')}. On the map, but not in the count, which follows the 193 UN member states plus Taiwan.` : '';
+  const bits = [];
+  if (files && !st.example){
+    const s = files.stats;
+    if (s.media) bits.push(`${fmt(s.media)} photos and videos read, ${fmt(s.withLoc)} with a location`);
+    if (s.sidecars) bits.push(`${fmt(s.sidecars)} Google Photos location${s.sidecars === 1 ? '' : 's'}`);
+    if (s.points) bits.push(`${fmt(s.points)} Timeline point${s.points === 1 ? '' : 's'}`);
+    if (files.tally.undated) bits.push(`${fmt(files.tally.undated)} with no date, left out of every year`);
+    if (s.unmatched) bits.push(`${fmt(s.unmatched)} too far from land to place`);
+  }
+  $('#stats').textContent = st.example ? 'Example data: a made-up set of trips, not anyone\'s real photos.' : bits.join(' · ');
+  $('#edit').hidden = st.example;
+  $('#addMore').hidden = st.example || !files;
+  $('#appLink').href = Kit.storeUrl(`en_${YEAR}`);
+  if (scroll) scrollToEl($('#out'));
+  await loadFonts();
+  if (run !== drawing) return;                                   // a newer list came in while the fonts were loading
+  const text = Year.drawYearCard(canvas, FEATS, v, { src: st.example ? 'example' : st.src, base: st.base });
+  const names = Year.orderOf(v).map(Kit.nameOf).join(', ');
+  canvas.setAttribute('aria-label', `${text.title}: ${text.count}${text.sub ? ', ' + text.sub : ''}. ${names}${names ? '. ' : ''}${text.caption}.`);
+  prepared = Kit.prepareShare(canvas, st.example
+    ? { fileName: `example-${YEAR}-in-travel.png`, url: PAGE_URL, text: 'A free page that puts your year of travel on one card. Nothing gets uploaded.' }
+    : { fileName: `my-${YEAR}-in-travel.png`, url: PAGE_URL, text: Year.shareText(v) });
+  $('#share').textContent = canShareFiles() ? 'Share' : 'Save image';
+  $('#save').hidden = !canShareFiles();
+}
+
+// ---------- saving and sharing: the share sheet with the image where there is one, otherwise a download ----------
+const canShareFiles = () => !!(navigator.share && navigator.canShare && typeof File === 'function' && navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] }));
+function download(){
+  const name = state && state.example ? `example-${YEAR}-in-travel.png` : `my-${YEAR}-in-travel.png`;
+  const go = blob => {
+    const a = document.createElement('a');
+    a.download = name; a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+  };
+  if (prepared && prepared.file) go(prepared.file);
+  else canvas.toBlob(b => { if (b) go(b); }, 'image/png');
+}
+// iOS opens the share sheet only when share() runs straight from the tap, with the file already made (prepareShare).
+async function shareOrSave(){
+  const s = prepared;
+  if (!s) return;                                                // still drawing
+  if (s.file && navigator.share && navigator.canShare && navigator.canShare({ files: [s.file] })){
+    try { await navigator.share({ files: [s.file], text: `${s.text} ${s.url}` }); return; }
+    catch (e){ if (e && e.name === 'AbortError') return; }
+  }
+  download();
+}
+
+// ---------- example ----------
+// [lon, lat, year, month]: a made-up traveller. The card says "Example" and its foot says the data is not real.
+const EXAMPLE = [
+  [-9.14, 38.72, 2019, 5], [-3.70, 40.42, 2019, 5], [12.50, 41.90, 2019, 6], [139.77, 35.68, 2022, 10], [100.50, 13.75, 2023, 2],
+  [-73.99, 40.73, 2024, 9], [-99.13, 19.43, 2025, 1], [-123.12, 49.28, 2025, 8],
+  [-114.07, 51.05, 2026, 1], [-114.07, 51.05, 2026, 5], [-123.12, 49.28, 2026, 8], [-122.33, 47.61, 2026, 2],
+  [139.77, 35.68, 2026, 3], [135.77, 35.01, 2026, 4], [126.98, 37.57, 2026, 4], [11.25, 43.77, 2026, 7], [8.54, 47.37, 2026, 7],
+  [-21.94, 64.15, 2026, 9],
+];
+async function showExample(){
+  if (busy) return;
+  try {
+    await ready();
+    const tally = Year.newTally();
+    for (const [lon, lat, y, m] of EXAMPLE){ const code = locate(lon, lat); if (code >= 0) Year.tallyAdd(tally, code, y, m); }
+    files = null; edits = null;
+    state = { view: Year.yearView(tally, FEATS, YEAR), src: 'example', base: null, example: true, showNew: true };
+    closePicker();
+    render(true);
+    setStatus('This is an example. Pick your countries or add your photos above to make yours.');
+  } catch (e){ setStatus(e && e.message ? e.message : 'The example did not load.'); }
+}
+
+// ---------- wiring ----------
+const drop = $('#drop');
+// Files chosen or dropped while a count from files is on the page are added to it (see handle). The input is
+// emptied first, so choosing the same files again still reports back.
+const choose = input => () => { if (busy) return; input.value = ''; input.click(); };
+$('#pickFiles').addEventListener('click', choose($('#fileInput')));
+$('#addMore').addEventListener('click', choose($('#fileInput')));
+$('#pickDir').addEventListener('click', choose($('#dirInput')));
+$('#fileInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#dirInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#exampleBtn').addEventListener('click', showExample);
+$('#pickBtn').addEventListener('click', () => openPicker(!!(state && !state.example)));
+$('#edit').addEventListener('click', () => { if (state && !state.example) openPicker(true); });
+$('#share').addEventListener('click', shareOrSave);
+$('#save').addEventListener('click', download);
+$('#showNew').addEventListener('change', e => { if (state){ state.showNew = e.target.checked; render(false); } });
+$('#again').addEventListener('click', () => {
+  files = null; edits = null; state = null; prepared = null; drawing++;
+  $('#out').hidden = true; closePicker(); setStatus(''); setProgress(null);
+  $('#fileInput').value = ''; $('#dirInput').value = '';
+  drop.scrollIntoView({ block: 'center' });
+});
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+drop.addEventListener('dragleave', e => { if (!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const items = e.dataTransfer.items;
+  const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
+  if (entries.some(en => en.isDirectory)){
+    setStatus('Looking through folders…');
+    handle(await Scan.entriesToFiles(entries, n => setStatus(`Looking through folders… ${fmt(n)} files so far`)), { adding: true });
+  }
+  else handle(e.dataTransfer.files, { adding: true });
+});
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
+</script>
+</body>
+</html>
