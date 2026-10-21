@@ -38,7 +38,7 @@
 {"@type":"Question","name":"How can I find out how many countries I have been to?","acceptedAnswer":{"@type":"Answer","text":"Photos taken with location services switched on store GPS coordinates inside the file. This page reads those coordinates, works out which country each one falls in, and counts the distinct countries for you. A Google Maps Timeline export or a Google Takeout folder works the same way."}},
 {"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself and its scripts, its fonts, its map file and a short demo video of the app, which you can verify in the network tab. Once the page has loaded, it keeps working with the network switched off."}},
 {"@type":"Question","name":"Which files work?","acceptedAnswer":{"@type":"Answer","text":"JPEG and HEIC photos, TIFF-based raw files such as DNG, iPhone and Android videos, the JSON files in a Google Takeout (Google Photos) export, and Google Maps Timeline exports (Timeline.json, Records.json and Semantic Location History). Photos taken with location turned off contain no coordinates and cannot be counted."}},
-{"@type":"Question","name":"Can I use it on my iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tap Choose photos, pick from your Photo Library and leave Location Is Included switched on, which is the default on recent iOS versions. For a whole library at once, the Driftlog app reads the location in your photo library directly. Android browsers remove the location from photos, so on Android use a Google Maps Timeline export instead."}},
+{"@type":"Question","name":"Can I use it on my iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tap Choose photos, pick from your Photo Library and leave Location Is Included switched on, which is the default on recent iOS versions. To select many photos at once, put a finger on the first photo, slide it sideways and keep going down; each batch you pick adds to your map. For a whole library at once, the Driftlog app reads the location in your photo library directly. Android browsers remove the location from photos, so on Android use a Google Maps Timeline export instead."}},
 {"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the page is free and needs no account. It is made by the developer of Driftlog, an iPhone app that keeps the same map up to date on its own."}}]}
 </script>
 <link rel="stylesheet" href="/fonts.css" />
@@ -75,6 +75,27 @@
   .mobile-note{display:none;margin:16px auto 0;max-width:520px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left}
   .is-mobile .mobile-note{display:block}
   .is-mobile #pickDir{display:none}
+  /* iPhone and iPad: how to select many photos at once in the photo picker (drag across, then down; the grid scrolls
+     on at the bottom edge). The finger goes across the top row and down, and the photos it passes get the blue tick. */
+  .ios-tip{display:none;align-items:center;gap:14px;max-width:440px;margin:18px auto 0;text-align:left;font-size:13.5px;color:var(--muted)}
+  .is-ios .ios-tip{display:flex}
+  .ios-tip b{color:var(--ink);font-weight:600}
+  .ios-tip svg{flex:none;width:60px;height:60px}
+  .ios-tip .ph{fill:var(--line)}
+  .ios-tip .tr{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.45}
+  .ios-tip .k{opacity:0;animation:4s linear infinite}
+  .ios-tip .k circle{fill:#0A84FF;stroke:#fff;stroke-width:1}
+  .ios-tip .k path{fill:none;stroke:#fff;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+  .ios-tip .fg{fill:var(--accent);fill-opacity:.5;stroke:#fff;stroke-width:1.5;animation:tip-fg 4s linear infinite}
+  .ios-tip .k0{animation-name:tip-k0} .ios-tip .k1{animation-name:tip-k1} .ios-tip .k2{animation-name:tip-k2}
+  .ios-tip .k3{animation-name:tip-k3} .ios-tip .k4{animation-name:tip-k4}
+  @keyframes tip-fg{0%{transform:translate(0,0);opacity:0}8%{transform:translate(0,0);opacity:1}36%{transform:translate(46px,0)}66%,84%{transform:translate(46px,46px);opacity:1}92%,100%{transform:translate(46px,46px);opacity:0}}
+  @keyframes tip-k0{0%,8%{opacity:0}9%,93%{opacity:1}94%,100%{opacity:0}}
+  @keyframes tip-k1{0%,21%{opacity:0}22%,93%{opacity:1}94%,100%{opacity:0}}
+  @keyframes tip-k2{0%,34%{opacity:0}35%,93%{opacity:1}94%,100%{opacity:0}}
+  @keyframes tip-k3{0%,50%{opacity:0}51%,93%{opacity:1}94%,100%{opacity:0}}
+  @keyframes tip-k4{0%,64%{opacity:0}65%,93%{opacity:1}94%,100%{opacity:0}}
+  @media (prefers-reduced-motion: reduce){ .ios-tip .k{animation:none;opacity:1} .ios-tip .fg{animation:none;opacity:0} }
   #status{text-align:center;color:var(--muted);font-size:14px;margin-top:18px;min-height:22px}
   #status a{color:var(--accent-t)}
   .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
@@ -173,13 +194,32 @@
       <button class="btn primary" id="pickFiles" type="button">Choose photos</button>
       <button class="btn" id="pickDir" type="button">Choose a folder</button>
     </div>
+    <div class="ios-tip" id="iosTip">
+      <svg viewBox="0 0 70 70" aria-hidden="true">
+        <rect class="ph" x="2" y="2" width="20" height="20" rx="3"/><rect class="ph" x="25" y="2" width="20" height="20" rx="3"/><rect class="ph" x="48" y="2" width="20" height="20" rx="3"/>
+        <rect class="ph" x="2" y="25" width="20" height="20" rx="3"/><rect class="ph" x="25" y="25" width="20" height="20" rx="3"/><rect class="ph" x="48" y="25" width="20" height="20" rx="3"/>
+        <rect class="ph" x="2" y="48" width="20" height="20" rx="3"/><rect class="ph" x="25" y="48" width="20" height="20" rx="3"/><rect class="ph" x="48" y="48" width="20" height="20" rx="3"/>
+        <path class="tr" d="M12 12H58V58M54.5 54.5 58 58l3.5-3.5"/>
+        <g class="k k0"><circle cx="17" cy="17" r="4.2"/><path d="M15.1 17.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k1"><circle cx="40" cy="17" r="4.2"/><path d="M38.1 17.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k2"><circle cx="63" cy="17" r="4.2"/><path d="M61.1 17.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k3"><circle cx="17" cy="40" r="4.2"/><path d="M15.1 40.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k3"><circle cx="40" cy="40" r="4.2"/><path d="M38.1 40.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k3"><circle cx="63" cy="40" r="4.2"/><path d="M61.1 40.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k4"><circle cx="17" cy="63" r="4.2"/><path d="M15.1 63.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k4"><circle cx="40" cy="63" r="4.2"/><path d="M38.1 63.1l1.3 1.4 2.6-2.8"/></g>
+        <g class="k k4"><circle cx="63" cy="63" r="4.2"/><path d="M61.1 63.1l1.3 1.4 2.6-2.8"/></g>
+        <circle class="fg" cx="12" cy="12" r="6.5"/>
+      </svg>
+      <p><b>Select lots at once:</b> in the photo picker, put a finger on the first photo and slide it sideways, then keep going down. Hold it at the bottom edge and the picker scrolls on, selecting as it goes.</p>
+    </div>
     <div class="alts">
       <button class="linkbtn" id="pickBtn" type="button">No photos handy? Pick countries</button>
       <button class="linkbtn" id="exampleBtn" type="button">See an example</button>
     </div>
     <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
     <input type="file" id="dirInput" hidden webkitdirectory multiple />
-    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well; for your whole library, the <a href="#app">Driftlog app</a> reads it directly. Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://driftlog-app.pages.dev/google-maps-timeline-countries/">how to export it</a>).</p>
+    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well, and each batch adds to your map (<b>Add more photos</b> under it); for your whole library at once, the <a href="#app">Driftlog app</a> reads it directly. Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://driftlog-app.pages.dev/google-maps-timeline-countries/">how to export it</a>).</p>
     <p class="note">Nothing is uploaded. Files are read inside your browser — check the network tab, or switch off Wi-Fi once the page has loaded. It keeps working.</p>
   </section>
   <section id="picker" hidden aria-label="Pick countries"></section>
@@ -221,6 +261,7 @@
     <p class="stats" id="stats"></p>
     <div class="actions">
       <button class="btn primary" id="share" type="button" hidden>Share</button>
+      <button class="btn" id="addMore" type="button" hidden>Add more photos</button>
       <button class="btn" id="save" type="button">Save this image</button>
       <button class="btn" id="edit" type="button" hidden>Edit countries</button>
       <button class="btn" id="again" type="button">Start over</button>
@@ -276,6 +317,7 @@ const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navi
 const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const IS_ANDROID = /Android/i.test(navigator.userAgent);
 if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_IOS) document.body.classList.add('is-ios');
 if (IS_ANDROID) document.getElementById('mobileNote').innerHTML = 'On Android, the browser removes the location from photos you pick, so photos won’t count here. Choose a <b>Google Maps Timeline export</b> (Timeline.json) instead, or open this page on a computer.';
 if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
 
@@ -578,20 +620,29 @@ async function entriesToFiles(entries){
 }
 
 // ---------- the run ----------
+// adding: add the files to the count from files on screen, if there is one (the photo buttons, a drop and "Add more
+// photos" all ask for it), so a big library can go in a batch at a time. A file already read into that count (same
+// name and size) is skipped. After the example, a list picked by hand or Start over, the files start a new count.
 let lastRun = null, busy = false;
-async function handle(files){
+const fileKey = f => f.name + '\n' + f.size;
+async function handle(files, { adding = false } = {}){
   if (busy) return;
   busy = true;
   try {
     await loadCountries();
-    const all = [...files].filter(f => f && !f.name.startsWith('._') && !f.name.startsWith('.'));
+    const prev = adding && lastRun && lastRun.keys && !lastRun.example && lastRun.n != null ? lastRun : null;
+    const picked = [...files].filter(f => f && !f.name.startsWith('._') && !f.name.startsWith('.'));
+    const all = prev ? picked.filter(f => !prev.keys.has(fileKey(f))) : picked;
+    if (prev && picked.length && !all.length){ setStatus(picked.length === 1 ? 'That file was counted already.' : `Those ${fmt(picked.length)} files were counted already.`); return; }
     const media = all.filter(f => KIND(f.name) && KIND(f.name) !== 'json');
     const jsons = all.filter(f => KIND(f.name) === 'json');
     if (!media.length && !jsons.length){
       setStatus(all.length ? `None of those ${fmt(all.length)} files are photos, videos or location exports I can read.` : 'Nothing to read in that selection.');
       return;
     }
-    const agg = new Map();
+    const keys = prev ? prev.keys : new Set();
+    for (const f of all) keys.add(fileKey(f));
+    const agg = prev ? prev.agg : new Map();
     const add = (code, year, kind) => {
       const fi = Math.floor(code / 10000);
       let a = agg.get(fi);
@@ -600,12 +651,14 @@ async function handle(files){
       a[kind]++;
       if (year){ if (a.y0 === null || year < a.y0) a.y0 = year; if (a.y1 === null || year > a.y1) a.y1 = year; }
     };
-    const stats = { media: media.length, withLoc: 0, sidecars: 0, points: 0, unmatched: 0, timelineFiles: 0 };
+    const stats = prev ? prev.stats : { media: 0, withLoc: 0, sidecars: 0, points: 0, unmatched: 0, timelineFiles: 0 };
+    stats.media += media.length;
+    const found0 = stats.withLoc + stats.sidecars + stats.points;
     // File name -> countries it was already counted in. A Takeout sidecar is skipped only when its own photo
     // (or another file with the same name) already put that country on the map.
-    const located = new Map();
+    const located = prev ? prev.located : new Map();
     const mark = (name, fi) => { let set = located.get(name); if (!set) located.set(name, set = new Set()); set.add(fi); };
-    let done = 0;
+    let done = 0, loc = 0;
     const total = media.length + jsons.length;
     const worker = async queue => {
       while (queue.length){
@@ -619,13 +672,13 @@ async function handle(files){
           else if (kind === 'video') r = await readVideo(f);
         } catch (e){ r = null; }
         if (r && r.point){
-          stats.withLoc++;
+          stats.withLoc++; loc++;
           const code = countryIndex(r.point[0], r.point[1]);
           mark(f.name.toLowerCase(), code >= 0 ? Math.floor(code / 10000) : -1);
           if (code >= 0) add(code, r.year, 'photos'); else stats.unmatched++;
         }
         done++;
-        if (done % 20 === 0){ setStatus(`Reading ${fmt(done)} of ${fmt(total)} files · ${fmt(stats.withLoc)} with a location`); setProgress(done / total); await tick(); }
+        if (done % 20 === 0){ setStatus(`Reading ${fmt(done)} of ${fmt(total)} files · ${fmt(loc)} with a location`); setProgress(done / total); await tick(); }
       }
     };
     const queue = media.slice();
@@ -659,8 +712,16 @@ async function handle(files){
       done++;
     }
     setProgress(null);
-    lastRun = { agg, stats, example: false };
+    lastRun = { agg, stats, keys, located, example: false };
     render(lastRun);
+    // Added to a count: say what the new files changed (on the receiving end, the comparison says it instead).
+    if (prev && !RECV){
+      const got = stats.withLoc + stats.sidecars + stats.points - found0, n = lastRun.n, fs = total === 1 ? 'file' : 'files';
+      setStatus(!got ? (total === 1 ? 'That file had no location, so the map is as it was.' : `None of those ${fmt(total)} files had a location, so the map is as it was.`)
+        : n > prev.n ? `Added ${fmt(total)} ${fs}: ${prev.n} → ${n} countries. Nothing left your browser.`
+        : `Added ${fmt(total)} ${fs}, but no new countries: still ${n}.`);
+      scrollToEl(statusEl);
+    }
   } catch (e){
     setProgress(null);
     setStatus(e && e.message ? e.message : 'Something went wrong while reading those files.');
@@ -675,13 +736,14 @@ function render(run){
   if (!counted.length && !others.length){
     const any = stats.withLoc + stats.sidecars + stats.points;
     if (any) setStatus(`Read ${fmt(any)} locations, but none landed in a country I could match. Try a different batch.`);
-    else if (IS_IOS) setStatus(`None of those ${fmt(stats.media)} photos had a location in them. In the photo picker, check that “Location Is Included” is on (tap it to switch), and that the camera had location turned on — or <a href="#app">let the Driftlog app read your library</a>.`, true);
+    else if (IS_IOS) setStatus(`None of those ${fmt(stats.media)} photos had a location in them. In the photo picker, check that “Location Is Included” is on (switch it under Options), and that the camera had location turned on — or <a href="#app">let the Driftlog app read your library</a>.`, true);
     else if (IS_ANDROID) setStatus(`None of those ${fmt(stats.media)} files had a location in them. Android removes it from photos picked in a browser — use a Google Maps Timeline export here, or try on a computer.`);
     else setStatus(`None of those ${fmt(stats.media)} files had a location saved in them. Photos taken with location turned off for the camera carry no coordinates.`);
     return;
   }
   const uniq = new Set(counted.map(r => r.f.a || r.f.n));
   const n = uniq.size;
+  run.n = n;
   $('#num').textContent = n;
   $('#lbl').textContent = (n === 1 ? 'country' : 'countries') + (example ? ' in this example' : ', found in your files');
   const years = r => r.y0 ? (r.y0 === r.y1 ? `${r.y0}` : `${r.y0}–${r.y1}`) : '';
@@ -708,6 +770,7 @@ function render(run){
   prepareShare(n, src, codes);
   preparePassport(run);
   prepareVideo(run);
+  $('#addMore').hidden = !!example;
   const res = $('#result');
   res.classList.toggle('example', !!example);
   res.classList.add('on');
@@ -760,6 +823,7 @@ async function renderPicked(codes, src, extra = {}){
   prepareShare(n, src, codes);
   preparePassport(lastRun);
   prepareVideo(lastRun);
+  $('#addMore').hidden = true;
   const res = $('#result');
   res.classList.remove('example');
   res.classList.add('on');
@@ -949,10 +1013,14 @@ async function showExample(){
 
 // ---------- wiring ----------
 const drop = $('#drop');
-$('#pickFiles').addEventListener('click', () => $('#fileInput').click());
-$('#pickDir').addEventListener('click', () => $('#dirInput').click());
-$('#fileInput').addEventListener('change', e => handle(e.target.files));
-$('#dirInput').addEventListener('change', e => handle(e.target.files));
+// Files chosen or dropped while a count from files is on screen are added to it (see handle). The input is emptied
+// first, so choosing the same files again still reports back.
+const choose = input => () => { if (busy) return; input.value = ''; input.click(); };
+$('#pickFiles').addEventListener('click', choose($('#fileInput')));
+$('#addMore').addEventListener('click', choose($('#fileInput')));
+$('#pickDir').addEventListener('click', choose($('#dirInput')));
+$('#fileInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#dirInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
 $('#exampleBtn').addEventListener('click', showExample);
 $('#pickBtn').addEventListener('click', () => {
   if (RECV) return pickMine();
@@ -964,8 +1032,8 @@ drop.addEventListener('drop', async e => {
   e.preventDefault(); drop.classList.remove('over');
   const items = e.dataTransfer.items;
   const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
-  if (entries.some(en => en.isDirectory)){ setStatus('Looking through folders…'); handle(await entriesToFiles(entries)); }
-  else handle(e.dataTransfer.files);
+  if (entries.some(en => en.isDirectory)){ setStatus('Looking through folders…'); handle(await entriesToFiles(entries), { adding: true }); }
+  else handle(e.dataTransfer.files, { adding: true });
 });
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
@@ -976,6 +1044,7 @@ $('#save').addEventListener('click', () => {
   a.click();
 });
 $('#again').addEventListener('click', () => {
+  lastRun = null; $('#addMore').hidden = true;
   $('#result').classList.remove('on', 'example'); setStatus(''); setProgress(null); share = null; $('#share').hidden = true;
   $('#shareMore').hidden = true; $('#appline').hidden = true; $('#edit').hidden = true; $('#passRow').hidden = true;
   $('#vidRow').hidden = true; resultVideo.set(null);

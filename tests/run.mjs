@@ -64,6 +64,44 @@ for (let pad = 0; pad < PERIOD; pad++){
 }
 console.log(`slice-boundary files: ${straddled} of ${PERIOD} read exactly`);
 
+// 4. Adding to the count on screen (the photo buttons, a drop and "Add more photos" pass adding: true): batches add
+// up, a file already read is skipped, and after nothing, the example or a list picked by hand it starts afresh.
+{
+  const { T: P, text, document } = loadPage();
+  const trip = n => new File([readFileSync(join(ROOT, 'tests', 'fixtures', 'trip', n))], n);
+  const names = () => [...P.lastRun.agg].filter(([fi]) => P.FEATS[fi].k).map(([fi]) => P.FEATS[fi].n).sort();
+  const addBtn = () => document.querySelector('#addMore').hidden;
+  await P.handle([trip('rome.jpg'), trip('malta.jpg')], { adding: true });
+  check(same(names(), ['Italy', 'Malta']) && P.lastRun.n === 2 && addBtn() === false, `adding with nothing on screen starts a count: ${names().join(', ')}`);
+  await P.handle([trip('singapore.jpg'), trip('newyork.jpg'), trip('rome.jpg')], { adding: true });
+  check(same(names(), ['Italy', 'Malta', 'Singapore', 'United States']) && P.lastRun.n === 4, `a second batch adds: ${names().join(', ')}`);
+  check(P.lastRun.stats.media === 4 && P.lastRun.stats.withLoc === 4 && P.lastRun.agg.get([...P.lastRun.agg.keys()].find(fi => P.FEATS[fi].n === 'Italy')).photos === 1,
+    `the photo already read is skipped: ${JSON.stringify(P.lastRun.stats)}`);
+  check(text('#status') === 'Added 2 files: 2 → 4 countries. Nothing left your browser.', `status: ${text('#status')}`);
+  await P.handle([trip('singapore.jpg')], { adding: true });
+  check(P.lastRun.n === 4 && text('#status') === 'That file was counted already.', `the same file again: ${text('#status')}`);
+  await P.handle([trip('nogps.jpg')], { adding: true });
+  check(P.lastRun.n === 4 && P.lastRun.stats.media === 5 && text('#status') === 'That file had no location, so the map is as it was.', `a file with no location: ${text('#status')}`);
+  await P.handle([trip('vatican.jpg'), trip('hongkong.jpg')], { adding: true });
+  check(P.lastRun.n === 4 && text('#status') === 'Added 2 files, but no new countries: still 4.', `places outside the 194: ${text('#status')}`);
+  await P.handle([new File([readFileSync(join(ROOT, 'tests', 'fixtures', 'Timeline.json'))], 'Timeline.json')], { adding: true });
+  check(P.lastRun.n === 6 && P.lastRun.src === 'both' && P.lastRun.stats.points > 0 && names().includes('Mexico'), `a Timeline file adds too: ${P.lastRun.n}, ${P.lastRun.src}`);
+  await P.handle([trip('malta.jpg')]);
+  check(same(names(), ['Malta']), `without adding it starts afresh: ${names().join(', ')}`);
+  await P.showExample();
+  check(addBtn() === true, 'the example has no "Add more photos"');
+  await P.handle([trip('malta.jpg')], { adding: true });
+  check(same(names(), ['Malta']) && P.lastRun.n === 1, `after the example it starts afresh: ${names().join(', ')}`);
+  await P.renderPicked(new Set(['JP', 'FR']), 'tap');
+  check(addBtn() === true, 'a list picked by hand has no "Add more photos"');
+  await P.handle([trip('malta.jpg')], { adding: true });
+  check(same(names(), ['Malta']) && P.lastRun.n === 1, `after a list picked by hand it starts afresh: ${names().join(', ')}`);
+  const empty = loadPage();
+  await empty.T.handle([trip('nogps.jpg')], { adding: true });
+  await empty.T.handle([trip('malta.jpg')], { adding: true });
+  check(empty.T.lastRun.n === 1 && empty.text('#status') === 'Done. Nothing left your browser.', `after a batch with no locations it starts afresh: ${empty.text('#status')}`);
+}
+
 if (failures.length){ console.error('FAIL\n- ' + failures.join('\n- ')); process.exit(1); }
 console.log('PASS');
 process.exit(0);
