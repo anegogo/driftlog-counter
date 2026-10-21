@@ -2,12 +2,12 @@
 
 **How many countries have you been to?** A single static web page that reads the location stored in your photos, a Google Takeout folder or a Google Maps Timeline export, and counts the countries on a world map — entirely in your browser. Nothing is uploaded.
 
-Live: **https://driftlog-counter.pages.dev** · Japanese: https://zubotabi-counter.pages.dev
+Live: **https://counter.getdriftlog.com** · Japanese: https://ja-counter.getdriftlog.com
 
-How it works, and what went wrong on the way: [Singapore does not exist at 1:110m](https://driftlog-app.pages.dev/notes/counting-countries-in-the-browser/).
+How it works, and what went wrong on the way: [Singapore does not exist at 1:110m](https://getdriftlog.com/notes/counting-countries-in-the-browser/).
 
-- No dependencies, no build step, no framework. One HTML file, two scripts (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing; `video.js`: the 9:16 video and the MP4 file it is saved in) and one 890 KB border file.
-- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its scripts, its fonts, the border file and a short demo video of the app (opened from a result link, the page fetches the demo only once it is scrolled into view, so the shared map loads first). The border file is fetched as soon as the page is idle, so once it has loaded you can switch off the network and it keeps working.
+- No dependencies, no build step, no framework. One HTML file, three scripts (`kit.js`: the country list, result links, map drawing, sharing, the country picker and the passport page's drawing; `video.js`: the 9:16 video and the MP4 file it is saved in; `us/states.js`: the US states under a result) and two border files: the countries (890 KB) and the US states (`us/us.json`, 407 KB).
+- No analytics, no cookies, no third-party requests (the fonts are self-hosted). The only requests are for the page and its scripts, its fonts, the two border files, the site icon and a short demo video of the app (opened from a result link, the page fetches the demo only once it is scrolled into view, so the shared map loads first). Every visitor's page asks for both border files, whatever is in their files, so the requests say nothing about where anyone has been. They are fetched as soon as the page is idle, so once they have loaded you can switch off the network and it keeps working.
 - Works in iPhone Safari: the iOS photo picker passes the location along while it shows “Location Is Included”.
 
 ## What it reads
@@ -32,14 +32,36 @@ Folders can be dropped whole; the page walks them with `webkitGetAsEntry`.
 - **What counts:** the headline counts the 193 UN member states plus Taiwan. Other places (Vatican City, Kosovo, and territories such as Hong Kong, Puerto Rico or Greenland) are listed and filled in on the map, not counted. A few small outlying areas follow their parent in the border data (Christmas Island and the Cocos Islands with Australia, the UK Sovereign Base Areas with Cyprus).
 - **The map:** France's outline includes French Guiana and Réunion, so only parts within 1,500 km of an actual hit are painted — a trip to Paris does not paint South America.
 
+## The other pages
+
+The same site has a few more pages, built on the same scripts and readers. Like the counter, they read files in the browser and upload nothing.
+
+| Page | What it does | Files |
+|---|---|---|
+| `/us/` | Counts the 50 US states, with a map of the United States, the states' first years and a result link (`/us/#s=1.<list>`). Washington, D.C. is drawn and named but not counted. | `us/index.html`, `us/states.js`, `us/us.json` |
+| `/2026/` | **Your 2026 in travel**: a 9:16 card of one year's countries, month by month, with the ones new that year marked. | `2026/index.html`, `year.js`, `scan.js` |
+| `/us/2026/` | The same card for US states. | `us/2026/index.html` |
+| `/ja/`, `/ja/2026/` | In Japanese: Japan's 47 prefectures, and the year card for trips at home. | `ja/index.html`, `ja/pref.js`, `ja/jp.json` |
+| `/schengen/` | A Schengen 90/180-day calculator: stays typed in or offered from the dates of photos taken in Schengen countries. The list stays in the browser's `localStorage`. Not legal advice. | `schengen/index.html`, `schengen.js` |
+
+- `scan.js` is the counter's readers (JPEG, HEIC, RAW, video, Takeout sidecars, Timeline) with the month and the day kept as well as the year; `tests/pages/year.mjs` checks that it finds what the counter's own page finds.
+- **US state lines:** the US Census Bureau's 1:500,000 cartographic boundary file (2024), simplified to about 65 m along the lines between states and the borders with Canada and Mexico and about 2 km along the rest of the coast. On the counter, a point inside a state's outline is counted in the United States whatever the 1:50m country borders say (downtown El Paso, the American side of Niagara Falls).
+- **Prefectures:** GSI's Global Map Japan (地球地図日本), every island kept.
+- `us/us.json` and `ja/jp.json` are generated files; the scripts that build them are not in this repository yet.
+
 ## Run it
 
 ```sh
-python3 -m http.server 8000   # then open http://localhost:8000
-node tests/run.mjs            # runs the page's own script against tests/fixtures (Node 20+)
-node tests/share.mjs          # result links, the country table and comparing two lists
-node tests/passport.mjs       # the passport page: stamps, grid, captions, links and the page's own script
-node tests/video.mjs          # the video: timing, drawing, the MP4 writer (checked with ffmpeg when installed), routes
+python3 -m http.server 8000      # then open http://localhost:8000
+node tests/run.mjs               # runs the page's own script against tests/fixtures (Node 20+)
+node tests/share.mjs             # result links, the country table and comparing two lists
+node tests/passport.mjs          # the passport page: stamps, grid, captions, links and the page's own script
+node tests/video.mjs             # the video: timing, drawing, the MP4 writer (checked with ffmpeg when installed), routes
+node tests/pages/year.mjs        # /2026/: scan.js against the counter's readers, months, the card, the page
+node tests/pages/year-card.mjs   # the English year card, every canvas call compared with tests/pages/golden/
+node tests/pages/states.mjs      # US states: the border file, 170 landmarks, /us/, /us/2026/, the line under a result
+node tests/pages/year-pref.mjs   # /ja/2026/ against /ja/
+node tests/pages/schengen.mjs    # the 90/180 count, under four time zones
 ```
 
 The test also generates an old-style `Records.json` (with `timestampMs`) and 65 Timeline files just over one 8 MB slice, so a coordinate straddles the slice boundary at every possible offset.
@@ -58,7 +80,7 @@ python3 tools/build_countries.py    # writes countries50.json (byte-identical to
 A result can be shared as a link that carries the countries, and whoever opens it sees that map and can compare it with their own: pick countries by hand (search, or tap through the regions) or count them from photos.
 
 ```
-https://driftlog-counter.pages.dev/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
+https://counter.getdriftlog.com/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
 ```
 
 - **What the server sees.** Only the number is in the path (`/c/37/`), so the host, and any link preview, sees that number. The country list is after the `#`, which browsers never send to any server; the page reads it in the browser. Anyone who has the link can read the list, including the app it is sent with.
@@ -97,12 +119,14 @@ https://driftlog-counter.pages.dev/c/37/#v=1.hADHYCgAAgBAgEwGSAA…
 
 ## Who made this
 
-Aki Takashima ([Shiori Studio](https://driftlog-app.pages.dev)), a solo developer in Calgary. I make **Driftlog**, an iPhone app that keeps this map up to date on its own, and the page links to it. The page itself is free and will stay that way. Bugs and odd countries: open an issue, or email shiori.sutudio@gmail.com.
+Aki Takashima ([Shiori Studio](https://getdriftlog.com)), a solo developer in Calgary. I make **Driftlog**, an app for iPhone and Android that keeps this map up to date on its own, and the page links to it. The page itself is free and will stay that way. Bugs and odd countries: open an issue, or email shiori.sutudio@gmail.com.
 
 ## License
 
-- Code (`index.html`, `kit.js`, `video.js`, `passport/index.html`, `tools/`, `tests/`): MIT, see [LICENSE](LICENSE).
+- Code (the HTML pages, `kit.js`, `video.js`, `scan.js`, `year.js`, `schengen.js`, `us/states.js`, `ja/pref.js`, `tools/`, `tests/`): MIT, see [LICENSE](LICENSE).
 - `countries50.json`: derived from [Natural Earth](https://www.naturalearthdata.com/) (public domain) via [world-atlas](https://github.com/topojson/world-atlas) (ISC), with ISO codes from [i18n-iso-countries](https://github.com/michaelwittig/node-i18n-iso-countries) (MIT). Their notices are in [NOTICE](NOTICE).
+- `us/us.json`: derived from the [US Census Bureau's cartographic boundary files](https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html) (public domain).
+- `ja/jp.json`: 地球地図日本（国土地理院）を加工して作成 — derived from GSI's [Global Map Japan](https://www.gsi.go.jp/kankyochiri/gm_jpn.html). See [NOTICE](NOTICE).
 - Fonts: [Inter](https://github.com/rsms/inter) and [Fraunces](https://github.com/undercasetype/Fraunces), SIL Open Font License 1.1 (`fonts/OFL-*.txt`).
-- `app-demo.mp4`, `app-demo-poster.jpg` and `og.png` show the Driftlog app and are not covered by the MIT license.
-- `stamps/` and `passport/og.png`: the Driftlog app's stamp drawings, not covered by the MIT license. They are the stamps of the [194-stamp poster](https://driftlog-app.pages.dev/stamps/) (apart from the three plain ones above), which is free to use and to republish, credit optional.
+- `app-demo.mp4`, `app-demo-poster.jpg`, `ja/jp-demo.mp4`, `ja/jp-demo-poster.jpg`, `img/` and `favicon.ico` show the Driftlog app or its icon, and the link-preview images (`og.png`, `og-ja.png`, `us/og.png`, `2026/og.png`, `us/2026/og.png`, `ja/2026/og.png`) are the site's own; none of these is covered by the MIT license.
+- `stamps/` and `passport/og.png`: the Driftlog app's stamp drawings, not covered by the MIT license. They are the stamps of the [194-stamp poster](https://getdriftlog.com/stamps/) (apart from the three plain ones above), which is free to use and to republish, credit optional.

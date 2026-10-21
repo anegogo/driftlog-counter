@@ -1,4 +1,6 @@
-Third-party notices for countries50.json
+Third-party notices for countries50.json, us/us.json and ja/jp.json
+
+== countries50.json ==
 
 Borders: Natural Earth (https://www.naturalearthdata.com/), public domain.
 
@@ -31,3 +33,16 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
+== us/us.json ==
+
+State lines: US Census Bureau, Cartographic Boundary Files, 1:500,000, 2024
+(https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html).
+Works of the US federal government, public domain. Simplified for this site.
+
+
+== ja/jp.json ==
+
+出典: 地球地図日本（国土地理院） https://www.gsi.go.jp/kankyochiri/gm_jpn.html
+地球地図日本（国土地理院）を加工して作成。Prefecture outlines derived from GSI's Global Map Japan,
+simplified for this site, every island kept.
