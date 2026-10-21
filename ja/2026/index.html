@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2026年の旅・国内旅行 — 今年行った都道府県を1枚のカードに</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png" />
+<link rel="apple-touch-icon" href="/img/icon-180.png" />
+<meta name="description" content="2026年に国内旅行で行った都道府県を選ぶか、写真から数えると、保存や投稿に使える縦長（9:16）のカードになります。いくつ行ったか、どこへ行ったか、月ごとの数、初めての都道府県。海外旅行は国のカードに分かれています。無料で、会員登録もありません。処理はすべてブラウザの中で、アップロードはしません。" />
+<link rel="canonical" href="https://counter.getdriftlog.com/ja/2026/" />
+<meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=ja_pref_2026_sb" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ずぼ旅" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:url" content="https://counter.getdriftlog.com/ja/2026/" />
+<meta property="og:title" content="2026年、どの県へ行った？" />
+<meta property="og:description" content="今年の国内旅行を1枚のカードに。いくつ行ったか、どこへ行ったか、初めての県はどこか。1分で選ぶか、写真から数えます。アップロードはしません。" />
+<meta property="og:image" content="https://counter.getdriftlog.com/ja/2026/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="2026年、どの県へ行った？ 見本のカード：1年分の国内旅行の都道府県を塗った日本地図（見本のデータ）。counter.getdriftlog.com/ja/2026" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="2026年、どの県へ行った？" />
+<meta name="twitter:description" content="今年の国内旅行を1枚のカードに。いくつ行ったか、どこへ行ったか、初めての県はどこか。1分で選ぶか、写真から数えます。アップロードはしません。" />
+<meta name="twitter:image" content="https://counter.getdriftlog.com/ja/2026/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"2026年の旅・国内旅行（ずぼ旅）",
+"url":"https://counter.getdriftlog.com/ja/2026/","applicationCategory":"TravelApplication",
+"operatingSystem":"ブラウザで動作","inLanguage":"ja",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},
+"description":"1年分の国内旅行を縦長（9:16）の画像にします。2026年に行った都道府県、月ごとの数、初めての都道府県。都道府県は手で選ぶか、自分の写真に入っているGPSの座標と日付、Googleマップのタイムラインの書き出しから数えます。処理はすべてブラウザの中で完結し、アップロードも会員登録も不要です。",
+"author":{"@type":"Person","name":"高島彬"},
+"publisher":{"@type":"Organization","name":"Shiori Studio"}}
+</script>
+<link rel="stylesheet" href="/fonts.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  /* 英語版 /2026/ と同じ。書体と見出しだけ日本語カウンターに合わせてある（counter-tools/build_2026_ja.py が作る）。 */
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#7D6656;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic Medium","Meiryo",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
+    color:var(--ink);min-height:100vh;line-height:1.75}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{text-align:center;padding:56px 0 6px}
+  .kicker{font-size:13px;letter-spacing:.3em;font-weight:600;color:var(--accent-t)}
+  .kicker a{color:inherit;text-decoration:none}
+  h1{font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-weight:600;font-size:clamp(31px,5.6vw,54px);line-height:1.3;margin-top:20px;letter-spacing:.01em}
+  .lead{font-weight:300;color:var(--muted);margin:18px auto 0;max-width:580px;font-size:clamp(15px,2.1vw,18px)}
+  .drop{margin:30px 0 0;background:var(--card);border:1.5px dashed var(--line);border-radius:20px;padding:30px 22px 28px;text-align:center;
+    transition:border-color .18s,background .18s}
+  .drop.over{border-color:var(--accent);background:var(--tint)}
+  .ways{display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left}
+  .way{border:1px solid var(--line);border-radius:16px;padding:20px 18px;background:#fff;display:flex;flex-direction:column}
+  .way h2{font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-weight:600;font-size:21px}
+  .way p{color:var(--muted);font-size:14px;margin:8px 0 16px;flex:1}
+  .way .btns{justify-content:flex-start;margin-top:0}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 22px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;display:inline-block}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t);border-color:var(--accent-t)}
+  .btn:hover{border-color:var(--accent)}
+  .btn:focus-visible,.linkbtn:focus-visible,a:focus-visible,summary:focus-visible,h2:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-t);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:18px}
+  .note{font-size:12.5px;color:var(--muted2);margin:14px auto 0;max-width:580px}
+  .note a,.how a,.also a,#status a,.mobile-note a{color:var(--accent-t)}
+  .mobile-note{display:none;margin:16px auto 0;max-width:540px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left}
+  .is-mobile .mobile-note{display:block}
+  .is-mobile #pickDir{display:none}
+  #status{text-align:center;color:var(--muted);font-size:14px;margin:18px auto 0;min-height:22px;max-width:600px}
+  .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
+  .bar.on{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .out{margin-top:34px;text-align:center}
+  .out h2{font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-weight:600;font-size:clamp(26px,4.4vw,34px);text-wrap:balance}
+  .example-flag{margin-bottom:10px;font-size:13px;letter-spacing:.08em;font-weight:600;color:var(--accent-t)}
+  .order{color:var(--muted);font-size:14px;margin:10px auto 0;max-width:560px}
+  #card{display:block;width:min(100%,400px);height:auto;aspect-ratio:9/16;margin:22px auto 0;border-radius:16px;
+    background:#FAF6EF;border:1px solid var(--line);box-shadow:0 14px 36px rgba(50,32,20,.12)}
+  .tog{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;color:var(--muted);cursor:pointer}
+  .tog input{width:18px;height:18px;accent-color:var(--accent-d)}
+  .year-list{list-style:none;margin:22px auto 0;max-width:520px;text-align:left;font-size:14.5px;border-top:1px solid var(--line)}
+  .year-list li{display:flex;gap:10px;align-items:baseline;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .year-list b{font-weight:500}
+  .year-list .mo{color:var(--muted);margin-left:auto;text-align:right;font-variant-numeric:tabular-nums}
+  .year-list .new{font-size:11.5px;font-weight:600;letter-spacing:.04em;color:var(--accent-t);border:1px solid var(--line);border-radius:999px;padding:1px 8px;white-space:nowrap}
+  .also{font-size:13.5px;color:var(--muted);margin:14px auto 0;max-width:560px}
+  .appline{text-align:center;font-size:14px;color:var(--muted);margin:30px auto 0;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .appline a{color:var(--accent-t);font-weight:500}
+  .how{margin:48px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
+  .how h3{font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
+  .how dl{display:grid;gap:14px}
+  .how dt{color:var(--ink);font-weight:500}
+  .how dd{margin-top:2px}
+  footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  /* 海外旅行／国内旅行の切り替え。2枚は別のページ（別のサイト）にあり、ここから行き来する。 */
+  .kinds{display:inline-flex;gap:4px;margin-top:24px;padding:4px;background:var(--card);border:1px solid var(--line);border-radius:999px}
+  .kinds a{font-size:14px;font-weight:500;line-height:1.4;padding:8px 20px;border-radius:999px;color:var(--muted);text-decoration:none}
+  .kinds a.on{background:var(--accent-d);color:#fff}
+  .kinds a:not(.on):hover{color:var(--accent-t)}
+  @media (max-width:600px){ .ways{grid-template-columns:1fr} }
+  @media (prefers-reduced-motion: reduce){ .bar i{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker"><a href="/ja/">ずぼ旅</a></div>
+    <h1>2026年は、<br>どの県へ行った？</h1>
+    <p class="lead">今年の国内旅行を、保存や投稿にちょうどいい縦長（9:16）のカードにします。いくつ行ったか、どこへ行ったか、初めての県はどこか。自分で選んでも、写真から数えても作れます。すべてブラウザの中で動き、アップロードはしません。</p>
+    <nav class="kinds" aria-label="海外旅行と国内旅行"><a href="https://ja-counter.getdriftlog.com/2026/">海外旅行</a><a class="on" aria-current="page" href="/ja/2026/">国内旅行</a></nav>
+  </header>
+
+  <section class="drop" id="drop" aria-label="カードを作る">
+    <div class="ways">
+      <div class="way">
+        <h2>都道府県を選ぶ</h2>
+        <p>2026年に行った都道府県をタップするだけです。1分で終わり、どのスマホでも使えます。</p>
+        <div class="btns"><button class="btn primary" id="pickBtn" type="button">今年行った都道府県を選ぶ</button></div>
+      </div>
+      <div class="way">
+        <h2>写真から数える</h2>
+        <p>写真やGoogleマップのタイムラインの書き出しを入れると、2026年の国内の分を月ごとに拾います（海外の分は数えません）。昔の写真も一緒に入れると、どの都道府県が初めてだったかも分かります。</p>
+        <div class="btns">
+          <button class="btn" id="pickFiles" type="button">写真を選ぶ</button>
+          <button class="btn" id="pickDir" type="button">フォルダを選ぶ</button>
+        </div>
+      </div>
+    </div>
+    <button class="linkbtn" id="exampleBtn" type="button">見本を見る</button>
+    <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
+    <input type="file" id="dirInput" hidden webkitdirectory multiple />
+    <p class="mobile-note" id="mobileNote">iPhoneでは<b>「写真を選ぶ」</b>から写真ライブラリで選び、<b>「位置情報あり」</b>になっていることを確認してください（最初からこの状態です）。一度に数百枚ずつが目安で、選ぶたびに足されていきます（カードの下の<b>「写真を追加」</b>から）。Googleマップのタイムラインを書き出した場合は、<b>「写真を選ぶ」</b>→<b>「ファイルを選択」</b>で <code>location-history.json</code> を選んでください（<a href="https://ja.getdriftlog.com/guide/google-timeline/">書き出し方</a>）。</p>
+    <p class="note">パソコンでは、この枠に写真やフォルダをそのままドロップできます。アップロードはしません。ファイルはブラウザの中だけで読み取られます。ページを開いたあとWi-Fiを切っても、そのまま動きます。</p>
+  </section>
+  <section id="picker" hidden aria-label="都道府県を選ぶ"></section>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="bar" id="bar"><i></i></div>
+
+  <section class="out" id="out" hidden aria-label="2026年の国内旅行のカード">
+    <div class="example-flag" id="exFlag" hidden>見本です（あなたの写真ではありません）</div>
+    <h2 id="outTitle" tabindex="-1">2026年の国内旅行</h2>
+    <p class="order" id="outNote"></p>
+    <canvas id="card" width="1080" height="1920" role="img" aria-label="2026年の国内旅行のカード"></canvas>
+    <div><label class="tog" id="newRow" hidden><input type="checkbox" id="showNew" checked /> 初めての都道府県をカードに出す</label></div>
+    <div class="btns">
+      <button class="btn primary" id="share" type="button">共有</button>
+      <button class="btn" id="save" type="button">画像を保存</button>
+      <button class="btn" id="edit" type="button">今年の都道府県を直す</button>
+      <button class="btn" id="addMore" type="button" hidden>写真を追加</button>
+      <button class="btn" id="again" type="button">もう一度やる</button>
+    </div>
+    <ul class="year-list" id="yearList"></ul>
+    <p class="also" id="also"></p>
+    <p class="note" id="stats"></p>
+    <p class="appline">スマホアプリ「ずぼ旅」（iPhone・Android）は、この地図を勝手に最新にしておきます。来年の12月は、思い出さなくても済みます。<a id="appLink" href="https://apps.apple.com/jp/app/id6785328399?pt=129098692&amp;ct=ja_pref_2026&amp;mt=8" rel="noopener">App Storeで見る</a> · <a href="https://play.google.com/store/apps/details?id=com.shioristudio.zubotabi" rel="noopener">Google Play</a></p>
+    <p class="also">今年だけでなく全部の年なら、<a href="/ja/">行った都道府県をまとめて数える</a>。海外旅行は、<a href="https://ja-counter.getdriftlog.com/2026/">国のカード</a>で作れます。</p>
+  </section>
+
+  <section class="how" aria-label="このページのしくみ">
+    <h3>しくみ</h3>
+    <dl>
+      <div><dt>カードに出るもの</dt><dd>2026年の日付がついた写真や位置の記録があった都道府県、月ごとの都道府県の数、初めての都道府県の数です。日付そのもの、市区町村などの細かい地名、写真は出ません。</dd></div>
+      <div><dt>「初めて」の決め方</dt><dd>入れたファイルの中に、2026年より前の日付のものが1つも無い都道府県を「初めて」としています。そのため、このページは今年の分だけでなく、入れたファイルの全部の年を読みます。2026年より前のものが1つも入っていないときは、どの都道府県も「初めて」とは呼びません。何年も前に行ったけれど位置情報つきの写真が残っていない都道府県は、初めてに見えます。その場合は<b>初めての都道府県をカードに出す</b>のチェックを外すと、カードから消せます。</dd></div>
+      <div><dt>日付</dt><dd>写真の日付は、カメラが書き込んだもの（カメラに設定されていた時刻）です。動画はファイルの作成日時、Googleフォトの書き出しは撮影日時で、どちらも協定世界時（UTC）です。日本時間とは9時間ずれるので、月の初日の午前9時より前に撮った分は前の月に、元日なら前の年に入ります。タイムラインの地点は、その地点が入っている区間の日付になります。年末年始をまたぐ旅は、1日ぶん前後の年に入ることがあります。</dd></div>
+      <div><dt>どこまでを数えるか</dt><dd>47都道府県です。<a href="/ja/">行った都道府県を数えるページ</a>と同じ境界のデータ（国土地理院の地球地図日本）で判定しています。海岸や港、フェリーの上で撮った写真は、約13km以内ならいちばん近い都道府県に入れます。県境のすぐ近くで撮った写真は、となりの県と判定されることがあります。住んでいる都道府県も、今年そこで位置情報つきの写真を撮っていれば入ります。旅先だけにしたいときは、<b>今年の都道府県を直す</b>で外してください。<b>海外の位置は数えません。</b>海外旅行は、<a href="https://ja-counter.getdriftlog.com/2026/">海外旅行のカード</a>で国を数えます。</dd></div>
+      <div><dt>プライバシー</dt><dd>ファイルも座標も、あなたのパソコンやスマホの外には出ません。ページが読み込むのは自分自身のHTMLとスクリプト・フォント・日本地図のデータだけで、誰が開いても同じ決まったファイルです。読み込みが終わったあとは通信を切っても動きます。アクセス解析もCookieもありません。<b>共有</b>で共有シートに渡すのは、画像と、都道府県の数を書いた一文と、このページのアドレスだけです。アドレスには、あなたの一覧は何も入りません。</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <a href="https://ja.getdriftlog.com" rel="noopener">ずぼ旅</a>／<a href="/ja/">行った都道府県を数える</a>／<a href="https://ja-counter.getdriftlog.com/2026/">海外旅行のカード</a>／<a href="https://github.com/anegogo/driftlog-counter" rel="noopener">ソースコード（GitHub・MIT）</a><br>
+    日本地図: <a href="https://www.gsi.go.jp/kankyochiri/gm_jpn.html" rel="noopener">地球地図日本</a>（国土地理院）を加工して作成
+  </footer>
+</div>
+
+<script src="/kit.js"></script>
+<script src="/scan.js"></script>
+<script src="/year.js"></script>
+<script src="/ja/pref.js"></script>
+<script>
+'use strict';
+const Kit = window.DriftlogKit;     // 共有の画像づくりと色: /kit.js（英語サイトのもの。国の一覧と世界地図は使わない）
+const Scan = window.DriftlogScan;   // a location and a date out of each file: /scan.js
+const Year = window.DriftlogYear;   // one year out of the count, and the card: /year.js
+const Pref = window.DriftlogPref;   // 47都道府県: 判定・日本地図・選ぶ画面: /ja/pref.js
+Year.use({ lang: 'ja', places: Pref.places, words: Pref.words });   // 日本語で、国の代わりに都道府県を数える。題は「国内旅行」
+const YEAR = 2026;                  // next year's page is this file with another number (and its own og.png)
+const $ = s => document.querySelector(s);
+const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i'), canvas = $('#card');
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_ANDROID) $('#mobileNote').innerHTML = 'Androidでは、ブラウザで選んだ写真から位置情報が消されるため、写真では数えられません。<b>今年行った都道府県を選ぶ</b>か、<b>Googleマップのタイムラインの書き出し</b>（Timeline.json）を選ぶか、パソコンで開いてください。';
+if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
+
+const PAGE_URL = `https://counter.getdriftlog.com/ja/${YEAR}/`;
+const FONTS = ['600 62px Fraunces', '600 28px Inter', '500 26px Inter'];   // 数字とアドレスだけ。和文は端末の書体
+function setStatus(t, html){ if (html) statusEl.innerHTML = t; else statusEl.textContent = t; }
+function setProgress(f){ if (f == null){ barEl.classList.remove('on'); return; } barEl.classList.add('on'); barFill.style.width = Math.round(f * 100) + '%'; }
+const fmt = n => n.toLocaleString('ja-JP');
+const tick = () => new Promise(r => setTimeout(r, 0));
+const cs = n => `${n}都道府県`;
+const scrollToEl = el => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+
+// ---------- borders and fonts ----------
+let FEATS = null, locate = null;
+const loadFonts = () => document.fonts && document.fonts.load ? Promise.all(FONTS.map(f => document.fonts.load(f))).catch(() => {}) : Promise.resolve();
+async function ready(){
+  if (FEATS) return;
+  const req = Pref.load();
+  req.catch(() => {});
+  await loadFonts();               // the card is drawn on a canvas, which falls back to Georgia if Fraunces is not in yet
+  setStatus('日本地図を読み込んでいます…');
+  FEATS = await req.catch(() => { throw new Error('地図データを読み込めませんでした。ページを再読み込みして、もう一度お試しください。'); });
+  locate = Pref.locator(FEATS);   // 都道府県の番号 × 10000、日本の外や海上は -1
+  setStatus('');
+}
+// Fetched once the page is idle, so a card can still be made if the network goes away before the first tap.
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => { Pref.load().catch(() => {}); loadFonts(); });
+
+// ---------- what is on the page ----------
+// files: the count from files, every year of it: { tally, stats, keys, located }. It grows a batch at a time
+// ("Add more photos") and stays until Start over. edits: what was changed by hand in this year's list since,
+// { added, removed }, put back on top of every recount.
+// state: what the card shows: { view, src, base, example, showNew }.
+let files = null, edits = null, state = null, prepared = null, busy = false, drawing = 0;
+const fileKey = f => f.name + '\n' + f.size;
+
+// ---------- reading files ----------
+async function handle(list, { adding = false } = {}){
+  if (busy) return;
+  busy = true;
+  try {
+    await ready();
+    const prev = adding && files ? files : null;
+    const picked = [...list].filter(f => f && !f.name.startsWith('.'));
+    const all = prev ? picked.filter(f => !prev.keys.has(fileKey(f))) : picked;
+    if (prev && picked.length && !all.length){ setStatus(`選んだ${fmt(picked.length)}件は、もう数えてあります。`); return; }
+    const media = all.filter(f => Scan.KIND(f.name) && Scan.KIND(f.name) !== 'json');
+    const jsons = all.filter(f => Scan.KIND(f.name) === 'json');
+    if (!media.length && !jsons.length){
+      setStatus(all.length ? `選んだ${fmt(all.length)}個のファイルの中に、読める写真・動画・位置情報の書き出しがありませんでした。` : '読めるものがありませんでした。');
+      return;
+    }
+    const run = prev || { tally: Year.newTally(), stats: { media: 0, withLoc: 0, sidecars: 0, points: 0, unmatched: 0 }, keys: new Set(), located: new Map() };
+    if (!prev) edits = null;
+    const { tally, stats, located, keys } = run;
+    for (const f of all) keys.add(fileKey(f));
+    stats.media += media.length;
+    // File name -> countries it was already counted in: a Takeout sidecar is skipped only when its own photo
+    // (or another file with the same name) already put that country on the map.
+    const mark = (name, fi) => { let set = located.get(name); if (!set) located.set(name, set = new Set()); set.add(fi); };
+    let done = 0, loc = 0;
+    const total = media.length + jsons.length;
+    const worker = async queue => {
+      while (queue.length){
+        const f = queue.shift(), r = await Scan.readMedia(f);
+        if (r && r.point){
+          stats.withLoc++; loc++;
+          const code = locate(r.point[0], r.point[1]);
+          mark(f.name.toLowerCase(), code >= 0 ? Math.floor(code / 10000) : -1);
+          if (code >= 0) Year.tallyAdd(tally, code, r.year, r.month); else stats.unmatched++;
+        }
+        done++;
+        if (done % 20 === 0){ setStatus(`${fmt(total)}ファイル中 ${fmt(done)} を読み取り中 · 位置情報あり ${fmt(loc)}`); setProgress(done / total); await tick(); }
+      }
+    };
+    const queue = media.slice();
+    await Promise.all([worker(queue), worker(queue), worker(queue), worker(queue)]);
+    for (const f of jsons){
+      if (f.size < 256 * 1024){
+        let o = null;
+        try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
+        const sc = Scan.sidecar(o);
+        if (sc){
+          const code = sc.point ? locate(sc.point[0], sc.point[1]) : -1, fi = code >= 0 ? Math.floor(code / 10000) : -1;
+          const seen = located.get(sc.title.toLowerCase());
+          if (sc.point && !(seen && seen.has(fi))){
+            stats.sidecars++;
+            mark(sc.title.toLowerCase(), fi);
+            if (code >= 0) Year.tallyAdd(tally, code, sc.year, sc.month); else stats.unmatched++;
+          }
+          done++;
+          continue;
+        }
+      }
+      await Scan.scanLocationFile(f, (p, year, month) => {
+        stats.points++;
+        const code = locate(p[0], p[1]);
+        if (code >= 0) Year.tallyAdd(tally, code, year, month); else stats.unmatched++;
+      }, frac => { setStatus(`${f.name} を読み取り中 · ${Math.round(frac * 100)}% · 地点 ${fmt(stats.points)}`); setProgress(frac); });
+      done++;
+    }
+    setProgress(null);
+    files = run;
+    showCount();
+  } catch (e){
+    setProgress(null);
+    setStatus(e && e.message ? e.message : 'ファイルの読み取り中に問題が起きました。');
+  } finally { busy = false; }
+}
+
+// The year out of the count from files, with the edits made by hand since put back on top.
+function showCount(){
+  const { tally, stats } = files, any = stats.withLoc + stats.sidecars + stats.points;
+  let view = Year.yearView(tally, FEATS, YEAR);
+  const fromPhotos = stats.withLoc + stats.sidecars > 0, fromTimeline = stats.points > 0;
+  let src = fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos', base = null;
+  if (edits && (edits.added.size || edits.removed.size)){
+    const codes = new Set([...view.codes].filter(c => !edits.removed.has(c)));
+    edits.added.forEach(c => codes.add(c));
+    view = Year.editView(view, codes); base = src; src = 'edited';
+  }
+  if (!view.codes.size && !view.others.length){
+    state = null; $('#out').hidden = true;
+    if (!any){
+      if (IS_IOS) setStatus(`選んだ${fmt(stats.media)}枚の写真には位置情報が入っていませんでした。写真を選ぶ画面で「位置情報あり」になっているか（「オプション」で切り替えられます）、撮影時にカメラの位置情報がオンだったかを確かめてください。今年行った都道府県を手で選ぶこともできます。`);
+      else if (IS_ANDROID) setStatus(`選んだ${fmt(stats.media)}個のファイルには位置情報が入っていませんでした。Androidではブラウザで選んだ写真から位置情報が消されます。今年行った都道府県を手で選ぶか、Googleマップのタイムラインの書き出しを使ってください。`);
+      else setStatus(`選んだ${fmt(stats.media)}個のファイルには位置情報が保存されていませんでした。カメラの位置情報をオフにして撮った写真には座標が入りません。`);
+    }
+    else if (!tally.dated && !tally.undated) setStatus(`位置情報を${fmt(any)}件読み取りましたが、日本の都道府県に当てはまるものがありませんでした。海外旅行は<a href="https://ja-counter.getdriftlog.com/2026/">国のカード</a>で作れます。`, true);
+    else if (!tally.dated) setStatus(`国内の位置情報を読み取りましたが、どれにも日付がなく、${YEAR}年のものか分かりませんでした。今年行った都道府県を手で選んでください。`);
+    else setStatus(`国内の位置情報で${YEAR}年のものはありませんでした（いちばん新しいのは${view.latest}年）。今年の写真も追加するか（足されていきます）、今年行った都道府県を手で選んでください。`);
+    return;
+  }
+  state = { view, src, base, example: false, showNew: state && !state.example ? state.showNew : true };
+  render(true);
+  setStatus('完了しました。ブラウザの外には何も出ていません。');
+}
+
+// ---------- picking by hand ----------
+const pickerEl = $('#picker');
+function closePicker(){ pickerEl.hidden = true; pickerEl.innerHTML = ''; }
+const focusOn = el => { if (el) el.focus({ preventScroll: true }); };
+// editing: a card is on screen and its list is being changed; otherwise the picker is the way in.
+function openPicker(editing){
+  const back = editing ? $('#out') : $('#drop');
+  Pref.picker(pickerEl, {
+    initial: editing && state ? state.view.codes : [],
+    title: `${YEAR}年に行った都道府県は？`,
+    doneLabel: editing ? 'カードを更新' : 'カードを作る',
+    onCancel: () => { closePicker(); scrollToEl(back); },
+    onDone: async codes => {
+      closePicker();
+      try { await ready(); } catch (e){ setStatus(e.message); return; }
+      if (editing && files && state && !state.example){
+        // A count from files: keep what was changed, so the months and the earlier years stay and a later batch of
+        // photos does not undo it.
+        const counted = Year.yearView(files.tally, FEATS, YEAR).codes;
+        edits = { added: new Set([...codes].filter(c => !counted.has(c))), removed: new Set([...counted].filter(c => !codes.has(c))) };
+        showCount();
+      } else {
+        files = null; edits = null;
+        state = { view: Year.pickedView(YEAR, codes), src: 'tap', base: null, example: false, showNew: true };
+        render(true);
+        setStatus(codes.size ? 'カードができました。' : '都道府県が選ばれていません。選ぶとカードに入ります。');
+      }
+      focusOn($('#outTitle'));
+    },
+  });
+  pickerEl.hidden = false;
+  scrollToEl(pickerEl);
+}
+
+// ---------- the card ----------
+// The view as drawn: with "Say which countries were new" unticked, the card and the list leave that out.
+const shown = st => st.showNew || !st.view.newCodes ? st.view : Object.assign({}, st.view, { newCodes: null });
+function noteFor(st, v){
+  if (st.example) return '架空の1年です。カードの見え方を示すための見本です。';
+  if (st.src === 'tap') return '手で選んだので、月ごとの数と「初めての都道府県」はカードに出ません。写真から数えると、どちらも入ります。';
+  const lead = st.src === 'edited' ? 'ファイルから数えて、手で直しました。' : '';
+  if (!st.view.newCodes) return `${lead}入れたファイルに${YEAR}年より前の日付のものがないので、「初めての都道府県」は出していません。昔の写真も追加すると出ます。`;
+  const k = st.view.newCodes.size;
+  if (!st.showNew) return `${lead}「初めての都道府県」はカードに出していません。`;
+  return lead + (k === 0 ? '初めての都道府県はありません。どの都道府県にも、もっと前の日付のファイルがあります。'
+    : `うち${k}都道府県は初めてです（${YEAR}年より前の日付のファイルがありません）。`);
+}
+async function render(scroll){
+  const run = ++drawing, st = state, v = shown(st), n = v.codes.size;
+  prepared = null;
+  $('#out').hidden = false;
+  $('#exFlag').hidden = !st.example;
+  $('#outTitle').textContent = st.example ? `見本：${YEAR}年の国内旅行は${cs(n)}` : `${YEAR}年の国内旅行は${cs(n)}`;
+  $('#outNote').textContent = noteFor(st, v);
+  $('#newRow').hidden = st.example || !(st.view.newCodes && st.view.newCodes.size);
+  $('#showNew').checked = st.showNew;
+  const months = Year.monthsKnown(v);
+  $('#yearList').innerHTML = Year.orderOf(v).map(code => {
+    const mask = v.months ? v.months.get(code) || 0 : 0;
+    return `<li><b>${Kit.esc(Pref.nameOf(code))}</b>${v.newCodes && v.newCodes.has(code) ? '<span class="new">初めて</span>' : ''}${months ? `<span class="mo">${mask ? Year.monthNames(mask).join('、') : '手で追加'}</span>` : ''}</li>`;
+  }).join('');
+  $('#also').textContent = '';                                   // 都道府県のほかに塗るものは無い
+  const bits = [];
+  if (files && !st.example){
+    const s = files.stats;
+    if (s.media) bits.push(`写真・動画 ${fmt(s.media)}件を読み取り、うち位置情報あり ${fmt(s.withLoc)}件`);
+    if (s.sidecars) bits.push(`Googleフォトの位置 ${fmt(s.sidecars)}件`);
+    if (s.points) bits.push(`タイムラインの地点 ${fmt(s.points)}件`);
+    if (files.tally.undated) bits.push(`日付がなく、どの年にも入れなかったもの ${fmt(files.tally.undated)}件`);
+    if (s.unmatched) bits.push(`日本の都道府県に当てはまらなかったもの（海外・海上など） ${fmt(s.unmatched)}件`);
+  }
+  $('#stats').textContent = st.example ? '見本のデータです。架空の旅で、実在する人の写真ではありません。' : bits.join(' · ');
+  $('#edit').hidden = st.example;
+  $('#addMore').hidden = st.example || !files;
+  $('#appLink').href = `https://apps.apple.com/jp/app/id6785328399?pt=129098692&ct=ja_pref_${YEAR}&mt=8`;   // 日本のストア（英語サイトの Kit.storeUrl は米国向け）
+  if (scroll) scrollToEl($('#out'));
+  await loadFonts();
+  if (run !== drawing) return;                                   // a newer list came in while the fonts were loading
+  const text = Year.drawYearCard(canvas, FEATS, v, { src: st.example ? 'example' : st.src, base: st.base });
+  const names = Year.orderOf(v).map(Pref.nameOf).join('、');
+  canvas.setAttribute('aria-label', `${text.title}：${text.count}${text.sub ? '（' + text.sub + '）' : ''}。${names}${names ? '。' : ''}${text.caption}。`);
+  prepared = Kit.prepareShare(canvas, st.example
+    ? { fileName: `${YEAR}年の国内旅行-見本.png`, url: PAGE_URL, text: '1年の国内旅行を1枚のカードにする無料のページです。アップロードはありません。' }
+    : { fileName: `${YEAR}年の国内旅行.png`, url: PAGE_URL, text: Year.shareText(v) });
+  $('#share').textContent = canShareFiles() ? '共有' : '画像を保存';
+  $('#save').hidden = !canShareFiles();
+}
+
+// ---------- saving and sharing: the share sheet with the image where there is one, otherwise a download ----------
+const canShareFiles = () => !!(navigator.share && navigator.canShare && typeof File === 'function' && navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] }));
+function download(){
+  const name = state && state.example ? `${YEAR}年の国内旅行-見本.png` : `${YEAR}年の国内旅行.png`;
+  const go = blob => {
+    const a = document.createElement('a');
+    a.download = name; a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+  };
+  if (prepared && prepared.file) go(prepared.file);
+  else canvas.toBlob(b => { if (b) go(b); }, 'image/png');
+}
+// iOS opens the share sheet only when share() runs straight from the tap, with the file already made (prepareShare).
+async function shareOrSave(){
+  const s = prepared;
+  if (!s) return;                                                // still drawing
+  if (s.file && navigator.share && navigator.canShare && navigator.canShare({ files: [s.file] })){
+    try { await navigator.share({ files: [s.file], text: `${s.text} ${s.url}` }); return; }
+    catch (e){ if (e && e.name === 'AbortError') return; }
+  }
+  download();
+}
+
+// ---------- example ----------
+// [lon, lat, year, month]: 架空の旅行者の国内旅行。カードには「見本」と入り、下の行にも実在の写真ではないと書かれる。
+const EXAMPLE = [
+  [139.77, 35.68, 2019, 4], [139.55, 35.32, 2019, 6], [140.12, 35.61, 2020, 1], [139.49, 35.92, 2020, 9], [138.38, 34.98, 2021, 3],
+  [137.97, 36.24, 2021, 8], [135.77, 35.01, 2022, 11], [135.50, 34.69, 2022, 11], [135.19, 34.69, 2023, 5], [141.35, 43.06, 2023, 2],
+  [130.40, 33.59, 2024, 10], [132.46, 34.39, 2025, 4],
+  [139.77, 35.68, 2026, 1], [139.55, 35.32, 2026, 1], [139.77, 35.68, 2026, 3], [138.38, 34.98, 2026, 3], [135.77, 35.01, 2026, 4],
+  [135.83, 34.68, 2026, 4], [139.77, 35.68, 2026, 6], [136.65, 36.56, 2026, 6], [137.21, 36.70, 2026, 6], [141.35, 43.06, 2026, 8],
+  [130.40, 33.59, 2026, 10], [131.49, 33.28, 2026, 10], [139.77, 35.68, 2026, 11], [127.68, 26.21, 2026, 12],
+];
+async function showExample(){
+  if (busy) return;
+  try {
+    await ready();
+    const tally = Year.newTally();
+    for (const [lon, lat, y, m] of EXAMPLE){ const code = locate(lon, lat); if (code >= 0) Year.tallyAdd(tally, code, y, m); }
+    files = null; edits = null;
+    state = { view: Year.yearView(tally, FEATS, YEAR), src: 'example', base: null, example: true, showNew: true };
+    closePicker();
+    render(true);
+    setStatus('これは見本です。上で都道府県を選ぶか、自分の写真を入れると、あなたのカードになります。');
+  } catch (e){ setStatus(e && e.message ? e.message : '見本を読み込めませんでした。'); }
+}
+
+// ---------- wiring ----------
+const drop = $('#drop');
+// Files chosen or dropped while a count from files is on the page are added to it (see handle). The input is
+// emptied first, so choosing the same files again still reports back.
+const choose = input => () => { if (busy) return; input.value = ''; input.click(); };
+$('#pickFiles').addEventListener('click', choose($('#fileInput')));
+$('#addMore').addEventListener('click', choose($('#fileInput')));
+$('#pickDir').addEventListener('click', choose($('#dirInput')));
+$('#fileInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#dirInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#exampleBtn').addEventListener('click', showExample);
+$('#pickBtn').addEventListener('click', () => openPicker(!!(state && !state.example)));
+$('#edit').addEventListener('click', () => { if (state && !state.example) openPicker(true); });
+$('#share').addEventListener('click', shareOrSave);
+$('#save').addEventListener('click', download);
+$('#showNew').addEventListener('change', e => { if (state){ state.showNew = e.target.checked; render(false); } });
+$('#again').addEventListener('click', () => {
+  files = null; edits = null; state = null; prepared = null; drawing++;
+  $('#out').hidden = true; closePicker(); setStatus(''); setProgress(null);
+  $('#fileInput').value = ''; $('#dirInput').value = '';
+  drop.scrollIntoView({ block: 'center' });
+});
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+drop.addEventListener('dragleave', e => { if (!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const items = e.dataTransfer.items;
+  const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
+  if (entries.some(en => en.isDirectory)){
+    setStatus('フォルダの中を探しています…');
+    handle(await Scan.entriesToFiles(entries, n => setStatus(`フォルダの中を探しています… いま${fmt(n)}ファイル`)), { adding: true });
+  }
+  else handle(e.dataTransfer.files, { adding: true });
+});
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>行った都道府県、何県？ — 写真から自動で数えます</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png" />
+<link rel="apple-touch-icon" href="/img/icon-180.png" />
+<meta name="description" content="スマホの写真やGoogleマップのタイムラインを入れるだけで、これまで行った都道府県を自動で数えて日本地図を塗ります。アップロードはされません。ブラウザの中だけで処理します。" />
+<link rel="canonical" href="https://counter.getdriftlog.com/ja/" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://counter.getdriftlog.com/ja/" />
+<meta property="og:title" content="行った都道府県、何県？" />
+<meta property="og:description" content="写真を入れるだけで、行った都道府県が自動で数えられて地図が塗られます。アップロードは一切なし。" />
+<meta property="og:image" content="https://counter.getdriftlog.com/og-ja.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="ずぼ旅" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://counter.getdriftlog.com/og-ja.png" />
+<link rel="stylesheet" href="/fonts.css" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"行った都道府県の数を調べる方法はありますか？","acceptedAnswer":{"@type":"Answer","text":"位置情報をオンにして撮った写真には、撮影場所の座標が記録されています。このページはその座標を読み取り、どの都道府県で撮られた写真かを判定して、行った都道府県の数を数えます。Googleマップのタイムラインの書き出し（Timeline.json、location-history.json）からも数えられます。"}},
+{"@type":"Question","name":"Googleマップのタイムラインから行った都道府県を調べられますか？","acceptedAnswer":{"@type":"Answer","text":"調べられます。タイムラインはパソコンのブラウザでは見られなくなりましたが、スマホから書き出したファイルをこのページに入れると、都道府県ごとに最初と最後の年つきで地図に塗ります。書き出し方は、Androidなら設定アプリの「位置情報」→「位置情報サービス」→「タイムライン」→「タイムラインのデータをエクスポート」、iPhoneならGoogleマップのプロフィール写真→「設定」の中にあります。"}},
+{"@type":"Question","name":"写真はどこかに送信されますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。ファイルはブラウザの中だけで読み取られ、ファイルも座標も外部に送信されません。ページを開いたあとWi-Fiを切っても、そのまま動きます。"}},
+{"@type":"Question","name":"どの形式のファイルが使えますか？","acceptedAnswer":{"@type":"Answer","text":"JPEGとHEICの写真、DNGなどのRAW、iPhoneとAndroidの動画、Google Takeout（Googleフォト）の書き出し、Googleマップのタイムラインの書き出し（Timeline.json、location-history.json、Records.json）に対応しています。フォルダごと入れることもできます。"}},
+{"@type":"Question","name":"無料ですか？","acceptedAnswer":{"@type":"Answer","text":"無料です。登録も不要です。iPhoneアプリ「ずぼ旅」の開発者が作ったページで、アプリは同じ地図を自動で更新し続けます。"}}]}
+</script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#A28A78;
+    --accent:#D6692E; --accent-d:#C25A22; --line:#EAD9C9; --card:#FFFDFB;
+  }
+  body{font-family:"Inter","Hiragino Sans","Hiragino Kaku Gothic ProN",-apple-system,BlinkMacSystemFont,sans-serif;
+    background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);color:var(--ink);min-height:100vh;line-height:1.85}
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px}
+  header{text-align:center;padding:60px 0 22px}
+  .kicker{font-size:12px;letter-spacing:.34em;font-weight:600;color:var(--accent)}
+  h1{font-size:clamp(28px,5.6vw,48px);line-height:1.35;margin-top:20px;font-weight:600;letter-spacing:.01em}
+  .lead{font-weight:300;color:var(--muted);margin:20px auto 0;max-width:540px;font-size:clamp(14px,2vw,16.5px)}
+  .drop{margin:30px 0 0;background:var(--card);border:1.5px dashed var(--line);border-radius:20px;padding:46px 24px;text-align:center;transition:.18s}
+  .drop:hover,.drop.over{border-color:var(--accent);background:#FFF9F3}
+  .drop h2{font-size:20px;font-weight:600}
+  .drop p{color:var(--muted);font-size:13.5px;margin-top:10px}
+  .btn{display:inline-block;margin-top:20px;background:var(--accent);color:#fff;font-weight:500;font-size:15px;padding:13px 28px;border-radius:999px;border:0;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--accent-d)}
+  .note{font-size:12px;color:var(--muted2);margin-top:14px}
+  #status{text-align:center;color:var(--muted);font-size:13.5px;margin-top:16px;min-height:22px}
+  .result{display:none;margin-top:26px}
+  .result.on{display:block}
+  canvas{width:100%;height:auto;display:block;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+  .list{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px;justify-content:center}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:13px}
+  .actions{display:flex;gap:11px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+  .actions button{font-family:inherit;font-size:15px;font-weight:500;padding:13px 24px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+  .actions .primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .pitch{margin:52px 0 0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:32px 28px;text-align:center}
+  .pitch h3{font-size:21px;font-weight:600}
+  .pitch p{color:var(--muted);font-weight:300;margin-top:14px;max-width:520px;margin-inline:auto;font-size:14.5px}
+  .pitch .cta{display:inline-block;margin-top:20px;background:var(--accent);color:#fff;font-weight:500;padding:14px 30px;border-radius:999px;text-decoration:none}
+  .pitch .sub{font-size:12px;color:var(--muted2);margin-top:12px}
+  .privacy{margin-top:30px;text-align:center;font-size:13px;color:var(--muted)}
+  .privacy b{color:var(--ink);font-weight:600}
+  .demo{margin-top:26px}
+  .demo video{width:100%;max-width:252px;aspect-ratio:9/16;display:block;margin:0 auto;background:#fff;
+    border:1px solid var(--line);border-radius:26px;box-shadow:0 12px 34px rgba(50,32,20,.11)}
+  .demo .cap{font-size:12px;color:var(--muted2);margin-top:14px;line-height:1.7}
+  footer{text-align:center;padding:44px 0 56px;color:var(--muted2);font-size:12.5px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+  .btns .btn{margin-top:0}
+  .btn.sub2{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+  .btn.sub2:hover{background:var(--card);border-color:var(--accent)}
+  .mobile-note{display:none;margin:16px auto 0;max-width:520px;font-size:13px;color:var(--ink);background:#FFF6EE;border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left;line-height:1.75}
+  .is-mobile .mobile-note{display:block}
+  .is-mobile #pickDir{display:none}
+  .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
+  .bar.on{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .stats{text-align:center;color:var(--muted2);font-size:12px;margin-top:12px}
+  #status a{color:var(--accent-d)}
+  code{font-size:.92em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">ずぼ旅</div>
+    <h1>行った都道府県、<br>何県か言えますか。</h1>
+    <p class="lead">たいていの人は正確に答えられません。でも、あなたの写真とGoogleマップのタイムラインは覚えています。下に入れるだけで、勝手に数えて地図を塗ります。</p>
+  </header>
+
+  <section class="drop" id="drop" aria-label="写真や位置情報のファイルを追加">
+    <h2>写真やフォルダをここにドロップ</h2>
+    <p>旅行の写真、カメラロールの書き出し、Google Takeout（Googleフォトの書き出し）のフォルダ、Googleマップのタイムラインの書き出し（Timeline.json など）が使えます。位置情報が付いたものだけを見ます。</p>
+    <div class="btns">
+      <button class="btn" id="pickFiles" type="button">写真を選ぶ</button>
+      <button class="btn sub2" id="pickDir" type="button">フォルダを選ぶ</button>
+    </div>
+    <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
+    <input type="file" id="dirInput" hidden webkitdirectory multiple />
+    <p class="mobile-note" id="mobileNote">iPhoneでは<b>「写真を選ぶ」</b>から写真ライブラリで選び、画面上部が<b>「位置情報あり」</b>になっていることを確認してください（最初からこの状態です）。一度に数百枚ずつが目安です。Googleマップのタイムラインを書き出した場合は、<b>「写真を選ぶ」</b>→<b>「ファイルを選択」</b>で <code>location-history.json</code> を選んでください。</p>
+    <p class="note">アップロードはしません。ファイルはブラウザの中だけで読み取られます。ページを開いたあとWi-Fiを切っても、そのまま動きます。</p>
+  </section>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="bar" id="bar"><i></i></div>
+
+  <section class="result" id="result" aria-label="行った都道府県">
+    <canvas id="map" width="1200" height="1440" role="img" aria-label="行った都道府県を塗った日本地図"></canvas>
+    <div class="list" id="list"></div>
+    <p class="stats" id="also"></p>
+    <p class="stats" id="stats"></p>
+    <div class="actions">
+      <button class="primary" id="share" type="button" hidden>共有</button>
+      <button id="save" type="button">画像を保存</button>
+      <button id="again" type="button">やり直す</button>
+    </div>
+  </section>
+
+  <div class="pitch" id="app">
+    <h3>これを毎日やっているのが「ずぼ旅」です。</h3>
+    <p>入れておくだけで、行った都道府県と国が自動で記録されて地図が塗られていくiPhoneアプリです。日記もチェックインもありません。このページと同じように過去の写真からも取り込めて、その先はずっと自動です。</p>
+
+    <div class="demo">
+      <video src="./jp-demo.mp4" poster="./jp-demo-poster.jpg"
+             muted loop playsinline autoplay preload="metadata"
+             aria-label="ずぼ旅が写真から都道府県を読み込み、地図が塗られて23都道府県まで増えていく様子"></video>
+      <p class="cap">アプリが写真から読み込んでいるところ（デモ）。<br>行った都道府県が増えるたびに、地図が勝手に塗られていきます。</p>
+    </div>
+    <a class="cta" href="https://apps.apple.com/jp/app/id6785328399?pt=129098692&amp;ct=ja_pref_counter&amp;mt=8" rel="noopener">App Storeで見る</a>
+    <p class="sub">無料でお試し・買い切り800円で全機能／iPhone・iPad（iOS 17以降）</p>
+  </div>
+
+  <div class="privacy">
+    <b>仕組み</b>：位置情報をオンにして撮った写真には、撮影場所の座標が記録されています。Googleマップのタイムラインの書き出しにも、行った場所の座標が並んでいます。このページはその座標をブラウザの中で読み、どの都道府県・どの国かを判定して地図にします。写真は先頭のメタデータ部分しか読まず、写っている中身は見ません。ファイルも座標も外部に送信していません。アクセス解析もCookieもありません。
+  </div>
+
+  <footer>
+    <a href="https://ja.getdriftlog.com" rel="noopener">ずぼ旅</a>／<a href="https://ja-counter.getdriftlog.com/">行った国を数える</a>／<a href="/ja/2026/">2026年の国内旅行</a>／<a href="../" hreflang="en" lang="en">English</a><br>
+    日本地図: <a href="https://www.gsi.go.jp/kankyochiri/gm_jpn.html" rel="noopener">地球地図日本</a>（国土地理院）を加工して作成・世界の国境: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a>
+  </footer>
+</div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i');
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_ANDROID) $('#mobileNote').innerHTML = 'Androidでは、ブラウザで選んだ写真から位置情報が消されるため、写真では数えられません。代わりに<b>Googleマップのタイムラインの書き出し</b>（Timeline.json）を選ぶか、パソコンで開いてください。';
+if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
+function setStatus(t, html){ if (html) statusEl.innerHTML = t; else statusEl.textContent = t; }
+function setProgress(f){ if (f == null){ barEl.classList.remove('on'); return; } barEl.classList.add('on'); barFill.style.width = Math.round(f*100) + '%'; }
+const fmt = n => n.toLocaleString('ja-JP');
+const tick = () => new Promise(r => setTimeout(r, 0));
+
+// ---------- country borders (Natural Earth 1:50m, 1:10m for small places; delta-encoded at 1/10000 degree) ----------
+let FEATS = null;
+// ずぼ旅アプリの国名表記（country-meta.json）。台湾だけはページ上の呼び方に合わせる。
+const JA_NAMES = {"VA":"バチカン","AU":"オーストラリア","GI":"ジブラルタル","MC":"モナコ","NR":"ナウル","BL":"サン・バルテルミー島","MF":"サン・マルタン","PN":"ピトケアン諸島","SX":"シント・マールテン","CK":"クック諸島","NF":"ノーフォーク島","MO":"マカオ","MS":"モントセラト","SM":"サンマリノ","GG":"ガーンジー","CU":"キューバ","AI":"アンギラ","JE":"ジャージー","BM":"バミューダ","AS":"アメリカ領サモア","NU":"ニウエ","LI":"リヒテンシュタイン","IO":"イギリス領インド洋地域","AW":"アルバ","CY":"キプロス","BB":"バルバドス","SG":"シンガポール","LC":"セントルシア","AD":"アンドラ","PM":"サンピエール島及びミクロン島","BH":"バーレーン","KN":"セントキッツ・ネーヴィス連邦","DM":"ドミニカ国","MT":"マルタ","GU":"グアム","HM":"ハード島とマクドナルド諸島","CW":"キュラソー","TC":"タークス・カイコス諸島","VG":"イギリス領ヴァージン諸島","IM":"マン島","AG":"アンティグア・バーブーダ","GD":"グレナダ","HK":"香港","VC":"セントビンセント・グレナディーン","VI":"アメリカ領ヴァージン諸島","AX":"オーランド諸島","LU":"ルクセンブルク","WS":"サモア","KY":"ケイマン諸島","FO":"フェロー諸島","KZ":"カザフスタン","BN":"ブルネイ","KM":"コモロ","QA":"カタール","PR":"プエルトリコ","ST":"サントメ・プリンシペ","JM":"ジャマイカ","TT":"トリニダード・トバゴ","PS":"パレスチナ","SZ":"エスワティニ","GM":"ガンビア","WF":"ウォリス・フツナ","LB":"レバノン","XK":"コソボ","DJ":"ジブチ","KW":"クウェート","SV":"エルサルバドル","ME":"モンテネグロ","MP":"北マリアナ諸島","FK":"フォークランド諸島","RW":"ルワンダ","BZ":"ベリーズ","BI":"ブルンジ","MK":"北マケドニア","TL":"東ティモール","SI":"スロベニア","LS":"レソト","AL":"アルバニア","GW":"ギニアビサウ","BT":"ブータン","HT":"ハイチ","CV":"カーボベルデ","IL":"イスラエル","BE":"ベルギー","AM":"アルメニア","GQ":"赤道ギニア","MV":"モルディブ","DO":"ドミニカ共和国","LK":"スリランカ","CH":"スイス","SL":"シエラレオネ","TG":"トーゴ","SK":"スロバキア","CR":"コスタリカ","BA":"ボスニア・ヘルツェゴビナ","MD":"モルドバ","TW":"台湾","EE":"エストニア","PA":"パナマ","TV":"ツバル","LT":"リトアニア","TO":"トンガ","RS":"セルビア","GT":"グアテマラ","CZ":"チェコ","AE":"UAE","GE":"ジョージア","SR":"スリナム","IE":"アイルランド","LR":"リベリア","LV":"ラトビア","JO":"ヨルダン","PW":"パラオ","BG":"ブルガリア","BJ":"ベナン","HU":"ハンガリー","NI":"ニカラグア","AZ":"アゼルバイジャン","AT":"オーストリア","DK":"デンマーク","HN":"ホンジュラス","VU":"バヌアツ","SO":"ソマリア","KH":"カンボジア","HR":"クロアチア","MW":"マラウイ","UY":"ウルグアイ","BD":"バングラデシュ","KR":"韓国","SN":"セネガル","GH":"ガーナ","TN":"チュニジア","NC":"ニューカレドニア","UG":"ウガンダ","NP":"ネパール","SY":"シリア","KP":"北朝鮮","TJ":"タジキスタン","IS":"アイスランド","GA":"ガボン","GY":"ガイアナ","BS":"バハマ","ER":"エリトリア","CI":"コートジボワール","GN":"ギニア","RO":"ルーマニア","KG":"キルギス","BF":"ブルキナファソ","BY":"ベラルーシ","ZW":"ジンバブエ","GS":"サウスジョージア・サウスサンドウィッチ諸島","EH":"西サハラ","PL":"ポーランド","GR":"ギリシャ","SB":"ソロモン諸島","SC":"セーシェル","TF":"フランス領南方・南極地域","LA":"ラオス","CG":"コンゴ共和国","MH":"マーシャル諸島","PY":"パラグアイ","MU":"モーリシャス","SH":"セントヘレナ","DE":"ドイツ","OM":"オマーン","YE":"イエメン","IQ":"イラク","KE":"ケニア","BW":"ボツワナ","CM":"カメルーン","SS":"南スーダン","MG":"マダガスカル","EC":"エクアドル","GB":"イギリス","TM":"トルクメニスタン","VN":"ベトナム","FI":"フィンランド","CF":"中央アフリカ","NG":"ナイジェリア","ZM":"ザンビア","EG":"エジプト","TZ":"タンザニア","TR":"トルコ","TH":"タイ","IT":"イタリア","MY":"マレーシア","UA":"ウクライナ","AF":"アフガニスタン","UZ":"ウズベキスタン","PH":"フィリピン","MR":"モーリタニア","PG":"パプアニューギニア","VE":"ベネズエラ","BO":"ボリビア","NA":"ナミビア","MM":"ミャンマー","AO":"アンゴラ","TD":"チャド","ET":"エチオピア","MZ":"モザンビーク","SE":"スウェーデン","PF":"フランス領ポリネシア","NE":"ニジェール","CO":"コロンビア","PK":"パキスタン","LY":"リビア","FM":"ミクロネシア","SD":"スーダン","MA":"モロッコ","PE":"ペルー","PT":"ポルトガル","ML":"マリ","IR":"イラン","SA":"サウジアラビア","MN":"モンゴル","CD":"コンゴ民主共和国","ES":"スペイン","DZ":"アルジェリア","JP":"日本","ZA":"南アフリカ","MX":"メキシコ","AR":"アルゼンチン","ID":"インドネシア","IN":"インド","NO":"ノルウェー","GL":"グリーンランド","BR":"ブラジル","CL":"チリ","CN":"中国","NL":"オランダ","FJ":"フィジー","CA":"カナダ","KI":"キリバス","FR":"フランス","AQ":"南極","RU":"ロシア","NZ":"ニュージーランド","US":"アメリカ"};
+function decodeRing(arr){
+  const out = new Float64Array(arr.length);
+  let x = 0, y = 0;
+  for (let i = 0; i < arr.length; i += 2){ x += arr[i]; y += arr[i+1]; out[i] = x / 10000; out[i+1] = y / 10000; }
+  return out;
+}
+function ringBox(r){
+  let a = Infinity, b = Infinity, c = -Infinity, d = -Infinity;
+  for (let i = 0; i < r.length; i += 2){ const x = r[i], y = r[i+1]; if (x < a) a = x; if (x > c) c = x; if (y < b) b = y; if (y > d) d = y; }
+  return [a, b, c, d];
+}
+let MAP_REQ = null;
+const fetchMap = () => MAP_REQ || (MAP_REQ = fetch('../countries50.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).catch(e => { MAP_REQ = null; throw e; }));
+const CANVAS_FONTS = ['600 132px Fraunces', '300 38px Inter', '400 24px Inter', '600 25px Inter'];
+// Fetch the borders and fonts once the page is idle, so a file dropped later is read even with the network switched off.
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => {
+  fetchMap().catch(() => {});
+  if (document.fonts && document.fonts.load) CANVAS_FONTS.forEach(f => document.fonts.load(f).catch(() => {}));
+});
+async function loadCountries(){
+  if (FEATS) return;
+  // The map image is drawn on a canvas, which silently falls back to Georgia (old-style digits) if Fraunces is not loaded yet.
+  if (document.fonts && document.fonts.load) await Promise.all(CANVAS_FONTS.map(f => document.fonts.load(f))).catch(() => {});
+  setStatus('地図を読み込んでいます…');
+  const raw = await fetchMap().catch(() => { throw new Error('地図データを読み込めませんでした。ページを再読み込みして、もう一度お試しください。'); });
+  FEATS = raw.map(f => {
+    const polys = (f.t === 'Polygon' ? [f.c] : f.c).map(poly => poly.map(decodeRing));
+    return { n: JA_NAMES[f.a] || f.n, a: f.a, k: f.k, b: f.b, polys, pb: polys.map(p => ringBox(p[0])) };
+  });
+}
+function inRing(x, y, r){
+  let inside = false;
+  for (let i = 0, j = r.length - 2; i < r.length; j = i, i += 2){
+    const yi = r[i+1], yj = r[j+1];
+    if ((yi > y) !== (yj > y)){
+      const xi = r[i], xj = r[j];
+      if (x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+    }
+  }
+  return inside;
+}
+function containing(lon, lat){
+  for (let fi = 0; fi < FEATS.length; fi++){          // smallest first: enclaves win
+    const f = FEATS[fi], b = f.b;
+    if (lon < b[0] || lon > b[2] || lat < b[1] || lat > b[3]) continue;
+    for (let pi = 0; pi < f.polys.length; pi++){
+      const pb = f.pb[pi];
+      if (lon < pb[0] || lon > pb[2] || lat < pb[1] || lat > pb[3]) continue;
+      const poly = f.polys[pi];
+      if (!inRing(lon, lat, poly[0])) continue;
+      let hole = false;
+      for (let h = 1; h < poly.length; h++) if (inRing(lon, lat, poly[h])){ hole = true; break; }
+      if (!hole) return fi * 10000 + pi;
+    }
+  }
+  return -1;
+}
+// Photos taken on a beach, a pier or a ferry often fall just outside simplified coastlines.
+function nearest(lon, lat, maxDeg){
+  const k = Math.cos(lat * Math.PI / 180) || 1e-6;
+  let best = -1, bestD = maxDeg * maxDeg;
+  for (let fi = 0; fi < FEATS.length; fi++){
+    const f = FEATS[fi], b = f.b;
+    if (lon < b[0] - maxDeg / k || lon > b[2] + maxDeg / k || lat < b[1] - maxDeg || lat > b[3] + maxDeg) continue;
+    for (let pi = 0; pi < f.polys.length; pi++){
+      const r = f.polys[pi][0];
+      for (let i = 0, j = r.length - 2; i < r.length; j = i, i += 2){
+        const ax = (r[j] - lon) * k, ay = r[j+1] - lat, bx = (r[i] - lon) * k, by = r[i+1] - lat;
+        const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+        let t = L ? -(ax * dx + ay * dy) / L : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const px = ax + t * dx, py = ay + t * dy, d = px * px + py * py;
+        if (d < bestD){ bestD = d; best = fi * 10000 + pi; }
+      }
+    }
+  }
+  return best;
+}
+const CACHE = new Map();
+// Returns featureIndex * 10000 + polygonIndex, or -1.
+function countryIndex(lon, lat){
+  if (!(lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) || (lat === 0 && lon === 0)) return -1;
+  const key = Math.round(lat * 200) * 100000 + Math.round(lon * 200);   // ~500 m cells
+  let fi = CACHE.get(key);
+  if (fi === undefined){ fi = containing(lon, lat); if (fi < 0) fi = nearest(lon, lat, 0.12); CACHE.set(key, fi); }
+  return fi;
+}
+
+// ---------- EXIF / TIFF ----------
+const TYPE_SIZE = {1:1,2:1,3:2,4:4,5:8,7:1,9:4,10:8,12:8};
+function readTiff(v, tiff){
+  try {
+    const bom = v.getUint16(tiff), le = bom === 0x4949;
+    if (!le && bom !== 0x4D4D) return null;
+    const magic = v.getUint16(tiff + 2, le);
+    if (magic !== 42 && magic !== 0x4F52 && magic !== 0x5352 && magic !== 0x0055) return null;   // TIFF, Olympus ORF, Panasonic RW2
+    const ifd = off => {
+      const m = new Map();
+      if (off + 2 > v.byteLength) return m;
+      const n = v.getUint16(off, le);
+      for (let i = 0; i < n; i++){ const e = off + 2 + i * 12; if (e + 12 > v.byteLength) break; m.set(v.getUint16(e, le), e); }
+      return m;
+    };
+    const valOff = e => { const size = (TYPE_SIZE[v.getUint16(e + 2, le)] || 1) * v.getUint32(e + 4, le); return size <= 4 ? e + 8 : tiff + v.getUint32(e + 8, le); };
+    const ascii = e => { const o = valOff(e), n = v.getUint32(e + 4, le); let s = ''; for (let i = 0; i < n && o + i < v.byteLength; i++){ const c = v.getUint8(o + i); if (!c) break; s += String.fromCharCode(c); } return s; };
+    const rat3 = e => { const o = valOff(e); const r = k => { const a = v.getUint32(o + k * 8, le), b = v.getUint32(o + k * 8 + 4, le); return b ? a / b : 0; }; return r(0) + r(1) / 60 + r(2) / 3600; };
+    const yearOf = s => { const y = parseInt(s.slice(0, 4), 10); return y > 1900 && y < 2100 ? y : null; };
+    const ifd0 = ifd(tiff + v.getUint32(tiff + 4, le));
+    let year = null, point = null;
+    if (ifd0.has(0x8769)){
+      const ex = ifd(tiff + v.getUint32(ifd0.get(0x8769) + 8, le));
+      if (ex.has(0x9003)) year = yearOf(ascii(ex.get(0x9003)));
+    }
+    if (!year && ifd0.has(0x0132)) year = yearOf(ascii(ifd0.get(0x0132)));
+    if (ifd0.has(0x8825)){
+      const g = ifd(tiff + v.getUint32(ifd0.get(0x8825) + 8, le));
+      if (g.has(2) && g.has(4)){
+        let lat = rat3(g.get(2)), lon = rat3(g.get(4));
+        if (g.has(1) && ascii(g.get(1)) === 'S') lat = -lat;
+        if (g.has(3) && ascii(g.get(3)) === 'W') lon = -lon;
+        if (isFinite(lat) && isFinite(lon) && !(lat === 0 && lon === 0)) point = [lon, lat];
+      }
+      if (!year && g.has(29)) year = yearOf(ascii(g.get(29)));
+    }
+    return point ? { point, year } : { point: null, year };
+  } catch (e){ return null; }
+}
+function jpegTiffStart(v){
+  if (v.byteLength < 4 || v.getUint16(0) !== 0xFFD8) return -1;
+  let o = 2;
+  while (o + 4 <= v.byteLength){
+    if (v.getUint8(o) !== 0xFF) return -1;
+    const m = v.getUint8(o + 1);
+    if (m === 0xFF){ o++; continue; }
+    if (m === 0xD9 || m === 0xDA) return -1;
+    const len = v.getUint16(o + 2);
+    if (m === 0xE1 && o + 10 <= v.byteLength && v.getUint32(o + 4) === 0x45786966 && v.getUint16(o + 8) === 0) return o + 10;
+    o += 2 + len;
+  }
+  return -2;
+}
+function scanExifMarker(u8){
+  for (let i = u8.indexOf(0x45); i >= 0 && i < u8.length - 6; i = u8.indexOf(0x45, i + 1)){
+    if (u8[i+1] === 0x78 && u8[i+2] === 0x69 && u8[i+3] === 0x66 && u8[i+4] === 0 && u8[i+5] === 0) return i + 6;
+  }
+  return -1;
+}
+async function readJpeg(file){
+  let buf = await file.slice(0, 128 * 1024).arrayBuffer();
+  let v = new DataView(buf), t = jpegTiffStart(v);
+  if (t === -2 && file.size > buf.byteLength){ buf = await file.slice(0, 1024 * 1024).arrayBuffer(); v = new DataView(buf); t = jpegTiffStart(v); }
+  if (t < 0) t = scanExifMarker(new Uint8Array(buf));
+  return t < 0 ? null : readTiff(v, t);
+}
+const fourcc = (v, o) => String.fromCharCode(v.getUint8(o), v.getUint8(o+1), v.getUint8(o+2), v.getUint8(o+3));
+async function readHeif(file){
+  try {
+    const v = new DataView(await file.slice(0, 512 * 1024).arrayBuffer());
+    let o = 0, meta = null;
+    while (o + 8 <= v.byteLength){
+      let size = v.getUint32(o), hdr = 8; const type = fourcc(v, o + 4);
+      if (size === 1){ size = Number(v.getBigUint64(o + 8)); hdr = 16; } else if (size === 0) size = v.byteLength - o;
+      if (type === 'meta'){ meta = [o + hdr + 4, Math.min(o + size, v.byteLength)]; break; }
+      if (size < 8) break; o += size;
+    }
+    if (!meta) return null;
+    let exifId = null, iloc = -1;
+    for (let p = meta[0]; p + 8 <= meta[1];){
+      const size = v.getUint32(p), type = fourcc(v, p + 4);
+      if (size < 8) break;
+      if (type === 'iinf'){
+        const ver = v.getUint8(p + 8); let q = p + 12;
+        const n = ver === 0 ? v.getUint16(q) : v.getUint32(q); q += ver === 0 ? 2 : 4;
+        for (let i = 0; i < n && q + 8 <= p + size; i++){
+          const bs = v.getUint32(q);
+          if (fourcc(v, q + 4) === 'infe' && v.getUint8(q + 8) >= 2){
+            const iv = v.getUint8(q + 8); let r = q + 12;
+            const id = iv === 2 ? v.getUint16(r) : v.getUint32(r); r += (iv === 2 ? 2 : 4) + 2;
+            if (fourcc(v, r) === 'Exif'){ exifId = id; break; }
+          }
+          if (bs < 8) break; q += bs;
+        }
+      }
+      if (type === 'iloc') iloc = p;
+      p += size;
+    }
+    if (exifId === null || iloc < 0) return null;
+    const ver = v.getUint8(iloc + 8); let q = iloc + 12;
+    const b1 = v.getUint8(q), b2 = v.getUint8(q + 1); q += 2;
+    const offSize = b1 >> 4, lenSize = b1 & 15, baseSize = b2 >> 4, idxSize = (ver === 1 || ver === 2) ? (b2 & 15) : 0;
+    const rd = n => { let x = 0; if (n === 2) x = v.getUint16(q); else if (n === 4) x = v.getUint32(q); else if (n === 8) x = Number(v.getBigUint64(q)); q += n; return x; };
+    const count = ver < 2 ? v.getUint16(q) : v.getUint32(q); q += ver < 2 ? 2 : 4;
+    let ext = null;
+    for (let i = 0; i < count && !ext; i++){
+      const id = ver < 2 ? v.getUint16(q) : v.getUint32(q); q += ver < 2 ? 2 : 4;
+      let method = 0; if (ver === 1 || ver === 2){ method = v.getUint16(q) & 15; q += 2; }
+      q += 2;
+      const base = rd(baseSize), n = v.getUint16(q); q += 2;
+      let first = null;
+      for (let e = 0; e < n; e++){ if (idxSize) rd(idxSize); const off = rd(offSize), len = rd(lenSize); if (!first) first = { off: base + off, len }; }
+      if (id === exifId && method === 0) ext = first;
+    }
+    if (!ext || !ext.len) return null;
+    const ev = new DataView(await file.slice(ext.off, ext.off + Math.min(ext.len, 256 * 1024)).arrayBuffer());
+    const t = 4 + ev.getUint32(0);
+    return t + 8 <= ev.byteLength ? readTiff(ev, t) : null;
+  } catch (e){ return null; }
+}
+async function readRawTiff(file){
+  const v = new DataView(await file.slice(0, 1024 * 1024).arrayBuffer());
+  return readTiff(v, 0);
+}
+async function readVideo(file){
+  const parts = [file.slice(0, 1024 * 1024)];
+  if (file.size > 1024 * 1024) parts.push(file.slice(Math.max(1024 * 1024, file.size - 1024 * 1024)));
+  for (const part of parts){
+    const txt = new TextDecoder('latin1').decode(await part.arrayBuffer());
+    const m = txt.match(/([+-]\d{2}\.\d{3,})([+-]\d{3}\.\d{3,})/);
+    if (m){
+      const lat = +m[1], lon = +m[2];
+      if (Math.abs(lat) <= 90 && Math.abs(lon) <= 180 && !(lat === 0 && lon === 0)) return { point: [lon, lat], year: null };
+    }
+  }
+  return null;
+}
+
+// ---------- Google Takeout sidecars and Timeline exports ----------
+function sidecarPoint(o){
+  for (const k of ['geoDataExif', 'geoData']){
+    const g = o && o[k];
+    if (g && typeof g.latitude === 'number' && typeof g.longitude === 'number' && !(g.latitude === 0 && g.longitude === 0))
+      return [g.longitude, g.latitude];
+  }
+  return null;
+}
+const LOC_RE = /"latitudeE7"\s*:\s*(-?\d+)\s*,\s*"longitudeE7"\s*:\s*(-?\d+)|(-?\d{1,2}(?:\.\d+)?)(?:°|\\u00b0),\s*(-?\d{1,3}(?:\.\d+)?)(?:°|\\u00b0)|geo:(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)|"(?:timestamp|startTime|endTime|time|startTimestamp|endTimestamp|creationTimestamp)"\s*:\s*"(\d{4})-\d\d|"timestampMs"\s*:\s*"(\d{12,13})"/g;
+async function scanLocationFile(file, onPoint, onProgress){
+  const CH = 8 * 1024 * 1024, OV = 512, dec = new TextDecoder();
+  let pos = 0, carry = '', year = null, n = 0;
+  while (pos < file.size){
+    const end = Math.min(pos + CH, file.size), last = end >= file.size;
+    const text = carry + dec.decode(await file.slice(pos, end).arrayBuffer(), { stream: !last });
+    const cut = last ? text.length : text.length - OV;
+    LOC_RE.lastIndex = 0;
+    let m, lastEnd = 0;
+    while ((m = LOC_RE.exec(text)) !== null){
+      if (m.index >= cut) break;
+      lastEnd = LOC_RE.lastIndex;
+      if (m[7]){ year = +m[7]; continue; }
+      if (m[8]){ year = new Date(+m[8]).getUTCFullYear(); continue; }
+      let lat, lon;
+      if (m[1] !== undefined){
+        // Newer Records.json puts the ISO timestamp after the coordinates in the same object.
+        // (Older exports put "timestampMs" first; LOC_RE has already read that one.)
+        const ahead = /"timestamp"\s*:\s*"(\d{4})-/.exec(text.slice(m.index, m.index + 400));
+        if (ahead) year = +ahead[1];
+        lat = +m[1]; lon = +m[2];
+        if (lat > 900000000) lat -= 4294967296;
+        if (lon > 1800000000) lon -= 4294967296;
+        lat /= 1e7; lon /= 1e7;
+      } else if (m[3] !== undefined){ lat = +m[3]; lon = +m[4]; }
+      else { lat = +m[5]; lon = +m[6]; }
+      onPoint([lon, lat], year); n++;
+    }
+    // A match that started before the cut may run past it; carrying from inside it would read its tail as a new point.
+    carry = last ? '' : text.slice(Math.max(cut, lastEnd));
+    pos = end;
+    onProgress(pos / file.size);
+    await tick();
+  }
+  return n;
+}
+
+// ---------- collecting files (buttons, drag and drop, whole folders) ----------
+const KIND = name => {
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  if (/^(jpe?g|jfif)$/.test(ext)) return 'jpeg';
+  if (/^(heic|heif|hif|avif)$/.test(ext)) return 'heif';
+  if (/^(dng|tiff?|nef|arw|cr2|orf|rw2|pef|srw)$/.test(ext)) return 'tiff';
+  if (/^(mov|mp4|m4v|3gp)$/.test(ext)) return 'video';
+  if (ext === 'json') return 'json';
+  return null;
+};
+async function entriesToFiles(entries){
+  const out = [];
+  const walk = async entry => {
+    if (!entry || entry.name.startsWith('.')) return;
+    if (entry.isFile){ out.push(await new Promise((res, rej) => entry.file(res, rej)).catch(() => null)); return; }
+    if (entry.isDirectory){
+      const reader = entry.createReader();
+      for (;;){
+        const batch = await new Promise((res, rej) => reader.readEntries(res, rej)).catch(() => []);
+        if (!batch.length) break;
+        for (const e of batch) await walk(e);
+        if (out.length % 500 === 0) setStatus(`フォルダの中を探しています… いま${fmt(out.length)}ファイル`);
+      }
+    }
+  };
+  for (const e of entries) await walk(e);
+  return out.filter(Boolean);
+}
+
+// ---------- prefectures ----------
+let PREF = null, PREF_REQ = null;
+const JP_BOX = [122, 24, 154, 46.5];
+const fetchPref = () => PREF_REQ || (PREF_REQ = fetch('./jp.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).catch(e => { PREF_REQ = null; throw e; }));
+(window.requestIdleCallback || (f => setTimeout(f, 1300)))(() => fetchPref().catch(() => {}));
+async function loadPrefectures(){
+  if (PREF) return;
+  const raw = await fetchPref().catch(() => { throw new Error('日本地図のデータを読み込めませんでした。ページを再読み込みして、もう一度お試しください。'); });
+  PREF = raw.map(f => {
+    const polys = f.c.map(poly => poly.map(r => Float64Array.from(r.flat())));
+    const pb = polys.map(p => ringBox(p[0]));
+    const b = [Math.min(...pb.map(x => x[0])), Math.min(...pb.map(x => x[1])), Math.max(...pb.map(x => x[2])), Math.max(...pb.map(x => x[3]))];
+    return { n: f.n, c: f.c, polys, pb, b };
+  });
+}
+function prefContaining(lon, lat){
+  for (let i = 0; i < PREF.length; i++){
+    const p = PREF[i], b = p.b;
+    if (lon < b[0] || lon > b[2] || lat < b[1] || lat > b[3]) continue;
+    for (let k = 0; k < p.polys.length; k++){
+      const q = p.pb[k];
+      if (lon < q[0] || lon > q[2] || lat < q[1] || lat > q[3]) continue;
+      const poly = p.polys[k];
+      if (!inRing(lon, lat, poly[0])) continue;
+      let hole = false;
+      for (let h = 1; h < poly.length; h++) if (inRing(lon, lat, poly[h])){ hole = true; break; }
+      if (!hole) return i;
+    }
+  }
+  return -1;
+}
+// 海岸・港・フェリーの写真は、簡略化した海岸線のすぐ外に落ちる。約13km以内なら一番近い県に寄せる。
+function prefNearest(lon, lat, maxDeg){
+  const k = Math.cos(lat * Math.PI / 180) || 1e-6;
+  let best = -1, bestD = maxDeg * maxDeg;
+  for (let i = 0; i < PREF.length; i++){
+    const p = PREF[i], b = p.b;
+    if (lon < b[0] - maxDeg / k || lon > b[2] + maxDeg / k || lat < b[1] - maxDeg || lat > b[3] + maxDeg) continue;
+    for (const poly of p.polys){
+      const r = poly[0];
+      for (let a = 0, j = r.length - 2; a < r.length; j = a, a += 2){
+        const ax = (r[j] - lon) * k, ay = r[j+1] - lat, bx = (r[a] - lon) * k, by = r[a+1] - lat;
+        const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+        let t = L ? -(ax * dx + ay * dy) / L : 0; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const px = ax + t * dx, py = ay + t * dy, d = px * px + py * py;
+        if (d < bestD){ bestD = d; best = i; }
+      }
+    }
+  }
+  return best;
+}
+const PCACHE = new Map();
+function prefIndex(lon, lat){
+  if (lon < JP_BOX[0] || lon > JP_BOX[2] || lat < JP_BOX[1] || lat > JP_BOX[3]) return -1;
+  const key = Math.round(lat * 200) * 100000 + Math.round(lon * 200);
+  let i = PCACHE.get(key);
+  if (i === undefined){ i = prefContaining(lon, lat); if (i < 0) i = prefNearest(lon, lat, 0.12); PCACHE.set(key, i); }
+  return i;
+}
+
+// ---------- the run ----------
+let lastRun = null, busy = false;
+async function handle(files){
+  if (busy) return;
+  busy = true;
+  try {
+    await Promise.all([loadCountries(), loadPrefectures()]);
+    const all = [...files].filter(f => f && !f.name.startsWith('._') && !f.name.startsWith('.'));
+    const media = all.filter(f => KIND(f.name) && KIND(f.name) !== 'json');
+    const jsons = all.filter(f => KIND(f.name) === 'json');
+    if (!media.length && !jsons.length){
+      setStatus(all.length ? `選んだ${fmt(all.length)}個のファイルの中に、読める写真・動画・位置情報の書き出しがありませんでした。` : '読めるものがありませんでした。');
+      return;
+    }
+    const pref = new Map(), country = new Map(), other = new Map();
+    const bump = (m, key, year, kind) => {
+      let a = m.get(key);
+      if (!a){ a = { photos: 0, points: 0, y0: null, y1: null }; m.set(key, a); }
+      a[kind]++;
+      if (year){ if (a.y0 === null || year < a.y0) a.y0 = year; if (a.y1 === null || year > a.y1) a.y1 = year; }
+    };
+    const stats = { media: media.length, withLoc: 0, sidecars: 0, points: 0, unmatched: 0 };
+    // 都道府県が先。日本の外なら国を調べて、海外として数える。
+    const locate = (lon, lat) => {
+      const pi = prefIndex(lon, lat);
+      if (pi >= 0) return { key: 'p' + pi, pi };
+      const code = countryIndex(lon, lat);
+      if (code < 0) return null;
+      const f = FEATS[Math.floor(code / 10000)];
+      if (f.a === 'JP') return null;   // 日本の中だが、どの都道府県の輪郭からも遠い: 判定できなかったものとして数える
+      return { key: 'c' + (f.a || f.n), f };
+    };
+    const record = (loc, year, kind) => {
+      if (loc.pi !== undefined) bump(pref, loc.pi, year, kind);
+      else if (loc.f.k) bump(country, loc.f.a, year, kind);
+      else bump(other, loc.f.a || loc.f.n, year, kind);   // 香港・グアムなど: 名前は出すが国の数には入れない
+    };
+    // ファイル名 -> そのファイル名で既に数えた場所。Takeoutの位置ファイルは、同じ名前の写真が同じ場所を数え済みのときだけ飛ばす。
+    const located = new Map();
+    const mark = (name, key) => { let set = located.get(name); if (!set) located.set(name, set = new Set()); set.add(key); };
+    let done = 0;
+    const total = media.length + jsons.length;
+    const worker = async queue => {
+      while (queue.length){
+        const f = queue.shift();
+        let r = null;
+        const kind = KIND(f.name);
+        try {
+          if (kind === 'jpeg') r = await readJpeg(f);
+          else if (kind === 'heif') r = await readHeif(f);
+          else if (kind === 'tiff') r = await readRawTiff(f);
+          else if (kind === 'video') r = await readVideo(f);
+        } catch (e){ r = null; }
+        if (r && r.point){
+          stats.withLoc++;
+          const loc = locate(r.point[0], r.point[1]);
+          mark(f.name.toLowerCase(), loc ? loc.key : null);
+          if (loc) record(loc, r.year, 'photos'); else stats.unmatched++;
+        }
+        done++;
+        if (done % 20 === 0){ setStatus(`${fmt(total)}ファイル中 ${fmt(done)} を読み取り中 · 位置情報あり ${fmt(stats.withLoc)}`); setProgress(done / total); await tick(); }
+      }
+    };
+    const queue = media.slice();
+    await Promise.all([worker(queue), worker(queue), worker(queue), worker(queue)]);
+
+    for (const f of jsons){
+      if (f.size < 256 * 1024){
+        let o = null;
+        try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
+        if (o && (o.geoData || o.geoDataExif) && typeof o.title === 'string'){
+          const p = sidecarPoint(o);
+          const loc = p ? locate(p[0], p[1]) : null, key = loc ? loc.key : null;
+          const seen = located.get(o.title.toLowerCase());
+          if (p && !(seen && seen.has(key))){
+            stats.sidecars++;
+            mark(o.title.toLowerCase(), key);
+            const ts = o.photoTakenTime && +o.photoTakenTime.timestamp;
+            if (loc) record(loc, ts ? new Date(ts * 1000).getUTCFullYear() : null, 'photos'); else stats.unmatched++;
+          }
+          done++;
+          continue;
+        }
+      }
+      await scanLocationFile(f, (p, year) => { stats.points++; const loc = locate(p[0], p[1]); if (loc) record(loc, year, 'points'); else stats.unmatched++; },
+        frac => { setStatus(`${f.name} を読み取り中 · ${Math.round(frac * 100)}% · 地点 ${fmt(stats.points)}`); setProgress(frac); });
+      done++;
+    }
+    setProgress(null);
+    lastRun = { pref, country, other, stats };
+    render(lastRun);
+  } catch (e){
+    setProgress(null);
+    setStatus(e && e.message ? e.message : 'ファイルの読み取り中に問題が起きました。');
+  } finally { busy = false; }
+}
+
+function render({ pref, country, other, stats }){
+  if (!pref.size && !country.size && !other.size){
+    const any = stats.withLoc + stats.sidecars + stats.points;
+    if (any) setStatus(`位置情報を${fmt(any)}件読み取りましたが、都道府県にも国にも当てはまりませんでした。別のファイルでお試しください。`);
+    else if (IS_IOS) setStatus(`選んだ${fmt(stats.media)}枚の写真には位置情報が入っていませんでした。写真を選ぶ画面の上部が「位置情報あり」になっているか、撮影時にカメラの位置情報がオンだったかを確かめてください。`);
+    else if (IS_ANDROID) setStatus(`選んだ${fmt(stats.media)}個のファイルには位置情報が入っていませんでした。Androidではブラウザで選んだ写真から位置情報が消されます。Googleマップのタイムラインの書き出しを使うか、パソコンでお試しください。`);
+    else setStatus(`選んだ${fmt(stats.media)}個のファイルには位置情報が保存されていませんでした。カメラの位置情報をオフにして撮った写真には座標が入りません。`);
+    return;
+  }
+  const years = a => a.y0 ? (a.y0 === a.y1 ? `${a.y0}年` : `${a.y0}〜${a.y1}年`) : '';
+  const qty = a => a.photos ? `写真${fmt(a.photos)}枚` : `${fmt(a.points)}地点`;
+  const chip = (name, a, dim) => `<span class="chip"${dim ? ' style="opacity:.75"' : ''}>${name} · ${[years(a), qty(a)].filter(Boolean).join(' · ')}</span>`;
+  const prefRows = [...pref.entries()].sort((x, y) => (y[1].photos + y[1].points) - (x[1].photos + x[1].points));
+  const countryRows = [...country.entries()].sort((x, y) => (x[1].y0 ?? 9999) - (y[1].y0 ?? 9999));
+  $('#list').innerHTML = prefRows.map(([i, a]) => chip(PREF[i].n, a)).join('') + countryRows.map(([code, a]) => chip(JA_NAMES[code] || code, a, true)).join('');
+  const otherNames = [...other.keys()].map(k => JA_NAMES[k] || k);
+  $('#also').textContent = otherNames.length ? `ほかに見つかった国・地域: ${otherNames.join('、')}（海外の数は「国連加盟193カ国＋台湾」で数えているため、入れていません）` : '';
+  const bits = [];
+  if (stats.media) bits.push(`写真・動画 ${fmt(stats.media)}件を読み取り、うち位置情報あり ${fmt(stats.withLoc)}件`);
+  if (stats.sidecars) bits.push(`Googleフォトの位置 ${fmt(stats.sidecars)}件`);
+  if (stats.points) bits.push(`タイムラインの地点 ${fmt(stats.points)}件`);
+  if (stats.unmatched) bits.push(`陸地から遠すぎて判定できなかったもの ${fmt(stats.unmatched)}件`);
+  $('#stats').textContent = bits.join(' · ');
+  const fromPhotos = stats.withLoc + stats.sidecars > 0, fromTimeline = stats.points > 0;
+  const src = fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos';
+  draw(new Set([...pref.keys()].map(i => PREF[i].n)), pref.size, country.size, src);
+  prepareShare(pref.size, src);
+  $('#result').classList.add('on');
+  setStatus('完了しました。ブラウザの外には何も出ていません。');
+  $('#result').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+
+// ---------- the map ----------
+const W=1200,H=1440,MTOP=430,MH=880;
+// 本土: 緯度経度を実形状に近い比率で最大化。沖縄は左下に別枠。
+const M={lon0:128.3,lon1:146.4,lat0:30.5,lat1:45.8};
+const OKI={lon0:126.6,lon1:128.5,lat0:26.0,lat1:26.95,x:W-38-250,y:MTOP+MH-230,w:250,h:200};
+const COS=Math.cos(38*Math.PI/180);
+const kMain=Math.min(MH/(M.lat1-M.lat0), W/((M.lon1-M.lon0)*COS));
+const wMain=(M.lon1-M.lon0)*COS*kMain, xOff=(W-wMain)/2;
+function projMain(lon,lat){
+  return [xOff+(lon-M.lon0)*COS*kMain, MTOP+(M.lat1-lat)*kMain];
+}
+const kOki=Math.min(OKI.h/(OKI.lat1-OKI.lat0), OKI.w/((OKI.lon1-OKI.lon0)*COS));
+function projOki(lon,lat){
+  return [OKI.x+(lon-OKI.lon0)*COS*kOki, OKI.y+(OKI.lat1-lat)*kOki];
+}
+function paint(c,f,proj,on){
+  c.beginPath();
+  for(const poly of f.c){for(const ring of poly){ring.forEach((p,i)=>{const[x,y]=proj(p[0],p[1]);i===0?c.moveTo(x,y):c.lineTo(x,y);});c.closePath();}}
+  c.fillStyle=on?'#D6692E':'#E8DACA'; c.fill();
+  c.strokeStyle=on?'#C25A22':'#DCC9B5'; c.lineWidth=on?1.2:0.7; c.stroke();
+}
+function draw(prefSet, nPref, nCountry, src){
+  const c=$('#map').getContext('2d');
+  c.fillStyle='#FCF7F0';c.fillRect(0,0,W,H);
+  c.fillStyle='#FDF6EE';c.fillRect(0,MTOP-40,W,MH+60);
+  c.save(); c.beginPath(); c.rect(0,MTOP-40,W,MH+60); c.clip();
+  for(const f of PREF){ if(f.n==='沖縄県') continue; paint(c,f,projMain,prefSet.has(f.n)); }
+  c.restore();
+  // 沖縄の別枠
+  c.save(); c.beginPath(); c.rect(OKI.x-10,OKI.y-10,OKI.w+20,OKI.h+20); c.clip();
+  const oki=PREF.find(p=>p.n==='沖縄県');
+  if(oki) paint(c,oki,projOki,prefSet.has('沖縄県'));
+  c.restore();
+  c.strokeStyle='#E0CDBA'; c.lineWidth=1.2;
+  c.strokeRect(OKI.x-10,OKI.y-10,OKI.w+20,OKI.h+20);
+  c.textAlign='left'; c.fillStyle='#A28A78'; c.font='400 20px Inter, "Hiragino Sans", sans-serif';
+  c.fillText('沖縄', OKI.x-6, OKI.y-20);
+  c.textAlign='center';
+  c.fillStyle='#D6692E'; c.letterSpacing='8px'; c.font='600 26px Inter, "Hiragino Sans", sans-serif';
+  c.fillText('行った都道府県', W/2, 132); c.letterSpacing='0px';
+  c.fillStyle='#322014'; c.font='600 150px Fraunces, Georgia, serif';
+  c.fillText(String(nPref), W/2, 278);
+  c.fillStyle='#7A6555'; c.font='300 40px Inter, "Hiragino Sans", sans-serif';
+  c.fillText('／ 47 都道府県', W/2, 340);
+  if(nCountry>0){
+    c.fillStyle='#A28A78'; c.font='400 30px Inter, "Hiragino Sans", sans-serif';
+    c.fillText('海外は ' + nCountry + ' カ国', W/2, 392);
+  }
+  c.fillStyle='#7A6555'; c.font='300 28px Inter, "Hiragino Sans", sans-serif';
+  c.fillText({ timeline: '自分の位置履歴から、自分のブラウザの中で数えました', both: '自分の写真と位置履歴から、自分のブラウザの中で数えました' }[src] || '自分の写真から、自分のブラウザの中で数えました', W/2, MTOP+MH+56);
+  c.fillStyle='#A28A78'; c.font='400 25px Inter, sans-serif';
+  c.fillText('counter.getdriftlog.com/ja/', W/2, MTOP+MH+104);
+}
+
+
+// ---------- sharing ----------
+// 画像は先に作っておく。iOSはタップから直接 share() を呼ばないと共有シートを開かない。
+const PAGE_URL = 'https://counter.getdriftlog.com/ja/';
+const CAN_SHARE = !!navigator.share;
+let share = null;
+function prepareShare(n, src){
+  const from = { timeline: 'Googleマップのタイムライン', both: '写真とGoogleマップのタイムライン' }[src] || '写真';
+  const text = n ? `行った都道府県は${n}/47でした。自分の${from}から数えました（アップロードなし）。` : '写真やGoogleマップのタイムラインから、行った都道府県を数えてくれる無料のページ。アップロードなし。';
+  share = { text, file: null };
+  const btn = $('#share');
+  btn.hidden = false;
+  btn.textContent = CAN_SHARE ? '共有' : 'リンクをコピー';
+  $('#map').toBlob(b => { if (b && share && share.text === text) share.file = new File([b], 'todofuken.png', { type: 'image/png' }); }, 'image/png');
+}
+// 押す頃には上の案内文が画面外なので、ボタン自体に結果を出す。
+async function copyLink(text){
+  const btn = $('#share'), label = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(`${text} ${PAGE_URL}`);
+    setStatus('文とリンクをコピーしました。そのまま貼り付けられます。');
+    btn.textContent = 'コピーしました';
+    setTimeout(() => { if (btn.textContent === 'コピーしました') btn.textContent = label; }, 2000);
+  } catch (e){
+    setStatus(`このページのリンク: ${PAGE_URL}`);
+    window.prompt('このリンクをコピーしてください:', PAGE_URL);
+  }
+}
+$('#share').addEventListener('click', async () => {
+  if (!share) return;
+  const { text, file } = share;
+  if (!CAN_SHARE) return copyLink(text);
+  try {
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], text: `${text} ${PAGE_URL}` });
+    else await navigator.share({ text, url: PAGE_URL });
+  } catch (e){
+    if (e && e.name === 'AbortError') return;
+    copyLink(text);
+  }
+});
+
+// ---------- wiring ----------
+const drop = $('#drop');
+$('#pickFiles').addEventListener('click', () => $('#fileInput').click());
+$('#pickDir').addEventListener('click', () => $('#dirInput').click());
+$('#fileInput').addEventListener('change', e => handle(e.target.files));
+$('#dirInput').addEventListener('change', e => handle(e.target.files));
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+drop.addEventListener('dragleave', e => { if (!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const items = e.dataTransfer.items;
+  const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
+  if (entries.some(en => en.isDirectory)){ setStatus('フォルダの中を探しています…'); handle(await entriesToFiles(entries)); }
+  else handle(e.dataTransfer.files);
+});
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
+$('#save').addEventListener('click', () => { const a = document.createElement('a'); a.download = '行った都道府県.png'; a.href = $('#map').toDataURL('image/png'); a.click(); });
+$('#again').addEventListener('click', () => {
+  $('#also').textContent = '';
+  $('#result').classList.remove('on'); setStatus(''); setProgress(null); share = null; $('#share').hidden = true;
+  $('#fileInput').value = ''; $('#dirInput').value = '';
+  drop.scrollIntoView({ block: 'center' });
+});
+</script>
+</body>
+</html>
