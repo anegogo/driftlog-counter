@@ -5,7 +5,7 @@
 (function (root){
 'use strict';
 
-const SITE = 'https://driftlog-counter.pages.dev';
+const SITE = 'https://counter.getdriftlog.com';
 // ppid is CPP2, the "countries visited" custom product page, as on the counter's own App Store link.
 const storeUrl = ct => `https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&pt=129098692&ct=${encodeURIComponent(String(ct).slice(0, 30))}&mt=8`;
 const xPostUrl = (text, url) => `https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
@@ -480,7 +480,7 @@ function drawResultCard(canvas, FEATS, { hits, n, src, base }){
   c.fillStyle = '#7A6555'; c.font = '300 27px Inter, sans-serif';
   c.fillText(resultCaption(src, base), W / 2, MAP_TOP + MAP_H + 88);
   c.fillStyle = '#8F7765'; c.font = '400 24px Inter, sans-serif';
-  c.fillText('driftlog-counter.pages.dev', W / 2, MAP_TOP + MAP_H + 140);
+  c.fillText('counter.getdriftlog.com', W / 2, MAP_TOP + MAP_H + 140);
 }
 // A bare map of someone's countries, 1200 × 700, for the page that opens from a result link.
 function drawSharedMap(canvas, FEATS, codes){
@@ -522,7 +522,7 @@ function drawCompareCard(canvas, FEATS, { cmp, mineSrc, mineBase }){
   c.fillStyle = '#7A6555';
   c.fillText(line, W / 2, MAP_TOP + MAP_H + 172);
   c.fillStyle = '#8F7765'; c.font = '400 24px Inter, sans-serif';
-  c.fillText('driftlog-counter.pages.dev', W / 2, H - 70);
+  c.fillText('counter.getdriftlog.com', W / 2, H - 70);
 }
 
 // ---------- the passport page (/passport/) ----------
@@ -583,7 +583,7 @@ function roundRect(c, x, y, w, h, r){
 // (revealOrder). sheets: from loadStamps(), or null when there are no stamps to draw. Returns the text it drew.
 function drawPassport(canvas, { order, sheets, src, base }){
   const { W, H } = PASSPORT, c = canvas.getContext('2d'), n = order.length, total = COUNTRIES.length, g = passportGrid(n);
-  const text = { title: `My passport page · ${n} of ${total}`, toGo: n < total ? `${total - n} to go` : `All ${total}`, caption: passportCaption(src, base), url: 'driftlog-counter.pages.dev/passport' };
+  const text = { title: `My passport page · ${n} of ${total}`, toGo: n < total ? `${total - n} to go` : `All ${total}`, caption: passportCaption(src, base), url: 'counter.getdriftlog.com/passport' };
   c.fillStyle = '#FAF6EF'; c.fillRect(0, 0, W, H);                    // the poster's paper: the stamps' faint fill is tuned to it
   c.strokeStyle = '#E6D8C6'; c.lineWidth = 2; roundRect(c, 34, 34, W - 68, H - 68, 30); c.stroke();
   c.textAlign = 'center';

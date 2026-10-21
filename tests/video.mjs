@@ -36,7 +36,7 @@ for (const n of [1, 3, 37, 100, 194]){
   frames.forEach((f, i) => { if (i && f.label && f.label !== frames[i - 1].label){ if (lastChange >= 0) fastest = Math.min(fastest, (i - lastChange) / FPS); lastChange = i; } });
   check(fastest >= 0.2 - 1e-9, `${n}: names under the map change at most every ${fastest.toFixed(2)} s`);
   const end = V.textAt(p, p.duration - 1 / FPS);
-  check(end.outro === 1 && end.count === n && end.note === '194 = 193 UN members + Taiwan' && end.address === 'driftlog-counter.pages.dev' && !end.label, `${n}: the end card`);
+  check(end.outro === 1 && end.count === n && end.note === '194 = 193 UN members + Taiwan' && end.address === 'counter.getdriftlog.com' && !end.label, `${n}: the end card`);
 }
 check(Math.round(V.plan({ codes: pick(3) }).duration) === 6 && Math.round(V.plan({ codes: new Set(ALL) }).duration) === 15, 'longer with more countries: 3 → 6 s, 194 → 15 s');
 console.log('clip lengths: ' + [1, 3, 37, 100, 194].map(n => `${n} → ${V.plan({ codes: n === 194 ? new Set(ALL) : pick(n) }).frames} frames`).join(', '));
@@ -74,8 +74,8 @@ for (const [n, src] of [[3, 'photos'], [37, 'tap'], [194, 'timeline']]){
   for (let i = 0; i < p.frames; i++){ const r = V.drawFrame(c, s, i / FPS); texts.push(r); }
   check(s.settled === n, `${n}: all ${n} countries end up on the map layer (${s.settled})`);
   const first = texts[0].drawn.map(d => d.str), last = texts[texts.length - 1].drawn;
-  check(first.includes('I HAVE BEEN TO') && first.includes('0') && first.includes('of 194 countries') && first.includes('driftlog-counter.pages.dev') && !first.includes(V.NOTE), `${n}: the first frame`);
-  const big = last.find(d => d.str === 'driftlog-counter.pages.dev' && d.alpha === 1);
+  check(first.includes('I HAVE BEEN TO') && first.includes('0') && first.includes('of 194 countries') && first.includes('counter.getdriftlog.com') && !first.includes(V.NOTE), `${n}: the first frame`);
+  const big = last.find(d => d.str === 'counter.getdriftlog.com' && d.alpha === 1);
   check(big && px(big.font) >= 54 && big.y <= SAFE.bottom - 0.25 * px(big.font) && big.str.length * px(big.font) * 0.55 <= SAFE.right - SAFE.left,
     `${n}: the address at the end is big (${big && px(big.font)} px) and inside the clear area (baseline ${big && big.y})`);
   check(last.some(d => d.str === V.NOTE && d.alpha === 1) && last.some(d => d.str === String(n)) && (src === 'tap' ? last.some(d => d.str === 'picked by hand') : last.some(d => d.str === CAP[src])),

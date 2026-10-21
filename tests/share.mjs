@@ -33,8 +33,8 @@ let r = round([]);
 check(Kit.linkHash([]) === 'v=1.' && r && r.codes.size === 0 && r.years === null, 'no countries: "v=1." and back');
 r = round(ALL);
 check(r && sameSet(r.codes, new Set(ALL)), 'all 194 and back');
-check(Kit.resultUrl(ALL) === 'https://driftlog-counter.pages.dev/c/194/#v=1.________________________________w', `all 194 link: ${Kit.resultUrl(ALL)}`);
-check(Kit.resultUrl([]) === 'https://driftlog-counter.pages.dev/c/0/#v=1.', 'no-country link');
+check(Kit.resultUrl(ALL) === 'https://counter.getdriftlog.com/c/194/#v=1.________________________________w', `all 194 link: ${Kit.resultUrl(ALL)}`);
+check(Kit.resultUrl([]) === 'https://counter.getdriftlog.com/c/0/#v=1.', 'no-country link');
 let bad = 0, longest = 0;
 for (let t = 0; t < 3000; t++){
   const codes = pick((rand() * 195) | 0);
@@ -124,14 +124,14 @@ const walk = dir => readdirSync(dir).flatMap(n => { const p = join(dir, n); retu
 page = loadPage();
 await page.T.handle(walk(join(ROOT, 'tests', 'fixtures')));
 const url = page.T.share.url, back = Kit.readLink(url.slice(url.indexOf('#')));
-check(/^https:\/\/driftlog-counter\.pages\.dev\/c\/15\/#v=1\.[A-Za-z0-9_-]+$/.test(url), `fixture link: ${url}`);
+check(/^https:\/\/counter\.getdriftlog\.com\/c\/15\/#v=1\.[A-Za-z0-9_-]+$/.test(url), `fixture link: ${url}`);
 check(back && sameSet(back.codes, page.T.lastRun.codes) && [...back.codes].sort().join() === 'CA,DZ,FR,IS,IT,JP,KR,MA,MC,MT,MX,PT,SG,US,AR'.split(',').sort().join(), 'the link holds the 15 counted countries, not Hong Kong or Vatican City');
 check(!url.includes('&y='), 'years are not shared');
 check(page.T.share.text.startsWith('I have been to 15 of 194 countries, counted from my own'), `share text: ${page.T.share.text}`);
 const href = sel => { const v = page.document.querySelector(sel).href; return typeof v === 'string' ? v : '(not set)'; };
 check(href('#appline a').includes('ct=en_share&'), `sender's App Store line is ct=en_share: ${href('#appline a')}`);
 await page.T.showExample();
-check(page.T.share.url === 'https://driftlog-counter.pages.dev/', 'the example shares the page, not a result link');
+check(page.T.share.url === 'https://counter.getdriftlog.com/', 'the example shares the page, not a result link');
 
 // 8. The receiving end: comparing by tap, by photos, and after editing; every App Store link is ct=en_share_recv.
 const sleep = ms => new Promise(res => setTimeout(res, ms));
@@ -145,7 +145,7 @@ page.T.MINE = { codes: tapped, src: 'tap' };
 await page.T.showCompare();
 check(nums() === '12,18,25', `tapped 30 against their 37: ${nums()}`);
 const sent = page.T.cmpShare.url, sentBack = Kit.readLink(sent.slice(sent.indexOf('#')));
-check(sent.startsWith('https://driftlog-counter.pages.dev/c/30/#v=1.') && sentBack && sameSet(sentBack.codes, tapped), `send-back link is your own: ${sent}`);
+check(sent.startsWith('https://counter.getdriftlog.com/c/30/#v=1.') && sentBack && sameSet(sentBack.codes, tapped), `send-back link is your own: ${sent}`);
 check(page.T.cmpShare.text === 'Both of us: 12. Only me: 18. Only you: 25. My map, to compare back:', `send-back text: ${page.T.cmpShare.text}`);
 check(href('#appLink').includes('ct=en_share_recv'), `receiver: the app section links with ct=en_share_recv: ${href('#appLink')}`);
 await page.T.handle(walk(join(ROOT, 'tests', 'fixtures')));
@@ -257,7 +257,7 @@ await sleep(50);
 const shown = () => [page.document.querySelector('#cmpPassRow').hidden === true, page.document.querySelector('#cmpVid').hidden === true, !!page.T.cmpVideo.list].join();
 page.T.MINE = { codes: new Set(), src: 'tap' };
 await page.T.showCompare(true);
-check(shown() === 'true,true,false' && page.T.cmpShare.url === 'https://driftlog-counter.pages.dev/c/0/#v=1.', `receiver, none picked: passport and video hidden (${shown()}), sends back /c/0/`);
+check(shown() === 'true,true,false' && page.T.cmpShare.url === 'https://counter.getdriftlog.com/c/0/#v=1.', `receiver, none picked: passport and video hidden (${shown()}), sends back /c/0/`);
 page.T.MINE = { codes: new Set(['JP']), src: 'tap' };
 await page.T.showCompare(true);
 check(shown() === 'false,false,true', `receiver, one picked: passport and video shown (${shown()})`);

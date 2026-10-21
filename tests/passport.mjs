@@ -96,7 +96,7 @@ for (const n of [0, 1, 37, 194]){
   const texts = calls.filter(c => c[0] === 'fillText').map(c => c[1][0]);
   check(text.title === `My passport page · ${n} of 194` && texts.includes(text.title), `${n}: title "${text.title}"`);
   check(text.toGo === (n < 194 ? `${194 - n} to go` : 'All 194') && texts.includes(text.toGo), `${n}: "${text.toGo}"`);
-  check(texts.includes('counted from my photos · ' + NOTE) && texts.includes('driftlog-counter.pages.dev/passport'), `${n}: caption and address`);
+  check(texts.includes('counted from my photos · ' + NOTE) && texts.includes('counter.getdriftlog.com/passport'), `${n}: caption and address`);
   const g = Kit.passportGrid(n), slots = calls.filter(c => c[0] === 'setLineDash' && c[1][0].length).length;
   check(slots === (n < 194 ? g.cols * g.rows - n : 0), `${n}: ${slots} empty slots`);
 }

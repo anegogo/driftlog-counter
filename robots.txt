@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://driftlog-counter.pages.dev/sitemap.xml
+Sitemap: https://counter.getdriftlog.com/sitemap.xml

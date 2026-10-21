@@ -14,7 +14,7 @@ const VIDEO = { W: 1080, H: 1920, FPS: 30, MAP: { x: 0, y: 300, w: 1080, h: 558 
 const INTRO = 0.5, HOLD = 1.0, OUTRO = 2.0;        // seconds: the empty map, the full map, the address at the end
 const FLASH = 0.4, PULSE = 0.7, FADE = 0.35;       // a new country is lighter for FLASH s; its ring lasts PULSE s
 const NOTE = '194 = 193 UN members + Taiwan';
-const ADDRESS = 'driftlog-counter.pages.dev';
+const ADDRESS = 'counter.getdriftlog.com';
 const FLASH_COLORS = ['#F29B5C', '#D6692E'];
 const FONTS = ['600 230px Fraunces', '300 44px Inter', '600 32px Inter', '500 40px Inter', '300 30px Inter', '400 32px Inter', '500 28px Inter', '600 64px Inter'];
 

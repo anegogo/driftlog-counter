@@ -4,29 +4,31 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>How many countries have you been to? — count them from your own photos</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png" />
+<link rel="apple-touch-icon" href="/img/icon-180.png" />
 <meta name="description" content="Drop in your photos, a whole folder, a Google Takeout export or a Google Maps Timeline file, and see every country you've been to on a map. It runs in your browser — nothing is uploaded." />
-<link rel="canonical" href="https://driftlog-counter.pages.dev/" />
-<link rel="alternate" hreflang="en" href="https://driftlog-counter.pages.dev/" />
-<link rel="alternate" hreflang="ja" href="https://zubotabi-counter.pages.dev/" />
-<link rel="alternate" hreflang="x-default" href="https://driftlog-counter.pages.dev/" />
+<link rel="canonical" href="https://counter.getdriftlog.com/" />
+<link rel="alternate" hreflang="en" href="https://counter.getdriftlog.com/" />
+<link rel="alternate" hreflang="ja" href="https://ja-counter.getdriftlog.com/" />
+<link rel="alternate" hreflang="x-default" href="https://counter.getdriftlog.com/" />
 <meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=en_counter_sb" />
 <script>/* Opened from a result link (/c/<N>/ forwards here with #v=1.…): the Smart App Banner is the receiving end too, like every App Store link on that screen. Set while the page is still being read; not checked on a real iPhone. */ if (/(?:^#|&|%26)v(?:=|%3D)/i.test(location.hash)) document.querySelector('meta[name="apple-itunes-app"]').content = 'app-id=6785328399, affiliate-data=pt=129098692&ct=en_share_recv';</script>
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Driftlog" />
-<meta property="og:url" content="https://driftlog-counter.pages.dev/" />
+<meta property="og:url" content="https://counter.getdriftlog.com/" />
 <meta property="og:title" content="How many countries have you been to?" />
 <meta property="og:description" content="Drop in your photos and watch the map fill in. Nothing is uploaded — it all runs in your browser." />
-<meta property="og:image" content="https://driftlog-counter.pages.dev/og.png" />
+<meta property="og:image" content="https://counter.getdriftlog.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="How many countries have you been to? Drop in your photos and the map fills in." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="How many countries have you been to?" />
 <meta name="twitter:description" content="Drop in your photos and watch the map fill in. Nothing is uploaded — it all runs in your browser." />
-<meta name="twitter:image" content="https://driftlog-counter.pages.dev/og.png" />
+<meta name="twitter:image" content="https://counter.getdriftlog.com/og.png" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Driftlog Counter",
-"url":"https://driftlog-counter.pages.dev/","applicationCategory":"TravelApplication",
+"url":"https://counter.getdriftlog.com/","applicationCategory":"TravelApplication",
 "operatingSystem":"Any (runs in the browser)",
 "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
 "description":"Counts how many countries you have been to from the GPS coordinates stored in your own photos, a Google Takeout export or a Google Maps Timeline export. Runs entirely in the browser: no upload, no account.",
@@ -36,10 +38,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"How can I find out how many countries I have been to?","acceptedAnswer":{"@type":"Answer","text":"Photos taken with location services switched on store GPS coordinates inside the file. This page reads those coordinates, works out which country each one falls in, and counts the distinct countries for you. A Google Maps Timeline export or a Google Takeout folder works the same way."}},
-{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself and its scripts, its fonts, its map file and a short demo video of the app, which you can verify in the network tab. Once the page has loaded, it keeps working with the network switched off."}},
+{"@type":"Question","name":"Are my photos uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Files are read inside your browser and no file and no coordinate is sent to a server. The only requests the page makes are for itself and its scripts, its fonts, its two border files (countries and US states) and a short demo video of the app, which you can verify in the network tab. Once the page has loaded, it keeps working with the network switched off."}},
 {"@type":"Question","name":"Which files work?","acceptedAnswer":{"@type":"Answer","text":"JPEG and HEIC photos, TIFF-based raw files such as DNG, iPhone and Android videos, the JSON files in a Google Takeout (Google Photos) export, and Google Maps Timeline exports (Timeline.json, Records.json and Semantic Location History). Photos taken with location turned off contain no coordinates and cannot be counted."}},
 {"@type":"Question","name":"Can I use it on my iPhone?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tap Choose photos, pick from your Photo Library and leave Location Is Included switched on, which is the default on recent iOS versions. To select many photos at once, put a finger on the first photo, slide it sideways and keep going down; each batch you pick adds to your map. For a whole library at once, the Driftlog app reads the location in your photo library directly. Android browsers remove the location from photos, so on Android use a Google Maps Timeline export instead."}},
-{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the page is free and needs no account. It is made by the developer of Driftlog, an iPhone app that keeps the same map up to date on its own."}}]}
+{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes, the page is free and needs no account. It is made by the developer of Driftlog, an app for iPhone and Android that keeps the same map up to date on its own."}}]}
 </script>
 <link rel="stylesheet" href="/fonts.css" />
 <style>
@@ -219,7 +221,7 @@
     </div>
     <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
     <input type="file" id="dirInput" hidden webkitdirectory multiple />
-    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well, and each batch adds to your map (<b>Add more photos</b> under it); for your whole library at once, the <a href="#app">Driftlog app</a> reads it directly. Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://driftlog-app.pages.dev/google-maps-timeline-countries/">how to export it</a>).</p>
+    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well, and each batch adds to your map (<b>Add more photos</b> under it); for your whole library at once, the <a href="#app">Driftlog app</a> reads it directly. Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://getdriftlog.com/google-maps-timeline-countries/">how to export it</a>).</p>
     <p class="note">Nothing is uploaded. Files are read inside your browser — check the network tab, or switch off Wi-Fi once the page has loaded. It keeps working.</p>
   </section>
   <section id="picker" hidden aria-label="Pick countries"></section>
@@ -249,7 +251,7 @@
     <p class="passrow" id="cmpPassRow"><a class="btn" id="cmpPassport" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
     <div id="cmpVid"></div>
     <p class="note linknote">Sending it back shares this image and your own link, <code id="cmpLink"></code>. Only your number is in its path; your country list sits after the #, which browsers never send to any server, including ours. Whoever gets the link, and the app you send it with, can read the list.</p>
-    <p class="appline">Driftlog, an iPhone app, keeps a map like this up to date on its own. <a id="cmpApp" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share_recv&amp;mt=8" rel="noopener">See it on the App Store</a></p>
+    <p class="appline">Driftlog, an app for iPhone and Android, keeps a map like this up to date on its own. <a id="cmpApp" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share_recv&amp;mt=8" rel="noopener">See it on the App Store</a></p>
   </section>
 
   <section class="result" id="result" aria-label="Your countries">
@@ -267,17 +269,18 @@
       <button class="btn" id="again" type="button">Start over</button>
     </div>
     <p class="passrow" id="passRow" hidden><a class="btn" id="passLink" href="/passport/">Make my passport page</a><span>A stamp for each of your countries, as a 9:16 image.</span></p>
+    <p class="passrow" id="usRow" hidden><a class="btn" id="usLink" href="/us/">See my US states map</a><span id="usText"></span></p>
     <div id="vidRow" hidden></div>
     <div class="sharemore" id="shareMore" hidden>
       <p class="note linknote">Your link: <code id="linkTail"></code><br>Only the number is in the link's path. Your country list sits after the #, which browsers never send to any server, including ours. Anyone you send the link to, and the app you send it with, can read the list.</p>
       <p class="note"><a id="xpost" href="https://x.com/" target="_blank" rel="noopener">Post it on X</a> · this hands X the whole link, country list included.</p>
     </div>
-    <p class="appline" id="appline" hidden>Driftlog, an iPhone app, keeps this map up to date on its own. <a href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share&amp;mt=8" rel="noopener">See it on the App Store</a></p>
+    <p class="appline" id="appline" hidden>Driftlog, an app for iPhone and Android, keeps this map up to date on its own. <a href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_share&amp;mt=8" rel="noopener">See it on the App Store</a></p>
   </section>
 
   <section class="pitch" id="app">
     <h3>This is the part Driftlog does every day.</h3>
-    <p>Driftlog is an iPhone app that keeps this map up to date on its own. No check-ins, no journaling — you carry your phone and the map fills in. It reads your old photos the way this page just did, then keeps going from there.</p>
+    <p>Driftlog is an app for iPhone and Android that keeps this map up to date on its own. No check-ins, no journaling — you carry your phone and the map fills in. It reads your old photos the way this page just did, then keeps going from there.</p>
     <div class="demo">
       <video id="demo" src="/app-demo.mp4" poster="/app-demo-poster.jpg"
              muted loop playsinline preload="none"
@@ -285,7 +288,8 @@
       <p class="cap">The app importing a camera roll — 6,432 photos in, 22 countries out, map filled. 9 seconds, no sound, loops.</p>
     </div>
     <a class="cta" id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_counter&amp;mt=8" rel="noopener">Get Driftlog on the App Store</a>
-    <p class="sub">Free to try · one-time unlock, no subscription · iPhone and iPad, iOS 17+ · no account, nothing kept on a server</p>
+    <p class="sub">Free to try · one-time unlock, no subscription · iPhone and iPad (iOS 17+) and Android · no account, nothing kept on a server</p>
+    <p class="sub">On Android: <a href="https://play.google.com/store/apps/details?id=com.shioristudio.zubotabi" rel="noopener">Driftlog on Google Play</a> · <a href="https://getdriftlog.com/about/" rel="noopener">What is Driftlog?</a></p>
   </section>
 
   <section class="how" aria-label="How this page works">
@@ -293,24 +297,27 @@
     <dl>
       <div><dt>Photos</dt><dd>A photo taken with location on carries GPS coordinates in its EXIF metadata. The page reads only the start of each JPEG, the metadata box of each HEIC, and the header of each video — never the picture itself — then tests each coordinate against country borders.</dd></div>
       <div><dt>Google Takeout and Timeline</dt><dd>Google Photos exports keep a location in a small JSON file next to each photo; Maps Timeline exports (the newer on-device <code>Timeline.json</code>, older <code>Records.json</code> and Semantic Location History) are read in slices, so large files work too. The Driftlog app itself does not import these files — this page is the only part of Driftlog that does.</dd></div>
-      <div><dt>What counts as a country</dt><dd>The headline counts the 193 UN member states plus Taiwan. Other places, such as Vatican City and Kosovo or territories like Hong Kong, Puerto Rico and Greenland, are named underneath and filled in on the map, but not counted. (The Driftlog app counts territories separately, so its number can be higher.) Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side.</dd></div>
-      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML and scripts, fonts, map file and demo video, all fetched within a second or two of the page opening (on a page opened from a shared link, the demo video waits until you scroll to it), so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://driftlog-app.pages.dev/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
-      <div><dt>Shared links</dt><dd>A shared result looks like <code>driftlog-counter.pages.dev/c/37/#v=1.…</code> Only the number is in the link's path, so Cloudflare, which hosts this page, sees that number when the link is opened or previewed. The country list sits after the #, which browsers never send to any server, including ours; the page reads it in the browser. Anyone who has the link can read the list, including the app you send it with, and <b>Post it on X</b> hands X the whole link. Picking countries by hand uses the same 194 as the photo count.</dd></div>
+      <div><dt>What counts as a country</dt><dd>The headline counts the 193 UN member states plus Taiwan. Other places, such as Vatican City and Kosovo or territories like Hong Kong, Puerto Rico and Greenland, are named underneath and filled in on the map, but not counted. (The Driftlog app counts territories separately, so its number can be higher.) Borders are Natural Earth 1:50m, so a photo taken within a kilometre or so of a border can land on the wrong side. Which list to use, and whether a layover counts: <a href="https://getdriftlog.com/how-to-count-countries-visited/">how to count the countries you've visited</a>.</dd></div>
+      <div><dt>US states</dt><dd>When some of your files are from the United States, the line under your countries says how many of the fifty states they were in, and <b>See my US states map</b> opens them on a map of their own. State lines are the US Census Bureau's (1:500,000, 2024), exact to about 65 metres between states and along the borders with Canada and Mexico, so there they also settle which country a photo is in: one from downtown El Paso or the American side of Niagara Falls counts for the United States. The states page works on its own too: <a href="/us/">how many US states have you been to?</a></dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your computer. The only requests the page makes are for its own HTML and scripts, fonts, two border files (countries and US states) and demo video, the same for every visitor and all fetched within a second or two of the page opening (on a page opened from a shared link, the demo video waits until you scroll to it), so it keeps working with the network switched off after that. There are no analytics and no cookies. More detail: <a href="https://getdriftlog.com/countries-from-your-photos/">doing the same thing with ExifTool on the command line</a>.</dd></div>
+      <div><dt>Shared links</dt><dd>A shared result looks like <code>counter.getdriftlog.com/c/37/#v=1.…</code> Only the number is in the link's path, so Cloudflare, which hosts this page, sees that number when the link is opened or previewed. The country list sits after the #, which browsers never send to any server, including ours; the page reads it in the browser. Anyone who has the link can read the list, including the app you send it with, and <b>Post it on X</b> hands X the whole link. Picking countries by hand uses the same 194 as the photo count.</dd></div>
       <div><dt>Video</dt><dd><b>Save video</b> makes a 9:16 clip of your map filling in, from 0 to your count, for Reels, TikTok or Stories: in order of first visit when your files have dates, region by region otherwise. It never shows the dates. The clip is drawn and encoded on your device, as an MP4 with WebCodecs where the browser has it, otherwise by recording the drawing (MediaRecorder); where neither works, you get the last frame as an image. It ends on this page's address.</dd></div>
     </dl>
   </section>
 
   <footer>
-    Made by <a href="https://driftlog-app.pages.dev" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT) · <a href="https://driftlog-app.pages.dev/notes/counting-countries-in-the-browser/">How it works</a> · <a href="/passport/">Passport page</a> · <a href="https://zubotabi-counter.pages.dev/" hreflang="ja" lang="ja">日本語</a>
+    Made by <a href="https://getdriftlog.com" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT) · <a href="https://getdriftlog.com/notes/counting-countries-in-the-browser/">How it works</a> · <a href="https://getdriftlog.com/guides/">Guides</a> · <a href="/passport/">Passport page</a> · <a href="/us/">US states</a> · <a href="/2026/">Your 2026 in travel</a> · <a href="/schengen/">Schengen 90/180 calculator</a> · <a href="https://ja-counter.getdriftlog.com/" hreflang="ja" lang="ja">日本語</a>
   </footer>
 </div>
 
 <script src="/kit.js"></script>
 <script src="/video.js"></script>
+<script src="/us/states.js"></script>
 <script>
 'use strict';
 const Kit = window.DriftlogKit;   // countries, result links, map and card drawing, sharing, the picker: /kit.js
 const Video = window.DriftlogVideo;   // the 9:16 clip of the map filling in, made on this device: /video.js
+const States = window.DriftlogStates || null;   // the US states under a count from files, and the link to their page: /us/states.js
 const $ = s => document.querySelector(s);
 const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i');
 const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -328,6 +335,10 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 
 // ---------- country borders (Natural Earth 1:50m, 1:10m for small places; decoded by Kit.decodeFeats) ----------
 let FEATS = null;
+// The US states (/us/us.json, read by /us/states.js): asked for with the country borders, by every visitor alike,
+// so the request says nothing about anyone's files. If it does not load, the count goes on without the states.
+// US_CODE: the United States as countryIndex() returns it.
+let stateOf = null, US_CODE = -1;
 let MAP_REQ = null;
 // Absolute: a page opened from a result link shows the link's /c/<N>/ path in the address bar.
 const fetchMap = () => MAP_REQ || (MAP_REQ = fetch('/countries50.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).catch(e => { MAP_REQ = null; throw e; }));
@@ -335,6 +346,7 @@ const CANVAS_FONTS = ['600 132px Fraunces', '300 38px Inter', '400 24px Inter', 
 // Fetch the borders and fonts once the page is idle, so a file dropped later is read even with the network switched off.
 (window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => {
   fetchMap().catch(() => {});
+  if (States) States.load().catch(() => {});
   if (document.fonts && document.fonts.load) CANVAS_FONTS.forEach(f => document.fonts.load(f).catch(() => {}));
 });
 async function loadCountries(){
@@ -347,6 +359,8 @@ async function loadCountries(){
   setStatus('Loading the world map…');
   const raw = await req.catch(() => { throw new Error('The map file did not load. Reload the page and try again.'); });
   FEATS = Kit.decodeFeats(raw);
+  US_CODE = FEATS.findIndex(f => f.k && f.a === 'US') * 10000;
+  if (States && !stateOf && US_CODE >= 0){ try { stateOf = States.locator(await States.load()); } catch (e){ stateOf = null; } }
 }
 function inRing(x, y, r){
   let inside = false;
@@ -643,6 +657,24 @@ async function handle(files, { adding = false } = {}){
     const keys = prev ? prev.keys : new Set();
     for (const f of all) keys.add(fileKey(f));
     const agg = prev ? prev.agg : new Map();
+    // The US states the files have been in: index in States.LIST -> first year, or null.
+    const us = prev && prev.us ? prev.us : new Map();
+    // Which country a point is in (as countryIndex), with the state lines asked as well. They follow the border
+    // with Canada and Mexico to about 65 m, where the country borders (1:50m) are a kilometre or two out: a point
+    // inside a state's outline is in the United States whatever the country borders say (downtown El Paso, the
+    // American side of Niagara Falls), and so is one just off a US coast that no country claims. Everywhere
+    // else the country borders decide, and a point they give to another country is in no state.
+    const where = (lon, lat, year) => {
+      const code = countryIndex(lon, lat);
+      if (!stateOf) return code;
+      const american = code >= 0 && Math.floor(code / 10000) * 10000 === US_CODE;
+      const exact = stateOf.inside(lon, lat), st = exact >= 0 ? exact : american || code < 0 ? stateOf(lon, lat) : -1;
+      if (st < 0) return code;
+      const i = Math.floor(st / 10000);
+      if (!us.has(i)) us.set(i, year || null);
+      else if (year && (us.get(i) === null || year < us.get(i))) us.set(i, year);
+      return american ? code : US_CODE;
+    };
     const add = (code, year, kind) => {
       const fi = Math.floor(code / 10000);
       let a = agg.get(fi);
@@ -673,7 +705,7 @@ async function handle(files, { adding = false } = {}){
         } catch (e){ r = null; }
         if (r && r.point){
           stats.withLoc++; loc++;
-          const code = countryIndex(r.point[0], r.point[1]);
+          const code = where(r.point[0], r.point[1], r.year);
           mark(f.name.toLowerCase(), code >= 0 ? Math.floor(code / 10000) : -1);
           if (code >= 0) add(code, r.year, 'photos'); else stats.unmatched++;
         }
@@ -689,13 +721,12 @@ async function handle(files, { adding = false } = {}){
         let o = null;
         try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
         if (o && (o.geoData || o.geoDataExif) && typeof o.title === 'string'){
-          const p = sidecarPoint(o);
-          const code = p ? countryIndex(p[0], p[1]) : -1, fi = code >= 0 ? Math.floor(code / 10000) : -1;
+          const p = sidecarPoint(o), ts = o.photoTakenTime && +o.photoTakenTime.timestamp;
+          const code = p ? where(p[0], p[1], ts ? new Date(ts * 1000).getUTCFullYear() : null) : -1, fi = code >= 0 ? Math.floor(code / 10000) : -1;
           const seen = located.get(o.title.toLowerCase());
           if (p && !(seen && seen.has(fi))){
             stats.sidecars++;
             mark(o.title.toLowerCase(), fi);
-            const ts = o.photoTakenTime && +o.photoTakenTime.timestamp;
             if (code >= 0) add(code, ts ? new Date(ts * 1000).getUTCFullYear() : null, 'photos'); else stats.unmatched++;
           }
           done++;
@@ -705,14 +736,14 @@ async function handle(files, { adding = false } = {}){
       const before = stats.points;
       await scanLocationFile(f, (p, year) => {
         stats.points++;
-        const code = countryIndex(p[0], p[1]);
+        const code = where(p[0], p[1], year);
         if (code >= 0) add(code, year, 'points'); else stats.unmatched++;
       }, frac => { setStatus(`Reading ${f.name} · ${Math.round(frac * 100)}% · ${fmt(stats.points)} location points`); setProgress(frac); });
       if (stats.points > before) stats.timelineFiles++;
       done++;
     }
     setProgress(null);
-    lastRun = { agg, stats, keys, located, example: false };
+    lastRun = { agg, stats, keys, located, us, example: false };
     render(lastRun);
     // Added to a count: say what the new files changed (on the receiving end, the comparison says it instead).
     if (prev && !RECV){
@@ -769,6 +800,7 @@ function render(run){
   $('#map').setAttribute('aria-label', mapLabel(n, src));
   prepareShare(n, src, codes);
   preparePassport(run);
+  prepareStates(run);
   prepareVideo(run);
   $('#addMore').hidden = !!example;
   const res = $('#result');
@@ -822,6 +854,7 @@ async function renderPicked(codes, src, extra = {}){
   $('#map').setAttribute('aria-label', mapLabel(n, src));
   prepareShare(n, src, codes);
   preparePassport(lastRun);
+  prepareStates(lastRun);
   prepareVideo(lastRun);
   $('#addMore').hidden = true;
   const res = $('#result');
@@ -863,7 +896,7 @@ function edited(prev, codes){
 
 // ---------- sharing ----------
 // A real result shares a link with its countries after the # (/kit.js); the example and empty results share the page.
-const PAGE_URL = 'https://driftlog-counter.pages.dev/';
+const PAGE_URL = 'https://counter.getdriftlog.com/';
 let share = null;
 function prepareShare(n, src, codes){
   const from = { timeline: 'Google Maps Timeline', both: 'photos and Google Maps Timeline' }[src] || 'photos';
@@ -888,6 +921,24 @@ function prepareShare(n, src, codes){
 // The passport page (/passport/) takes the list, its first years and where it came from after the #. It opens in
 // this tab, so none of that reaches a server; the example and an empty result get no link.
 const passportHref = list => '/passport/#' + Kit.passportHash(list.codes, list.years, list.src, list.base);
+// The US states under a result. A count from files that was in any of them says how many and hands the list to
+// /us/ in this tab, after the # (as for the passport page), for a map of their own. A list picked by hand with the
+// United States on it gets the way to pick states. The example gets neither.
+function prepareStates(run){
+  const row = $('#usRow');
+  const counted = !!States && !run.example && !run.picked && run.us && run.us.size > 0;
+  const picked = !!States && !!run.picked && run.codes.has('US');
+  row.hidden = !counted && !picked;
+  if (picked){ $('#usLink').textContent = 'Pick my US states'; $('#usLink').href = '/us/'; $('#usText').textContent = 'The United States is on your list: its fifty states have a map of their own.'; }
+  if (!counted) return;
+  const codes = new Set(), years = new Map();
+  for (const [i, y] of run.us){ const code = States.LIST[i].code; codes.add(code); if (y) years.set(code, y); }
+  const n = States.countOf(codes), dc = codes.has(States.DC);
+  run.usCodes = codes;
+  $('#usLink').textContent = 'See my US states map';
+  $('#usLink').href = '/us/#' + States.linkHash(codes, { years, src: run.src });
+  $('#usText').textContent = n ? `In the United States, your files were in ${n} of the 50 ${States.statesWord(n)}${dc ? ', and in Washington, D.C.' : '.'}` : 'In the United States, your files were in Washington, D.C., which is not one of the 50 states.';
+}
 function preparePassport(run){
   const real = !run.example && run.codes && run.codes.size > 0;
   $('#passRow').hidden = !real;
@@ -1046,7 +1097,7 @@ $('#save').addEventListener('click', () => {
 $('#again').addEventListener('click', () => {
   lastRun = null; $('#addMore').hidden = true;
   $('#result').classList.remove('on', 'example'); setStatus(''); setProgress(null); share = null; $('#share').hidden = true;
-  $('#shareMore').hidden = true; $('#appline').hidden = true; $('#edit').hidden = true; $('#passRow').hidden = true;
+  $('#shareMore').hidden = true; $('#appline').hidden = true; $('#edit').hidden = true; $('#passRow').hidden = true; $('#usRow').hidden = true;
   $('#vidRow').hidden = true; resultVideo.set(null);
   $('#fileInput').value = ''; $('#dirInput').value = '';
   (drop.hidden ? $('#recv') : drop).scrollIntoView({ block: 'center' });

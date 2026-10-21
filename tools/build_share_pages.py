@@ -2,7 +2,7 @@
 """Builds the result-link pages of the English counter: <site>/c/<N>/index.html and <site>/c/og/<N>.png for
 N = 0..194 (195 of each). Design notes: DESIGN-share.md.
 
-A result link is https://driftlog-counter.pages.dev/c/<N>/#v=1.<mask>. Link previews (iMessage, X, Slack...)
+A result link is https://counter.getdriftlog.com/c/<N>/#v=1.<mask>. Link previews (iMessage, X, Slack...)
 fetch the page without the # and do not run scripts, so each N needs its own static page with its own OG tags.
 The page itself only forwards to the counter, carrying the # along; the counter shows the shared list.
 The pages are noindex with a canonical to the top page, and are left out of sitemap.xml and IndexNow:
@@ -20,7 +20,7 @@ import json, os, sys
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITE_URL = 'https://driftlog-counter.pages.dev'
+SITE_URL = 'https://counter.getdriftlog.com'
 TOTAL = 194
 W, H = 1200, 630
 CREAM, LAND = (252, 247, 240), (236, 223, 208)
@@ -85,7 +85,7 @@ def og_image(site, base, n, fonts):
     d.text((86, top(384, 'of 194', fonts['of'])), f'of {TOTAL} countries', font=fonts['of'], fill=MUTED)
     tag = 'See which ones, and compare with yours.' if n else 'Which have you been to?'    # 0: nothing to see yet
     d.text((86, top(468, 'See', fonts['tag'])), tag, font=fonts['tag'], fill=MUTED2)
-    d.text((86, top(522, 'd', fonts['url'])), 'driftlog-counter.pages.dev', font=fonts['url'], fill=ACCENT)
+    d.text((86, top(522, 'd', fonts['url'])), 'counter.getdriftlog.com', font=fonts['url'], fill=ACCENT)
     # A palette PNG: flat colours and antialiased text need about 48 colours, and it keeps each file small.
     return img.quantize(colors=48, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
 
@@ -113,7 +113,7 @@ def page(n):
 <meta property="og:image" content="{img}" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="{e(title)}. driftlog-counter.pages.dev" />
+<meta property="og:image:alt" content="{e(title)}. counter.getdriftlog.com" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{e(title)}" />
 <meta name="twitter:description" content="{e(desc)}" />

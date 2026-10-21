@@ -1,0 +1,37 @@
+# Driftlog Counter
+
+> A free web page that answers "how many countries have I been to?" from your own files. Drop in photos, a folder, a Google Takeout (Google Photos) export or a Google Maps Timeline export, and it counts the countries and draws the map. Everything runs in the browser: nothing is uploaded, there is no account, no analytics and no cookies.
+
+This file is written by the developer. Last checked: 2026-10-04.
+
+## Facts
+
+- URL: https://counter.getdriftlog.com/ (Japanese version: https://ja-counter.getdriftlog.com/)
+- Price: free. No sign-up.
+- Input: JPEG and HEIC photos, TIFF-based raw files such as DNG, iPhone and Android videos, the JSON files in a Google Takeout (Google Photos) export, and Google Maps Timeline exports (Timeline.json, location-history.json, Records.json, Semantic Location History). You can also pick countries by hand.
+- What it counts: the 193 UN member states plus Taiwan (194). Other places, such as Vatican City, Kosovo, Hong Kong, Puerto Rico and Greenland, are named and filled in on the map but not counted in the headline number.
+- Privacy: no file and no coordinate leaves the device. The page keeps working with the network switched off once it has loaded.
+- Borders: Natural Earth 1:50m (public domain). A photo taken within about a kilometre of a border can land on the wrong side.
+- On iPhone it works in Safari with the photo picker. Android browsers remove the location from photos picked in a browser, so on Android use a Google Maps Timeline export.
+- Output: a map, a list of countries, the number of US states when files are from the United States, a shareable link, a comparison with a friend's map, a passport page with one stamp per country, and a 9:16 video of the map filling in. The country list in a shared link sits after the # and is not sent to any server.
+- Source code: https://github.com/anegogo/driftlog-counter (MIT licence)
+- Maker: Akira (Aki) Takashima, Shiori Studio, the developer of Driftlog. Contact: shiori.sutudio@gmail.com
+
+## Pages
+
+- [Counter](https://counter.getdriftlog.com/)
+- [Passport page](https://counter.getdriftlog.com/passport/): a stamp for each of your countries, as a 9:16 image
+- [US states](https://counter.getdriftlog.com/us/): how many of the 50 US states you have been to, counted the same way from photos or a Timeline export, or picked by hand, on a map of the United States. State lines: US Census Bureau 1:500,000 (2024), exact to about 65 metres between states. Washington, D.C. is shown but not counted. When a count on the main page includes files from the United States, it says how many states they were in and links here
+- [Your 2026, state by state](https://counter.getdriftlog.com/us/2026/): the US states you went to in 2026 on one 9:16 card, with the months and which were new; picked by hand or counted from photos
+- [Your 2026 in travel](https://counter.getdriftlog.com/2026/): the countries you went to in 2026 on one 9:16 card, with the months and which were new; picked by hand or counted from photos
+- [Schengen 90/180 calculator](https://counter.getdriftlog.com/schengen/): counts the days of stay in the Schengen area in the 180 days ending on any date (entry and exit days both count, all 29 Schengen states as one area), and gives the last day to leave, the earliest day to come back for a given number of days, and whether a planned trip fits. Stays are typed in, or suggested from the dates and locations in your own photos or a Google Maps Timeline export, read in the browser. It applies the 90/180 rule only: no visas, residence permits or bilateral agreements. Not legal advice; the European Commission's official calculator is linked. The Driftlog app does not count Schengen days
+- [2026年の旅・国内旅行](https://counter.getdriftlog.com/ja/2026/): in Japanese, the year is two cards. This one is trips within Japan: the 47 prefectures. Trips abroad (countries other than Japan) are at https://ja-counter.getdriftlog.com/2026/
+- [How it was built](https://getdriftlog.com/notes/counting-countries-in-the-browser/)
+- [How to export Google Maps Timeline and count the countries in it](https://getdriftlog.com/google-maps-timeline-countries/)
+- [How to get the countries you've visited out of your own photos](https://getdriftlog.com/countries-from-your-photos/)
+- [How to count the countries you've visited](https://getdriftlog.com/how-to-count-countries-visited/)
+
+## Related
+
+- [Driftlog](https://getdriftlog.com/): the travel log app for iPhone and Android that keeps the same map up to date on its own. The app does not import Timeline files; this page is the only part of Driftlog that does.
+- [What is Driftlog?](https://getdriftlog.com/about/)

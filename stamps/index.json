@@ -1,5 +1,5 @@
 {
- "about": "Driftlog country stamps for the passport page (https://driftlog-counter.pages.dev/passport/). The landmark drawings, frame shapes and ink colours are the ones in the Driftlog iPhone app; the layout (English name in capitals, no date) is the one on the 194-stamp poster at https://driftlog-app.pages.dev/stamps/. For now the stamps of Armenia, Israel and North Korea are plain, with the same frame, ink colour and name but no drawing, while their drawings are being reviewed (\"plain\": true below).",
+ "about": "Driftlog country stamps for the passport page (https://counter.getdriftlog.com/passport/). The landmark drawings, frame shapes and ink colours are the ones in the Driftlog iPhone app; the layout (English name in capitals, no date) is the one on the 194-stamp poster at https://getdriftlog.com/stamps/. For now the stamps of Armenia, Israel and North Korea are plain, with the same frame, ink colour and name but no drawing, while their drawings are being reviewed (\"plain\": true below).",
  "definition": "194 = the 193 UN member states + Taiwan, the same set the counter counts. This set has no stamp for Vatican City, Kosovo, Palestine, Western Sahara or territories such as Hong Kong.",
  "count": 194,
  "image": {

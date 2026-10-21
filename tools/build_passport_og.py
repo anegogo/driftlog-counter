@@ -82,7 +82,7 @@ def main():
     d.text((68, top(258, 'p', title)), 'passport page', font=title, fill=INK)
     d.text((72, top(372, 'A', tag)), "A stamp for every country", font=tag, fill=MUTED)
     d.text((72, top(410, 'y', tag)), "you've been to, out of 194.", font=tag, fill=MUTED)
-    d.text((72, top(488, 'd', url)), 'driftlog-counter.pages.dev/passport', font=url, fill=ACCENT)
+    d.text((72, top(488, 'd', url)), 'counter.getdriftlog.com/passport', font=url, fill=ACCENT)
     out = os.path.join(site, 'passport', 'og.png')
     os.makedirs(os.path.dirname(out), exist_ok=True)
     img.convert('RGB').quantize(colors=128, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).save(out, optimize=True)
