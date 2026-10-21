@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Schengen 90/180 calculator — count your days, from your photos too</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png" />
+<link rel="apple-touch-icon" href="/img/icon-180.png" />
+<meta name="description" content="Free Schengen 90/180-day calculator. Add your stays, or fill them in from your photos' dates and locations, and see the days you've used, the day you must leave by and when you can come back. Runs in your browser: nothing is uploaded, no account." />
+<link rel="canonical" href="https://counter.getdriftlog.com/schengen/" />
+<meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=en_schengen_sb" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftlog" />
+<meta property="og:url" content="https://counter.getdriftlog.com/schengen/" />
+<meta property="og:title" content="Schengen 90/180 calculator" />
+<meta property="og:description" content="How many of your 90 days have you used, when do you have to leave, and when can you come back? Type your stays or fill them in from your photos. Nothing is uploaded." />
+<meta property="og:image" content="https://counter.getdriftlog.com/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="How many countries have you been to? Drop in your photos and the map fills in." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Schengen 90/180 calculator" />
+<meta name="twitter:description" content="How many of your 90 days have you used, when do you have to leave, and when can you come back? Type your stays or fill them in from your photos. Nothing is uploaded." />
+<meta name="twitter:image" content="https://counter.getdriftlog.com/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Driftlog: Schengen 90/180 calculator",
+"url":"https://counter.getdriftlog.com/schengen/","applicationCategory":"TravelApplication",
+"operatingSystem":"Any (runs in the browser)",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"description":"Counts the days of stay in the Schengen area in the 180 days ending on any date, under the 90/180-day rule for short stays, and works out the last day to leave, the earliest day to come back, and whether a planned trip fits. Stays are typed in, or suggested from the dates and GPS coordinates stored in your own photos or a Google Maps Timeline export. Runs entirely in the browser: no upload, no account. Not legal advice.",
+"author":{"@type":"Person","name":"Akira Takashima"},
+"publisher":{"@type":"Organization","name":"Shiori Studio"}}
+</script>
+<script type="application/ld+json" id="faqLd">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How does the 90/180-day rule work?","acceptedAnswer":{"@type":"Answer","text":"On any day you are in the Schengen area, look at that day and the 179 days before it. The days you spent in any Schengen country in that period must add up to 90 or fewer. The period moves forward one day at a time, so each day you used stops counting 180 days later."}},
+{"@type":"Question","name":"Do the day I arrive and the day I leave both count?","acceptedAnswer":{"@type":"Answer","text":"Yes. The day you enter is the first day of your stay and the day you leave is the last, even if you were there for only a few hours. A day trip counts as one day."}},
+{"@type":"Question","name":"Which countries are in the Schengen area?","acceptedAnswer":{"@type":"Answer","text":"29 countries: Austria, Belgium, Bulgaria, Croatia, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, the Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden and Switzerland. Bulgaria and Romania became full members on 1 January 2025. Cyprus and Ireland are in the EU but not in the Schengen area."}},
+{"@type":"Question","name":"Can this page find my days from my photos?","acceptedAnswer":{"@type":"Answer","text":"It can suggest them, if your photos were taken with location on. The page reads the date and GPS coordinates saved in each photo, inside your browser, and suggests a stay for each run of days with photos taken in Schengen countries. Nothing is uploaded. Check the suggested dates before you add them: a photo shows where you were on a day, not when you crossed a border."}},
+{"@type":"Question","name":"Is this the official calculator?","acceptedAnswer":{"@type":"Answer","text":"No. It is a free tool made by Driftlog, and it is not legal advice. The European Commission has an official short-stay calculator, and the border guard decides at the border. Check your dates there before you travel."}}
+]}
+</script>
+<link rel="stylesheet" href="/fonts.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  /* The counter's colours: --muted2 and --accent-t for small text, --accent-d under white text (WCAG AA on cream2). */
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#7D6656;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+    --stay:#D6692E; --over:#8E1F12; --empty:#EFE3D6; --ok:#2F6B3A;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
+    color:var(--ink);min-height:100vh;line-height:1.6}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+  header{text-align:center;padding:56px 0 6px}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent-t);text-transform:uppercase}
+  .kicker a{color:inherit;text-decoration:none}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,56px);line-height:1.14;margin-top:18px;letter-spacing:-.015em;text-wrap:balance}
+  .lead{font-weight:300;color:var(--muted);margin:18px auto 0;max-width:600px;font-size:clamp(15px,2.1vw,18px)}
+  .card{margin:30px 0 0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 20px}
+  .card h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(22px,3.6vw,28px);line-height:1.2;text-wrap:balance}
+  .card h2:focus{outline:none}
+  .hint{color:var(--muted);font-size:14px;margin-top:6px}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .btn{font-family:inherit;font-weight:500;font-size:15px;padding:12px 20px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:#fff;color:var(--ink);text-decoration:none;display:inline-block;line-height:1.3}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t);border-color:var(--accent-t)}
+  .btn:hover{border-color:var(--accent)}
+  .btn:focus-visible,.linkbtn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,.rm:focus-visible,h2:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-t);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 0}
+  label{font-size:13px;color:var(--muted);font-weight:500;display:block;margin-bottom:4px}
+  label .opt{font-weight:400;color:var(--muted2)}
+  input[type=date],input[type=text],input[type=number],select{font:inherit;font-size:16px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:9px 10px;width:100%;min-width:0;max-width:100%;display:block;min-height:44px;-webkit-appearance:none;appearance:none}
+  input[type=date]::-webkit-date-and-time-value{text-align:left}
+  input[aria-invalid=true]{border-color:var(--over)}
+  select{-webkit-appearance:menulist;appearance:auto;width:auto;display:inline-block}
+
+  /* stays */
+  #stays{list-style:none;margin-top:16px;counter-reset:stay}
+  .stay{display:grid;grid-template-columns:1fr 1fr 1.3fr auto;gap:10px 12px;align-items:end;padding:14px 0;border-top:1px solid var(--line)}
+  .stay:first-child{border-top:0;padding-top:4px}
+  .stay .f{min-width:0}
+  .stay .rm{font:inherit;font-size:14px;background:none;border:1px solid var(--line);border-radius:10px;color:var(--muted);cursor:pointer;min-height:44px;padding:0 12px}
+  .stay .rm:hover{border-color:var(--accent);color:var(--ink)}
+  .stay .meta{grid-column:1/-1;font-size:13px;color:var(--muted);margin-top:-4px}
+  .stay .meta .err{color:var(--over);font-weight:500}
+  .stay .meta .src{color:var(--muted2)}
+
+  /* result */
+  .check{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;margin-top:14px}
+  .check .f{width:200px;max-width:100%}
+  .big{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin-top:20px}
+  .big b{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(48px,11vw,72px);line-height:1;font-variant-numeric:tabular-nums}
+  .big span{font-size:18px;color:var(--ink)}
+  .range{color:var(--muted);font-size:14px;margin-top:6px}
+  .left{font-size:16px;margin-top:10px}
+  .say{font-size:16px;margin-top:12px;padding:14px 16px;border-radius:14px;background:var(--tint);border:1px solid var(--line)}
+  .say.bad{background:#FBEDEA;border-color:#E9C3BC}
+  .say b{font-weight:600}
+  .warn{font-size:14px;color:var(--over);margin-top:10px;font-weight:500}
+  .small{font-size:13.5px;color:var(--muted);margin-top:10px}
+  .again{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px;font-size:16px}
+  .again input{width:76px;display:inline-block}
+  .again label{display:inline;margin:0;font-size:16px;color:var(--ink);font-weight:400}
+  .strip{margin-top:22px}
+  .strip .cells{display:flex;height:34px;border-radius:6px;overflow:hidden;background:var(--empty)}
+  .strip .cells i{flex:1 1 0;min-width:0}
+  .strip .cells i.s{background:var(--stay)}
+  .strip .cells i.o{background:var(--over)}
+  .strip .cells i.t{box-shadow:inset 0 0 0 1px var(--ink)}
+  .strip .months{position:relative;height:20px;font-size:11.5px;color:var(--muted2);margin-top:4px}
+  .strip .months span{position:absolute;top:0;white-space:nowrap;border-left:1px solid var(--line);padding-left:3px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);margin-top:6px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px;background:var(--empty)}
+  .legend i.s{background:var(--stay)} .legend i.o{background:var(--over)}
+
+  /* plan */
+  .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 12px;margin-top:14px;max-width:460px}
+  .pair .f{min-width:0}
+  #planOut{margin-top:14px}
+
+  /* photos */
+  .opts{display:grid;gap:10px;margin-top:16px;font-size:14px;color:var(--muted)}
+  .opts label{display:flex;gap:8px;align-items:flex-start;font-size:14px;font-weight:400;color:var(--muted);margin:0}
+  .opts label[for=gap]{display:block;line-height:2}
+  .opts select{min-height:36px;padding:4px 8px;margin:0 4px;vertical-align:middle;font-size:15px}
+  .opts input[type=checkbox]{margin-top:2px;width:18px;height:18px;accent-color:var(--accent-d);flex:none}
+  .drop{margin-top:16px;border:1.5px dashed var(--line);border-radius:16px;padding:18px 16px;background:#fff;transition:border-color .18s,background .18s}
+  .drop.over{border-color:var(--accent);background:var(--tint)}
+  .drop .btns{margin-top:0}
+  .mobile-note{display:none;margin-top:14px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .is-mobile .mobile-note{display:block}
+  .is-mobile #pickDir{display:none}
+  .note{font-size:12.5px;color:var(--muted2);margin-top:12px}
+  .note a,.how a,.faq a,.say a,.small a,#photoStatus a,.mobile-note a{color:var(--accent-t)}
+  #photoStatus{color:var(--muted);font-size:14px;margin-top:14px;min-height:22px}
+  .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:8px;display:none}
+  .bar.on{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  #proposals h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:20px;margin-top:18px}
+  #propList{list-style:none;margin-top:8px;border-top:1px solid var(--line)}
+  #propList li{border-bottom:1px solid var(--line)}
+  #propList label{display:flex;gap:10px;align-items:flex-start;padding:10px 2px;margin:0;font-size:15px;color:var(--ink);font-weight:400;cursor:pointer}
+  #propList input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent-d);flex:none}
+  #propList .sub{display:block;font-size:13px;color:var(--muted)}
+
+  .appline{text-align:center;font-size:14px;color:var(--muted);margin:30px auto 0;max-width:600px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .appline b{color:var(--ink);font-weight:600}
+  .appline a{color:var(--accent-t);font-weight:500}
+  .how,.faq{margin:48px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
+  .how h2,.faq h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
+  .how dl,.faq dl{display:grid;gap:14px}
+  .how dt,.faq dt{color:var(--ink);font-weight:500}
+  .how dd,.faq dd{margin-top:2px}
+  .disclaimer{margin:30px auto 0;max-width:680px;font-size:14px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .disclaimer a{color:var(--accent-t)}
+  footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  @media (max-width:600px){
+    header{padding-top:40px}
+    .card{padding:20px 16px}
+    .stay{grid-template-columns:1fr 1fr;gap:8px 10px}
+    .stay .lab{grid-column:1/2}
+    .stay .rm{grid-column:2/3}
+  }
+  @media (prefers-reduced-motion: reduce){ .bar i,.drop{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker"><a href="/">Driftlog</a></div>
+    <h1>Schengen 90/180 calculator</h1>
+    <p class="lead">Add your stays and see how many of your 90 days you've used in the last 180, the day you must leave by, and when you can come back. Fill them in from your photos if you like. It all runs in your browser: nothing is uploaded, and there's no account.</p>
+  </header>
+
+  <section class="card" aria-labelledby="staysTitle">
+    <h2 id="staysTitle">Your stays in the Schengen area</h2>
+    <p class="hint">One row per stay. The entry day and the exit day both count. Leave the exit empty if you're there now.</p>
+    <ol id="stays"></ol>
+    <div class="btns">
+      <button class="btn primary" id="addRow" type="button">Add a stay</button>
+      <button class="btn" id="photoBtn" type="button" aria-expanded="false" aria-controls="photos">Fill from my photos</button>
+    </div>
+    <div class="btns" style="margin-top:8px">
+      <button class="linkbtn" id="exampleBtn" type="button">See an example</button>
+      <button class="linkbtn" id="clearBtn" type="button">Clear all</button>
+    </div>
+    <p class="note" id="saveNote">Your list stays in this browser only (its local storage), so it's here next time. <b>Clear all</b> removes it.</p>
+  </section>
+
+  <section class="card" id="photos" hidden aria-labelledby="photosTitle">
+    <h2 id="photosTitle" tabindex="-1">Fill from your photos</h2>
+    <p class="hint">Choose photos from your trips, or a Google Maps Timeline export. The page reads the date and location saved in each file, inside your browser, and suggests a stay for each run of days in Schengen countries. You check them before they go in your list.</p>
+    <div class="drop" id="drop">
+      <div class="btns">
+        <button class="btn primary" id="pickFiles" type="button">Choose photos</button>
+        <button class="btn" id="pickDir" type="button">Choose a folder</button>
+      </div>
+      <p class="note">On a computer you can also drop photos or a whole folder here. Nothing is uploaded: files are read inside your browser.</p>
+    </div>
+    <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
+    <input type="file" id="dirInput" hidden webkitdirectory multiple />
+    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://getdriftlog.com/google-maps-timeline-countries/">how to export it</a>).</p>
+    <div class="opts">
+      <label for="gap">Join photo days up to <select id="gap"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="5">5</option><option value="7">7</option></select> days apart into one stay, unless a photo in between was taken outside the area</label>
+      <label for="micro"><input type="checkbox" id="micro" checked /> Count photo days in Monaco, San Marino and Vatican City</label>
+    </div>
+    <div id="photoStatus" role="status" aria-live="polite"></div>
+    <div class="bar" id="bar"><i></i></div>
+    <div id="proposals" hidden>
+      <h3 id="propTitle">Suggested stays</h3>
+      <p class="hint">From the first to the last day with a photo in the area. You may have arrived earlier or left later than your photos show: check each one against your tickets or passport before you rely on it.</p>
+      <ul id="propList"></ul>
+      <div class="btns">
+        <button class="btn primary" id="addProps" type="button">Add the ticked stays</button>
+        <button class="btn" id="moreFiles" type="button">Add more photos</button>
+        <button class="btn" id="discard" type="button">Discard</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="result" aria-labelledby="resultTitle">
+    <h2 id="resultTitle">Your count</h2>
+    <div class="check">
+      <div class="f"><label for="on">On this date</label><input type="date" id="on" /></div>
+      <button class="linkbtn" id="todayBtn" type="button">Today</button>
+    </div>
+    <div id="resultBody">
+      <div class="big"><b id="used">0</b><span>of 90 days used</span></div>
+      <p class="range" id="range"></p>
+      <p class="left" id="left"></p>
+      <p class="say" id="say" role="status" aria-live="polite"></p>
+      <div id="warns"></div>
+      <p class="again"><label for="needDays">Earliest day you could enter for</label> <input type="number" id="needDays" min="1" max="90" value="90" inputmode="numeric" /> <span id="againText">days</span></p>
+      <div class="strip" id="strip">
+        <div class="cells" id="cells" role="img"></div>
+        <div class="months" id="months" aria-hidden="true"></div>
+        <div class="legend" aria-hidden="true"><span><i class="s"></i>Day of stay</span><span><i class="o"></i>Over 90 that day</span><span><i></i>Not in the area</span></div>
+      </div>
+      <p class="small" id="later" hidden></p>
+    </div>
+  </section>
+
+  <section class="card" id="plan" aria-labelledby="planTitle">
+    <h2 id="planTitle">Plan a trip</h2>
+    <p class="hint">If I enter on one day and stay until another, is that within the rule? Your stays above count too.</p>
+    <div class="pair">
+      <div class="f"><label for="planIn">Enter on</label><input type="date" id="planIn" /></div>
+      <div class="f"><label for="planOut2">Leave on</label><input type="date" id="planOut2" /></div>
+    </div>
+    <div id="planOut" role="status" aria-live="polite"></div>
+  </section>
+
+  <p class="disclaimer"><b>Not legal advice.</b> This page applies the 90/180-day rule to the dates you give it, and nothing else. Your visa, your nationality and the border guard's record can change the answer. Before you travel, check your dates with the European Commission's <a href="https://home-affairs.ec.europa.eu/policies/schengen/border-crossing/short-stay-calculator_en" rel="noopener">official short-stay calculator</a>.</p>
+
+  <p class="appline"><b>Your travel history, automatically.</b> Driftlog, an app for iPhone and Android, keeps a map of where you've been up to date on its own, from your photos and location, trip by trip. It doesn't count Schengen days; this page does. <a id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_schengen&amp;mt=8" rel="noopener">See it on the App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.shioristudio.zubotabi" rel="noopener">Google Play</a></p>
+
+  <section class="how" aria-labelledby="howTitle">
+    <h2 id="howTitle">How the count works</h2>
+    <dl>
+      <div><dt>The rule</dt><dd>A short stay in the Schengen area is up to 90 days in any 180-day period, and the period is counted back from each day of stay (<a href="https://www.legislation.gov.uk/eur/2016/399/article/6" rel="noopener">Schengen Borders Code, Regulation (EU) 2016/399, Article 6(1)</a>). So the page checks every day of every stay: for each one, that day and the 179 before it. A trip that is fine on the day you arrive but goes over later shows the day it goes over.</dd></div>
+      <div><dt>Entry and exit days</dt><dd>Both count. The day you enter is the first day of stay and the day you leave is the last, as in the European Commission's calculator and the <a href="https://www.sem.admin.ch/sem/en/home/themen/einreise/info-einreise/voraussetzungen-nach-staat/mit-visum/aufenthaltsrechner.html" rel="noopener">Swiss State Secretariat for Migration's examples</a> (in on 1 March and out on 29 May is 90 days; the next entry is possible from 28 August). Dates are whole calendar days: the page never uses times or time zones, so a clock change can't move a day.</dd></div>
+      <div><dt>One area</dt><dd>All 29 countries count as one: 10 days in France and 10 in Italy are 20 days. Moving from one to another doesn't start the count again.</dd></div>
+      <div><dt>The 29 countries</dt><dd>Austria, Belgium, Bulgaria, Croatia, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, the Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden and Switzerland (<a href="https://home-affairs.ec.europa.eu/policies/schengen/schengen-area_en" rel="noopener">European Commission</a>). Bulgaria and Romania have been full members since 1 January 2025. Cyprus and Ireland are EU members but not in the Schengen area. France's territories outside Europe, the Caribbean islands of the Netherlands, Greenland, the Faroe Islands and Svalbard are not in it either; the Canary Islands, Ceuta and Melilla, the Azores and Madeira are.</dd></div>
+      <div><dt>Monaco, San Marino, Vatican City and Andorra</dt><dd>None of the four is a Schengen state. Monaco, San Marino and Vatican City have no border checks with the countries around them; Andorra is reached through France or Spain. This page counts the dates you type, so it is up to you whether a day there goes in. When it fills stays from photos, the box <b>Count photo days in Monaco, San Marino and Vatican City</b> decides for those three; photo days in Andorra are never counted.</dd></div>
+      <div><dt>What the page doesn't know</dt><dd>Your nationality, your visa or your permits. It applies the 90/180 rule and nothing else. A Schengen visa can allow fewer days, and its dates of validity and number of entries apply as well. Days under a residence permit or a long-stay visa don't count towards the 90 (Article 6(2)), so leave them out of your list. Some countries have bilateral visa-waiver agreements with individual Schengen states that can allow longer stays in that state; those are not modelled. EU, EEA and Swiss citizens are not limited by this rule.</dd></div>
+      <div><dt>The Entry/Exit System (EES)</dt><dd>Since 10 April 2026 the EU's Entry/Exit System has been fully operational at the Schengen area's external borders. It records non-EU short-stay travellers' passport details, fingerprints and facial image, and the date and place of each entry and exit (<a href="https://home-affairs.ec.europa.eu/news/main-differences-between-ees-and-etias-what-travellers-need-know-2026-04-28_en" rel="noopener">European Commission</a>). This page can't see that record. Yours is a check on it, not a replacement.</dd></div>
+      <div><dt>ETIAS</dt><dd>ETIAS, the travel authorisation that visa-exempt travellers will need, is not in operation yet (checked in October 2026). The EU says it will announce the start date months before it begins: <a href="https://travel-europe.europa.eu/etias_en" rel="noopener">travel-europe.europa.eu</a>.</dd></div>
+      <div><dt>Filling from photos</dt><dd>The page reads the date and the GPS coordinates in each photo's metadata (the start of each JPEG, the metadata box of each HEIC, the header of each video), or the dated points in a Google Maps Timeline export, with the same readers as the <a href="/">country counter</a>. Each point is tested against country borders (<a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> 1:50m), so a photo taken within a kilometre or so of a border can land on the wrong side. A photo's day is the one its camera wrote, in the camera's own time zone; a video's and a Google Photos export's are in UTC, so a late-evening one can land on the next day. Days with photos in the area next to each other, or up to the number of days you set apart with no photo taken outside the area in between, become one suggested stay. Nothing goes in your list until you tick it.</dd></div>
+      <div><dt>Privacy</dt><dd>No file, date or coordinate leaves your device. The page asks the server only for its own files: the page and its scripts and fonts when it opens, and the border file (900 KB) when you choose photos. There are no analytics and no cookies. Your list of stays is kept in this browser's local storage, on this device only, until you press <b>Clear all</b>.</dd></div>
+    </dl>
+  </section>
+
+  <section class="faq" aria-labelledby="faqTitle">
+    <h2 id="faqTitle">Questions</h2>
+    <dl id="faq">
+      <div><dt>How does the 90/180-day rule work?</dt><dd>On any day you are in the Schengen area, look at that day and the 179 days before it. The days you spent in any Schengen country in that period must add up to 90 or fewer. The period moves forward one day at a time, so each day you used stops counting 180 days later.</dd></div>
+      <div><dt>Do the day I arrive and the day I leave both count?</dt><dd>Yes. The day you enter is the first day of your stay and the day you leave is the last, even if you were there for only a few hours. A day trip counts as one day.</dd></div>
+      <div><dt>Which countries are in the Schengen area?</dt><dd>29 countries: Austria, Belgium, Bulgaria, Croatia, Czechia, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, the Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain, Sweden and Switzerland. Bulgaria and Romania became full members on 1 January 2025. Cyprus and Ireland are in the EU but not in the Schengen area.</dd></div>
+      <div><dt>Can this page find my days from my photos?</dt><dd>It can suggest them, if your photos were taken with location on. The page reads the date and GPS coordinates saved in each photo, inside your browser, and suggests a stay for each run of days with photos taken in Schengen countries. Nothing is uploaded. Check the suggested dates before you add them: a photo shows where you were on a day, not when you crossed a border.</dd></div>
+      <div><dt>Is this the official calculator?</dt><dd>No. It is a free tool made by Driftlog, and it is not legal advice. The European Commission has an <a href="https://home-affairs.ec.europa.eu/policies/schengen/border-crossing/short-stay-calculator_en" rel="noopener">official short-stay calculator</a>, and the border guard decides at the border. Check your dates there before you travel.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    Made by <a href="https://getdriftlog.com" rel="noopener">Driftlog</a> — a travel map that fills itself in. Borders: <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain). · <a href="/">Count all your countries from photos</a> · <a href="/2026/">Your 2026 in travel</a> · <a href="/passport/">Passport page</a>
+  </footer>
+</div>
+
+<script src="/schengen.js"></script>
+<script src="/kit.js"></script>
+<script src="/scan.js"></script>
+<script>
+'use strict';
+const S = window.DriftlogSchengen;  // the 90/180 count and where the area is: /schengen.js
+const Kit = window.DriftlogKit;     // the border file and the App Store link: /kit.js
+const Scan = window.DriftlogScan;   // a location and a day out of each file: /scan.js
+const $ = s => document.querySelector(s);
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_ANDROID) $('#mobileNote').innerHTML = 'On Android, the browser removes the location from photos you pick, so photos can’t fill stays here. Choose a <b>Google Maps Timeline export</b> (Timeline.json) instead, type your stays, or open this page on a computer.';
+if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
+$('#appLink').href = Kit.storeUrl('en_schengen');
+
+const fmt = n => n.toLocaleString('en-US');
+const days = n => `${fmt(n)} ${n === 1 ? 'day' : 'days'}`;
+const H = (n, wd) => S.human(n, wd);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const tick = () => new Promise(r => setTimeout(r, 0));
+
+// ---------- the list, kept in this browser ----------
+// rows: [{ id, entry: 'YYYY-MM-DD', exit: 'YYYY-MM-DD' | '', label, src: 'photos' | undefined }]
+const KEY = 'driftlog-schengen-v1';
+let rows = [], nextId = 1;
+function load(){
+  try {
+    const o = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (o && Array.isArray(o.stays)) return o;
+  } catch (e){}
+  return null;
+}
+function save(){
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ v: 1, stays: rows.filter(r => r.entry || r.exit || r.label)
+      .map(r => ({ entry: r.entry || '', exit: r.exit || '', label: r.label || '', src: r.src || undefined })), need: +$('#needDays').value || 90 }));
+  } catch (e){}
+}
+function forget(){ try { localStorage.removeItem(KEY); } catch (e){} }
+const newRow = (r = {}) => ({ id: nextId++, entry: r.entry || '', exit: r.exit || '', label: String(r.label || '').slice(0, 60), src: r.src });
+
+// ---------- the rows on the page ----------
+const list = $('#stays');
+function drawRows(focusId){
+  list.textContent = '';
+  rows.forEach((r, k) => {
+    const li = document.createElement('li');
+    li.className = 'stay'; li.dataset.id = r.id;
+    li.innerHTML =
+      `<div class="f"><label for="en${r.id}">Entry</label><input type="date" id="en${r.id}" data-k="entry" value="${esc(r.entry)}" aria-describedby="meta${r.id}" /></div>` +
+      `<div class="f"><label for="ex${r.id}">Exit</label><input type="date" id="ex${r.id}" data-k="exit" value="${esc(r.exit)}" aria-describedby="meta${r.id}" /></div>` +
+      `<div class="f lab"><label for="lb${r.id}">Label <span class="opt">(optional)</span></label><input type="text" id="lb${r.id}" data-k="label" maxlength="60" autocomplete="off" placeholder="e.g. Lisbon" value="${esc(r.label)}" /></div>` +
+      `<button class="rm" type="button" aria-label="Remove stay ${k + 1}">Remove</button>` +
+      `<p class="meta" id="meta${r.id}"></p>`;
+    list.appendChild(li);
+  });
+  if (focusId){ const el = document.getElementById('en' + focusId); if (el) el.focus(); }
+}
+list.addEventListener('input', e => {
+  const k = e.target.dataset.k, li = e.target.closest('.stay');
+  if (!k || !li) return;
+  const r = rows.find(x => x.id === +li.dataset.id);
+  if (!r) return;
+  r[k] = e.target.value;
+  if (k !== 'label') delete r.src;
+  save(); update();
+});
+list.addEventListener('click', e => {
+  const b = e.target.closest('.rm');
+  if (!b) return;
+  const li = b.closest('.stay'), i = rows.findIndex(x => x.id === +li.dataset.id);
+  if (i < 0) return;
+  rows.splice(i, 1);
+  if (!rows.length) rows.push(newRow());
+  drawRows();
+  const next = list.children[Math.min(i, list.children.length - 1)];
+  if (next) next.querySelector('.rm').focus();
+  save(); update();
+});
+$('#addRow').addEventListener('click', () => {
+  const r = newRow(); rows.push(r); drawRows(r.id); save(); update();
+});
+$('#clearBtn').addEventListener('click', () => {
+  if (rows.some(r => r.entry || r.exit) && !confirm('Remove every stay from the list (and from this browser)?')) return;
+  rows = [newRow()]; forget(); drawRows(); update();
+});
+$('#exampleBtn').addEventListener('click', () => {
+  if (rows.some(r => r.entry || r.exit) && !confirm('Replace your list with an example?')) return;
+  const t = S.today(), d = n => S.isoDay(t + n);
+  rows = [newRow({ entry: d(-170), exit: d(-141), label: 'Example: Lisbon and Porto' }), newRow({ entry: d(-95), exit: d(-72), label: 'Example: Berlin' }),
+          newRow({ entry: d(-30), exit: '', label: 'Example: Barcelona, still there' })];
+  $('#on').value = S.isoDay(t);
+  drawRows(); save(); update();
+});
+
+// ---------- the count ----------
+const onDay = () => { const d = S.parseDay($('#on').value); return d === null ? S.today() : d; };
+const WHY = { entry: 'The entry date isn’t a date.', exit: 'The exit date isn’t a date.', order: 'The exit is before the entry.', long: 'Longer than ten years: check the dates.' };
+function update(){
+  const on = onDay(), c = S.collect(rows, on), ds = c.days;
+  // each row's own line: its length, or what is wrong with it
+  for (const r of rows){
+    const i = rows.indexOf(r), meta = document.getElementById('meta' + r.id);
+    if (!meta) continue;
+    const bad = c.problems.find(p => p.i === i), st = c.stays.find(s => s.i === i);
+    const en = document.getElementById('en' + r.id), ex = document.getElementById('ex' + r.id);
+    en.setAttribute('aria-invalid', bad && bad.why === 'entry' ? 'true' : 'false');
+    ex.setAttribute('aria-invalid', bad && (bad.why === 'exit' || bad.why === 'order') ? 'true' : 'false');
+    const src = r.src === 'photos' ? ' <span class="src">· from photos</span>' : '';
+    if (bad) meta.innerHTML = `<span class="err">${WHY[bad.why]}</span>`;
+    else if (st) meta.innerHTML = st.ongoing ? `${days(st.exit - st.entry + 1)} so far (to ${H(st.exit)})${src}` : days(st.exit - st.entry + 1) + src;
+    else meta.textContent = '';
+  }
+  const s = S.status(ds, on);
+  $('#used').textContent = s.used;
+  $('#range').textContent = `in the 180 days from ${H(on - 179)} to ${H(on)}, both included.`;
+  $('#left').innerHTML = s.left >= 0 ? `<b>${days(s.left)}</b> left on that date.` : `<b>${days(-s.left)}</b> over the limit on that date.`;
+  const say = $('#say');
+  say.classList.remove('bad');
+  const hasAny = ds.length > 0;
+  if (s.inside){
+    if (s.leaveBy === null){ say.classList.add('bad'); say.innerHTML = `You’re in the area on ${H(on)} with more than 90 days used: that day is already over the limit.`; }
+    else say.innerHTML = `You’re in the area on ${H(on)}. Leave by <b>${H(s.leaveBy, true)}</b> at the latest: the last day you can be there, and it counts as a day of stay. That’s ${days(s.leaveBy - on + 1)} counting ${H(on)}.`;
+  } else if (s.stayIfEnter > 0){
+    say.innerHTML = `If you enter on ${H(on)}, you can stay up to <b>${days(s.stayIfEnter)}</b>, until <b>${H(s.stayUntil, true)}</b>.`;
+  } else { say.classList.add('bad'); say.innerHTML = `You can’t enter on ${H(on)}: the 180 days up to it already hold 90 days of stay.`; }
+  if (!hasAny) say.innerHTML = `No stays yet. With none in the 180 days up to ${H(on)}, you could enter that day and stay up to <b>90 days</b>, until <b>${H(on + 89, true)}</b>.`;
+  // warnings: over the limit somewhere in the list
+  const w = [];
+  if (s.pastOver !== null) w.push(`On ${H(s.pastOver, true)} the count went over 90 (an overstay, or a date typed wrong).`);
+  if (s.laterOver !== null && s.laterOver !== s.pastOver) w.push(`A stay after ${H(on)} goes over 90 on ${H(s.laterOver, true)}.`);
+  $('#warns').innerHTML = w.map(t => `<p class="warn">${esc(t)}</p>`).join('');
+  // earliest entry for n days
+  const need = Math.max(1, Math.min(90, Math.floor(+$('#needDays').value) || 90));
+  const from = s.inside ? on + 1 : on;
+  const e = S.earliestEntry(ds, from, need);
+  const ongoing = c.stays.some(x => x.ongoing && x.exit === on && x.entry <= on);
+  $('#againText').innerHTML = (need === 1 ? 'day' : 'days') + ': ' + (e === null ? 'not within the next three years' : `<b>${H(e, true)}</b>`) +
+    (e !== null && need > 1 ? ` (to ${H(e + need - 1)})` : '') + (ongoing ? `, if the stay with no exit date ends on ${H(on)}` : '') + '.';
+  // the strip
+  const win = S.windowDays(ds, on), cells = $('#cells');
+  let html = '';
+  for (const x of win){ const over = x.stay && S.usedOn(ds, x.day) > S.LIMIT; html += `<i class="${x.stay ? (over ? 'o' : 's') : ''}${x.day === on ? ' t' : ''}"></i>`; }
+  cells.innerHTML = html;
+  cells.setAttribute('aria-label', `The 180 days from ${H(on - 179)} to ${H(on)}: ${days(s.used)} of stay.`);
+  let months = '';
+  win.forEach((x, i) => { if (S.isoDay(x.day).endsWith('-01') && i < 170) months += `<span style="left:${(i / 180 * 100).toFixed(2)}%">${H(x.day).split(' ')[1]}</span>`; });
+  $('#months').innerHTML = months;
+  const later = ds.filter(d => d > on).length;
+  $('#later').hidden = !later;
+  if (later) $('#later').textContent = `Your list also has ${days(later)} after ${H(on)}. They aren’t in this count, but the leave-by date, the earliest entry and the trip check below take them into account.`;
+  updatePlan(ds);
+}
+
+// ---------- plan a trip ----------
+function updatePlan(ds){
+  const out = $('#planOut'), a = S.parseDay($('#planIn').value), b = S.parseDay($('#planOut2').value);
+  if (a === null && b === null){ out.innerHTML = ''; return; }
+  if (a === null || b === null){ out.innerHTML = '<p class="small">Pick both dates.</p>'; return; }
+  if (b < a){ out.innerHTML = '<p class="say bad">The day you leave is before the day you enter.</p>'; return; }
+  if (b - a > 3660){ out.innerHTML = '<p class="say bad">That’s longer than ten years: check the dates.</p>'; return; }
+  const p = S.plan(ds, a, b), all = S.addRange(ds, a, b);
+  let html;
+  if (p.ok){
+    html = `<p class="say"><b>Yes, within the rule.</b> That’s a stay of ${days(p.length)}. On the day you leave, ${H(b)}, the 180 days up to it hold ${days(p.usedOnExit)} of stay.` +
+      (p.latestExit !== null && p.latestExit > b ? ` Entering on ${H(a)}, you could stay until ${H(p.latestExit, true)} (${days(p.maxDays)}).` : '') + '</p>';
+  } else {
+    const n = S.usedOn(all, p.firstOver), inTrip = p.firstOver <= b;
+    html = `<p class="say bad"><b>No, that goes over.</b> ` + (inTrip
+      ? `On ${H(p.firstOver, true)}, day ${p.firstOver - a + 1} of the trip, the 180 days up to it would hold ${days(n)} of stay.`
+      : `With this trip, a later stay in your list would go over on ${H(p.firstOver, true)} (${days(n)} in its 180 days).`) + ' ';
+    if (p.maxDays > 0) html += `Entering on ${H(a)}, the last day you could leave is <b>${H(p.latestExit, true)}</b> (${days(p.maxDays)}).`;
+    else {
+      const e = S.earliestEntry(ds, a, Math.min(p.length, 90));
+      html += `You can’t enter on ${H(a)} at all.` + (e !== null ? ` The earliest day you could enter for ${days(Math.min(p.length, 90))} is <b>${H(e, true)}</b>.` : '');
+    }
+    if (p.length > 90) html += ' No single stay can be longer than 90 days.';
+    html += '</p>';
+  }
+  out.innerHTML = html;
+}
+$('#planIn').addEventListener('input', () => { if (S.parseDay($('#planIn').value) !== null) $('#planOut2').min = $('#planIn').value; update(); });
+$('#planOut2').addEventListener('input', update);
+$('#on').addEventListener('input', update);
+$('#todayBtn').addEventListener('click', () => { $('#on').value = S.isoDay(S.today()); update(); });
+$('#needDays').addEventListener('input', () => { save(); update(); });
+
+// ---------- filling from photos ----------
+let FEATS = null, locate = null, busy = false;
+// What was read so far, a batch at a time ("Add more photos"): unique (day, zone, name), the files already read.
+let photo = null;
+const fileKey = f => f.name + '\n' + f.size;
+const statusEl = $('#photoStatus'), barEl = $('#bar'), barFill = $('#bar i');
+const setStatus = (t, html) => { if (html) statusEl.innerHTML = t; else statusEl.textContent = t; };
+const setProgress = f => { if (f == null){ barEl.classList.remove('on'); return; } barEl.classList.add('on'); barFill.style.width = Math.round(f * 100) + '%'; };
+async function ready(){
+  if (FEATS) return;
+  setStatus('Loading the border file…');
+  FEATS = await Kit.loadFeats().catch(() => { throw new Error('The border file did not load. Reload the page and try again.'); });
+  locate = Scan.locator(FEATS);
+  setStatus('');
+}
+$('#photoBtn').addEventListener('click', () => {
+  const sec = $('#photos'), open = sec.hidden;
+  sec.hidden = !open;
+  $('#photoBtn').setAttribute('aria-expanded', String(open));
+  if (open){ $('#photosTitle').focus({ preventScroll: true }); sec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }); }
+});
+function addPoint(lon, lat, dayStr){
+  const st = photo.stats;
+  if (!dayStr){ st.undated++; return; }
+  const day = S.parseDay(dayStr);
+  if (day === null){ st.undated++; return; }
+  const code = locate(lon, lat);
+  if (code < 0){ st.nowhere++; return; }
+  const a = FEATS[Math.floor(code / 10000)].a, zone = S.zone(a, lon, lat);
+  const name = zone === 'out' ? '' : S.stateName(a), key = day + '|' + zone + '|' + name;
+  st.dated++;
+  if (!photo.seen.has(key)){ photo.seen.add(key); photo.points.push({ day, zone, name }); }
+}
+async function handle(fileList){
+  if (busy) return;
+  busy = true;
+  try {
+    await ready();
+    if (!photo) photo = { points: [], seen: new Set(), keys: new Set(), stats: { media: 0, located: 0, dated: 0, undated: 0, nowhere: 0, timeline: 0 } };
+    const picked = [...fileList].filter(f => f && !f.name.startsWith('.'));
+    const all = picked.filter(f => !photo.keys.has(fileKey(f)));
+    if (picked.length && !all.length){ setStatus(picked.length === 1 ? 'That file was read already.' : `Those ${fmt(picked.length)} files were read already.`); return; }
+    all.forEach(f => photo.keys.add(fileKey(f)));
+    const media = all.filter(f => Scan.KIND(f.name) && Scan.KIND(f.name) !== 'json'), jsons = all.filter(f => Scan.KIND(f.name) === 'json');
+    if (!media.length && !jsons.length){ setStatus(all.length ? `None of those ${fmt(all.length)} files are photos, videos or location exports this page can read.` : 'Nothing to read in that selection.'); return; }
+    const st = photo.stats, total = media.length + jsons.length;
+    st.media += media.length;
+    let done = 0;
+    const worker = async queue => {
+      while (queue.length){
+        const f = queue.shift(), r = await Scan.readMedia(f);
+        if (r && r.point){ st.located++; addPoint(r.point[0], r.point[1], r.day); }
+        done++;
+        if (done % 20 === 0){ setStatus(`Reading ${fmt(done)} of ${fmt(total)} files…`); setProgress(done / total); await tick(); }
+      }
+    };
+    const queue = media.slice();
+    await Promise.all([worker(queue), worker(queue), worker(queue), worker(queue)]);
+    for (const f of jsons){
+      if (f.size < 256 * 1024){
+        let o = null;
+        try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
+        const sc = Scan.sidecar(o);
+        if (sc){ if (sc.point){ st.located++; addPoint(sc.point[0], sc.point[1], sc.day); } done++; continue; }
+      }
+      await Scan.scanLocationFile(f, (p, y, m, d) => { st.timeline++; addPoint(p[0], p[1], d); },
+        frac => { setStatus(`Reading ${f.name} · ${Math.round(frac * 100)}%`); setProgress(frac); });
+      done++;
+    }
+    setProgress(null);
+    propose(true);
+  } catch (e){
+    setProgress(null);
+    setStatus(e && e.message ? e.message : 'Something went wrong while reading those files.');
+  } finally { busy = false; }
+}
+let proposals = [];
+function propose(fresh){
+  if (!photo) return;
+  const st = photo.stats;
+  proposals = S.proposeStays(photo.points, { gap: +$('#gap').value, micro: $('#micro').checked });
+  const read = `Read ${fmt(st.media)} ${st.media === 1 ? 'file' : 'files'}${st.timeline ? ` and ${fmt(st.timeline)} Timeline points` : ''}: ${fmt(st.dated)} dated locations.`;
+  if (!proposals.length){
+    $('#proposals').hidden = true;
+    if (!st.located && !st.timeline){
+      if (IS_IOS) setStatus(`None of those photos had a location in them. In the photo picker, check that “Location Is Included” is on (under Options), and that the camera had location turned on. You can still type your stays.`);
+      else if (IS_ANDROID) setStatus('None of those files had a location in them. Android removes it from photos picked in a browser. Use a Google Maps Timeline export, or type your stays.');
+      else setStatus('None of those files had a location saved in them. Photos taken with location turned off carry no coordinates.');
+    } else if (!st.dated) setStatus(`${read} None of them has a date, so no stays can be suggested.`);
+    else setStatus(`${read} None was taken in a Schengen country.`);
+    return;
+  }
+  setStatus(`${read} ${proposals.length === 1 ? 'One stay' : fmt(proposals.length) + ' stays'} in the Schengen area. Nothing left your browser.`);
+  const ul = $('#propList');
+  ul.innerHTML = proposals.map((p, i) => {
+    const len = p.exit - p.entry + 1;
+    return `<li><label><input type="checkbox" data-i="${i}" checked /><span>${H(p.entry)} – ${H(p.exit)} · ${days(len)}` +
+      `<span class="sub">${esc(p.names.join(', '))} · photos on ${fmt(p.photoDays)} of ${fmt(len)} ${len === 1 ? 'day' : 'days'}</span></span></label></li>`;
+  }).join('');
+  $('#proposals').hidden = false;
+  if (fresh) $('#propTitle').scrollIntoView({ block: 'nearest' });
+}
+$('#gap').addEventListener('change', () => propose(false));
+$('#micro').addEventListener('change', () => propose(false));
+$('#addProps').addEventListener('click', () => {
+  const picked = [...$('#propList').querySelectorAll('input:checked')].map(b => proposals[+b.dataset.i]).filter(Boolean);
+  if (!picked.length){ setStatus('Tick at least one stay to add it, or press Discard.'); return; }
+  rows = rows.filter(r => r.entry || r.exit || r.label);
+  for (const p of picked) rows.push(newRow({ entry: S.isoDay(p.entry), exit: S.isoDay(p.exit), label: p.names.join(', ').slice(0, 60), src: 'photos' }));
+  rows.sort((x, y) => (x.entry || '9999').localeCompare(y.entry || '9999'));
+  drawRows(); save(); update();
+  photo = null; proposals = []; $('#proposals').hidden = true;
+  setStatus(`Added ${picked.length === 1 ? 'one stay' : fmt(picked.length) + ' stays'} to your list. Check their dates: you may have arrived before your first photo or left after your last.`);
+  $('#staysTitle').scrollIntoView({ block: 'start' });
+});
+$('#discard').addEventListener('click', () => { photo = null; proposals = []; $('#proposals').hidden = true; setStatus(''); $('#fileInput').value = ''; $('#dirInput').value = ''; });
+const choose = input => () => { if (busy) return; input.value = ''; input.click(); };
+$('#pickFiles').addEventListener('click', choose($('#fileInput')));
+$('#moreFiles').addEventListener('click', choose($('#fileInput')));
+$('#pickDir').addEventListener('click', choose($('#dirInput')));
+$('#fileInput').addEventListener('change', e => handle(e.target.files));
+$('#dirInput').addEventListener('change', e => handle(e.target.files));
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+drop.addEventListener('dragleave', e => { if (!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const items = e.dataTransfer.items;
+  const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
+  if (entries.some(en => en.isDirectory)){
+    setStatus('Looking through folders…');
+    handle(await Scan.entriesToFiles(entries, n => setStatus(`Looking through folders… ${fmt(n)} files so far`)));
+  } else handle(e.dataTransfer.files);
+});
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
+
+// ---------- start ----------
+{
+  const saved = load();
+  rows = saved ? saved.stays.map(newRow) : [];
+  if (saved && saved.need >= 1 && saved.need <= 90) $('#needDays').value = saved.need;
+  if (!rows.length) rows.push(newRow());
+  $('#on').value = S.isoDay(S.today());
+  drawRows();
+  update();
+}
+</script>
+</body>
+</html>
