@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline.json Reader — Count Your Countries from a Google Timeline Export (Free, No Upload)</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<meta name="description" content="Free browser tool that reads Google's Timeline.json export (or old Takeout location history) and shows every country you've visited on a world map. 100% on-device: nothing is uploaded.">
+<link rel="canonical" href="https://counter.getdriftlog.com/tools/timeline-json-reader/">
+<link rel="alternate" hreflang="en" href="https://counter.getdriftlog.com/tools/timeline-json-reader/">
+<link rel="alternate" hreflang="ja" href="https://ja-counter.getdriftlog.com/tools/timeline-json-reader/">
+<meta property="og:title" content="Timeline.json Reader — your Google Timeline export on a world map">
+<meta property="og:description" content="Count and map the countries in your Google Timeline export. Free, private, nothing uploaded.">
+<meta property="og:image" content="https://counter.getdriftlog.com/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/fonts.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Timeline.json Reader",
+  "url": "https://counter.getdriftlog.com/tools/timeline-json-reader/",
+  "applicationCategory": "TravelApplication",
+  "operatingSystem": "Any (web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Reads a Google Timeline.json export entirely in the browser and maps the countries you have visited. Nothing is uploaded.",
+  "creator": { "@type": "Person", "name": "Akira Takashima", "url": "https://getdriftlog.com" }
+}
+</script>
+<style>
+  :root{
+    --cream:#FCF7F0; --cream2:#F7EDE1; --card:#FFFDFB; --tint:#FFF6EE;
+    --ink:#322014; --muted:#7A6555; --muted2:#8d7663;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B;
+    --line:#EAD9C9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic Medium","Meiryo",sans-serif;
+    background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);background-attachment:fixed;
+    color:var(--ink);line-height:1.6}
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+  header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:26px 0 0}
+  .brand{font-weight:600;letter-spacing:.01em}
+  .brand small{color:var(--muted);font-weight:400;display:block;font-size:.82rem}
+  .langswitch{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+  .langswitch button{background:transparent;color:var(--ink);border:none;border-radius:999px;padding:7px 14px;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:500}
+  .langswitch button.on{background:var(--accent-d);color:#fff}
+  h1{font-family:"Fraunces","Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    font-weight:600;font-size:clamp(30px,5vw,46px);line-height:1.25;margin:34px 0 10px;letter-spacing:.01em;text-align:center}
+  .sub{color:var(--muted);margin:0 auto 8px;max-width:640px;text-align:center}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin:18px 0}
+  .drop{border:2px dashed var(--line);border-radius:14px;padding:38px 20px;text-align:center;cursor:pointer;transition:.15s;background:var(--tint)}
+  .drop:hover,.drop.over{border-color:var(--accent);background:#fff}
+  .drop strong{font-size:1.05rem}
+  .drop .hint{color:var(--muted);font-size:.9rem;margin-top:6px}
+  .privacy{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:.88rem;margin-top:14px}
+  .privacy svg{flex:none;margin-top:2px}
+  #stat{display:none;gap:12px;flex-wrap:wrap}
+  .statbox{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+  .statbox b{font-family:"Fraunces","Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-size:1.9rem;display:block;color:var(--accent-d)}
+  .statbox span{color:var(--muted);font-size:.85rem}
+  #mapbox{display:none}
+  svg#map{width:100%;height:auto;display:block;background:var(--tint);border-radius:14px;border:1px solid var(--line)}
+  .country{fill:#EADFCE;stroke:#FCF7F0;stroke-width:.4}
+  .country.hit{fill:var(--accent)}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:10px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+  #tablebox{display:none;max-height:420px;overflow:auto}
+  .btn{display:inline-block;font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;transition:background .18s}
+  .btn:hover{background:var(--tint)}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .cta{background:var(--tint);border:1px solid var(--line)}
+  .cta h2{margin-top:0}
+  h2{font-family:"Fraunces","Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-weight:600;font-size:1.35rem}
+  footer{color:var(--muted);font-size:.82rem;margin-top:36px;text-align:center}
+  a{color:var(--accent-t)}
+  #err{display:none;background:#FBEDE6;border:1px solid #E5B49C;color:#8C3D16;padding:12px 14px;border-radius:10px;margin-top:12px;font-size:.9rem}
+  .progress{color:var(--muted);font-size:.88rem;margin-top:10px}
+  ol.howto{padding-left:20px;color:var(--muted)}
+  ol.howto li{margin-bottom:6px}
+  ol.howto b{color:var(--ink)}
+  code{background:var(--tint);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.88em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Timeline.json Reader<small data-i18n="byline">by the developer of Driftlog</small></div>
+    <div class="langswitch">
+      <button id="btn-en" onclick="setLang('en')">English</button>
+      <button id="btn-ja" onclick="setLang('ja')">日本語</button>
+    </div>
+  </header>
+
+  <h1 data-i18n="h1">Your Google Timeline export, on a world map</h1>
+  <p class="sub" data-i18n="sub">Google Maps Timeline no longer lives on the web — but your export still holds every trip. Drop your <code>Timeline.json</code> here and see the countries you've visited, with first and last dates. Free, and nothing leaves your browser.</p>
+
+  <div class="card">
+    <div id="drop" class="drop" role="button" tabindex="0" aria-label="Choose Timeline.json">
+      <strong data-i18n="drop1">Drop your Timeline.json here</strong>
+      <div class="hint" data-i18n="drop2">or click to choose the file — old Takeout “Records.json” works too</div>
+      <input type="file" id="file" accept=".json,application/json" style="display:none">
+      <div id="err"></div>
+      <div class="progress" id="prog"></div>
+    </div>
+    <div class="privacy">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A84D1B" stroke-width="2"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10z"/></svg>
+      <span data-i18n="privacy">Private by design: the file is read only inside your browser. Nothing is uploaded, logged, or shared — you can even turn off Wi-Fi after this page loads.</span>
+    </div>
+  </div>
+
+  <div id="stat">
+    <div class="statbox"><b id="st-countries">0</b><span data-i18n="stc">countries</span></div>
+    <div class="statbox"><b id="st-points">0</b><span data-i18n="stp">location points</span></div>
+    <div class="statbox"><b id="st-span">–</b><span data-i18n="sts">span</span></div>
+  </div>
+
+  <div class="card" id="mapbox">
+    <svg id="map" viewBox="0 0 960 500" aria-label="World map of visited countries"></svg>
+    <div class="row">
+      <button class="btn" id="copy" data-i18n="copy">Copy summary</button>
+      <button class="btn" id="png" data-i18n="png">Download map as PNG</button>
+    </div>
+  </div>
+
+  <div class="card" id="tablebox">
+    <table>
+      <thead><tr><th data-i18n="th1">Country</th><th data-i18n="th2">First visit</th><th data-i18n="th3">Last visit</th><th data-i18n="th4">Points</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="howh">How to get your Timeline.json</h2>
+    <ol class="howto" data-i18n-html="howto">
+      <li>On your phone, open <b>Google Maps → your profile picture → Your Timeline</b>.</li>
+      <li>Tap <b>⋮ → Location and privacy settings → Export Timeline data</b>.</li>
+      <li>Save or share the exported file, then drop it in above. On desktop, Google Takeout’s old <code>Records.json</code> also works.</li>
+    </ol>
+  </div>
+
+  <div class="card cta">
+    <h2 data-i18n="ctah">Want it to keep filling in by itself?</h2>
+    <p data-i18n="ctap">Driftlog is the iPhone app that does this automatically: it records the countries and cities you pass through in the background — no check-ins, no account, no server, no subscription. It can also rebuild past trips from your photo library, the same way this page does.</p>
+    <div class="row">
+      <a class="btn primary" href="https://apps.apple.com/app/id6785328399" rel="noopener" data-i18n="cta1">Get Driftlog on the App Store</a>
+      <a class="btn" href="https://counter.getdriftlog.com/" rel="noopener" data-i18n="cta2">Count countries from your photos →</a>
+    </div>
+  </div>
+
+  <footer>
+    <span data-i18n="foot">Built by Shiori Studio (Akira Takashima), Calgary. This page reads files locally in your browser; no data is ever sent anywhere.</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+"use strict";
+/* ---------------- i18n ---------------- */
+const I18N = {
+  en: {
+    byline:"by the developer of Driftlog",
+    h1:"Your Google Timeline export, on a world map",
+    sub:"Google Maps Timeline no longer lives on the web — but your export still holds every trip. Drop your Timeline.json here and see the countries you've visited, with first and last dates. Free, and nothing leaves your browser.",
+    drop1:"Drop your Timeline.json here",
+    drop2:"or click to choose the file — old Takeout “Records.json” works too",
+    privacy:"Private by design: the file is read only inside your browser. Nothing is uploaded, logged, or shared — you can even turn off Wi-Fi after this page loads.",
+    stc:"countries", stp:"location points", sts:"span",
+    copy:"Copy summary", png:"Download map as PNG",
+    th1:"Country", th2:"First visit", th3:"Last visit", th4:"Points",
+    howh:"How to get your Timeline.json",
+    howto:'<li>On your phone, open <b>Google Maps → your profile picture → Your Timeline</b>.</li><li>Tap <b>⋮ → Location and privacy settings → Export Timeline data</b>.</li><li>Save or share the exported file, then drop it in above. On desktop, Google Takeout’s old <code>Records.json</code> also works.</li>',
+    ctah:"Want it to keep filling in by itself?",
+    ctap:"Driftlog is the iPhone app that does this automatically: it records the countries and cities you pass through in the background — no check-ins, no account, no server, no subscription. It can also rebuild past trips from your photo library, the same way this page does.",
+    cta1:"Get Driftlog on the App Store", cta2:"Count countries from your photos →",
+    foot:"Built by Shiori Studio (Akira Takashima), Calgary. This page reads files locally in your browser; no data is ever sent anywhere.",
+    reading:"Reading file…", parsing:"Parsing locations…", mapping:"Matching countries…",
+    errParse:"Could not find any locations in that file. Make sure it is a Timeline.json export or an old Takeout Records.json.",
+    errFile:"That does not look like a JSON file.",
+    summary:(n,first,last)=>`My Google Timeline export holds ${n} countries (${first} – ${last}). Counted with this free browser tool (nothing uploaded): `,
+    copied:"Copied!", years:(a,b)=>a===b?String(a):`${a}–${b}`
+  },
+  ja: {
+    byline:"Driftlog 開発者による無料ツール",
+    h1:"Google タイムラインのエクスポートを世界地図に",
+    sub:"Google マップのタイムラインは Web から消えましたが、エクスポートには全ての旅が残っています。Timeline.json をドロップすると、訪問国と最初・最後の訪問日が表示されます。無料で、データはブラウザの外に出ません。",
+    drop1:"Timeline.json をここにドロップ",
+    drop2:"またはクリックして選択 — 旧 Takeout の Records.json も使えます",
+    privacy:"プライバシー第一:ファイルはブラウザの中だけで読み込まれます。アップロード・記録・共有は一切なし。ページ読み込み後は Wi-Fi を切っても動きます。",
+    stc:"か国", stp:"位置ポイント", sts:"期間",
+    copy:"結果をコピー", png:"地図を PNG で保存",
+    th1:"国", th2:"最初の訪問", th3:"最後の訪問", th4:"点数",
+    howh:"Timeline.json の取り出し方",
+    howto:'<li>スマホで <b>Google マップ → プロフィール写真 → タイムライン</b> を開きます。</li><li><b>⋮ → 位置情報とプライバシーの設定 → タイムラインのデータをエクスポート</b> をタップします。</li><li>保存または共有されたファイルを上の枠にドロップします。パソコンでは旧 Takeout の <code>Records.json</code> も使えます。</li>',
+    ctah:"これからは自動で記録しませんか?",
+    ctap:"Driftlog は、この記録を自動で続ける iPhone アプリです。チェックイン不要・アカウントなし・サーバーなし・サブスクなしで、通過した国や都市をバックグラウンドで記録します。このページと同じ仕組みで、写真ライブラリから過去の旅を復元することもできます。",
+    cta1:"App Store で Driftlog を入手", cta2:"写真から訪問国を数える →",
+    foot:"制作:Shiori Studio(高島彬)カルガリー。このページはブラウザ内でのみファイルを読み、データはどこにも送信されません。",
+    reading:"ファイルを読み込み中…", parsing:"位置情報を解析中…", mapping:"国を判定中…",
+    errParse:"そのファイルから位置情報が見つかりませんでした。タイムラインの Timeline.json エクスポートか、旧 Takeout の Records.json をご確認ください。",
+    errFile:"JSON ファイルではないようです。",
+    summary:(n,first,last)=>`私の Google タイムラインには ${n} か国の記録がありました(${first} – ${last})。無料・ブラウザだけで計測(アップロードなし): `,
+    copied:"コピーしました!", years:(a,b)=>a===b?`${a}年`:`${a}–${b}年`
+  }
+};
+let LANG = (navigator.language||"en").startsWith("ja") ? "ja" : "en";
+function setLang(l){
+  LANG=l;
+  document.documentElement.lang=l;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n; if(I18N[l][k]) el.textContent=I18N[l][k];});
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{const k=el.dataset.i18nHtml; if(I18N[l][k]) el.innerHTML=I18N[l][k];});
+  document.getElementById("btn-en").classList.toggle("on",l==="en");
+  document.getElementById("btn-ja").classList.toggle("on",l==="ja");
+}
+
+/* ---------------- parsing ---------------- */
+function parseDegPair(s){ // "35.6812°, 139.7671°" or "35.6812° N, 139.7671° E"
+  if(typeof s!=="string") return null;
+  const nums=s.match(/-?\d+(\.\d+)?/g);
+  if(!nums||nums.length<2) return null;
+  const lat=parseFloat(nums[0]), lng=parseFloat(nums[1]);
+  if(!isFinite(lat)||!isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180) return null;
+  return [lat,lng];
+}
+function tsDate(t){ // accepts ISO string or ms
+  if(!t) return null;
+  const d = typeof t==="number" ? new Date(t) : new Date(t);
+  return isNaN(d)?null:d;
+}
+function extractPoints(json){
+  const pts=[]; // {lat,lng,date}
+  const push=(lat,lng,date)=>{ if(isFinite(lat)&&isFinite(lng)&&Math.abs(lat)<=90&&Math.abs(lng)<=180) pts.push({lat,lng,date:date||null}); };
+  // New on-device Timeline export
+  if(Array.isArray(json.semanticSegments)){
+    for(const seg of json.semanticSegments){
+      const t0=tsDate(seg.startTimeUtc);
+      const v=seg.visit?.topCandidate?.placeLocation;
+      if(v){
+        const p = typeof v.latLng==="string" ? parseDegPair(v.latLng)
+               : (v.latitudeE7!=null ? [v.latitudeE7/1e7, v.longitudeE7/1e7] : null);
+        if(p) push(p[0],p[1],t0);
+      }
+      if(Array.isArray(seg.timelinePath)){
+        for(const tp of seg.timelinePath){
+          const p=parseDegPair(tp.point);
+          if(p) push(p[0],p[1],tsDate(tp.time)||t0);
+        }
+      }
+      for(const key of ["activity","parkingEvent"]){
+        const a=seg[key];
+        if(a?.start){const p=typeof a.start.latLng==="string"?parseDegPair(a.start.latLng):null; if(p)push(p[0],p[1],t0);}
+        if(a?.end){const p=typeof a.end.latLng==="string"?parseDegPair(a.end.latLng):null; if(p)push(p[0],p[1],tsDate(seg.endTimeUtc)||t0);}
+      }
+    }
+  }
+  // Old Takeout Records.json / Location History
+  if(Array.isArray(json.locations)){
+    for(const loc of json.locations){
+      const lat = loc.latitudeE7!=null ? loc.latitudeE7/1e7 : parseFloat(loc.latitude);
+      const lng = loc.longitudeE7!=null? loc.longitudeE7/1e7: parseFloat(loc.longitude);
+      const d = tsDate(loc.timestamp) || (loc.timestampMs? new Date(+loc.timestampMs):null);
+      if(isFinite(lat)&&isFinite(lng)) push(lat,lng,d);
+    }
+  }
+  // Takeout "timelineObjects" variant
+  if(Array.isArray(json.timelineObjects)){
+    for(const obj of json.timelineObjects){
+      const pv=obj.placeVisit;
+      if(pv){
+        const ll=pv.location||{};
+        const lat=ll.latitudeE7!=null?ll.latitudeE7/1e7:undefined, lng=ll.longitudeE7!=null?ll.longitudeE7/1e7:undefined;
+        if(lat!=null) push(lat,lng,tsDate(pv.duration?.startTimestamp)||(pv.duration?.startTimestampMs?new Date(+pv.duration.startTimestampMs):null));
+      }
+      const ap=obj.activitySegment;
+      if(ap){
+        for(const end of ["startLocation","endLocation"]){
+          const ll=ap[end];
+          if(ll?.latitudeE7!=null) push(ll.latitudeE7/1e7,ll.longitudeE7/1e7,null);
+        }
+        if(Array.isArray(ap.simplifiedRawPath?.points)){
+          for(const p of ap.simplifiedRawPath.points) if(p.latE7!=null) push(p.latE7/1e7,p.lngE7/1e7,null);
+        }
+      }
+    }
+  }
+  return pts;
+}
+
+/* ---------------- country lookup ---------------- */
+let FEATURES=null; // GeoJSON country features with bbox
+function bboxOf(coords){
+  let m=[Infinity,Infinity,-Infinity,-Infinity];
+  (function rec(c){ if(typeof c[0]==="number"){const[x,y]=c; if(x<m[0])m[0]=x; if(y<m[1])m[1]=y; if(x>m[2])m[2]=x; if(y>m[3])m[3]=y;} else c.forEach(rec); })(coords);
+  return m;
+}
+function pipRing(pt,ring){ // ray casting, ring closed or not
+  let inside=false;
+  for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+    const xi=ring[i][0],yi=ring[i][1],xj=ring[j][0],yj=ring[j][1];
+    if(((yi>pt[1])!==(yj>pt[1])) && (pt[0] < (xj-xi)*(pt[1]-yi)/(yj-yi)+xi)) inside=!inside;
+  }
+  return inside;
+}
+function pipGeom(pt,geom){
+  const polys = geom.type==="Polygon" ? [geom.coordinates] : geom.type==="MultiPolygon" ? geom.coordinates : [];
+  for(const poly of polys){
+    if(pipRing(pt,poly[0])){
+      let hole=false;
+      for(let h=1;h<poly.length;h++) if(pipRing(pt,poly[h])){hole=true;break;}
+      if(!hole) return true;
+    }
+  }
+  return false;
+}
+function countryOf(lat,lng){
+  const pt=[lng,lat];
+  for(const f of FEATURES){
+    const b=f.bbox;
+    if(lng<b[0]||lat<b[1]||lng>b[2]||lat>b[3]) continue;
+    if(pipGeom(pt,f.geometry)) return f.properties.name;
+  }
+  return null;
+}
+async function loadAtlas(){
+  if(FEATURES) return FEATURES;
+  const res=await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+  const topo=await res.json();
+  FEATURES=topojson.feature(topo,topo.objects.countries).features
+    .filter(f=>f.properties.name!=="Antarctica");
+  FEATURES.forEach(f=>f.bbox=bboxOf(f.geometry.coordinates));
+  return FEATURES;
+}
+
+/* ---------------- main flow ---------------- */
+const $=id=>document.getElementById(id);
+const drop=$("drop"), fileInput=$("file"), prog=$("prog"), err=$("err");
+drop.addEventListener("click",()=>fileInput.click());
+drop.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")fileInput.click();});
+drop.addEventListener("dragover",e=>{e.preventDefault();drop.classList.add("over");});
+drop.addEventListener("dragleave",()=>drop.classList.remove("over"));
+drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("over"); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);});
+fileInput.addEventListener("change",()=>{if(fileInput.files[0]) handleFile(fileInput.files[0]);});
+
+let LAST=null; // last result for copy/png
+
+async function handleFile(file){
+  err.style.display="none"; prog.textContent=I18N[LANG].reading;
+  try{
+    if(!/json$/i.test(file.name) && file.type!=="application/json"){ throw new Error(I18N[LANG].errFile); }
+    const text=await file.text();
+    prog.textContent=I18N[LANG].parsing;
+    const json=JSON.parse(text);
+    let pts=extractPoints(json);
+    if(!pts.length){ throw new Error(I18N[LANG].errParse); }
+    // de-dup on a ~1km grid to speed up matching
+    const seen=new Set(); pts=pts.filter(p=>{const k=p.lat.toFixed(2)+","+p.lng.toFixed(2); if(seen.has(k))return false; seen.add(k); return true;});
+    prog.textContent=I18N[LANG].mapping+" ("+pts.length.toLocaleString()+" pts)";
+    await loadAtlas();
+    await new Promise(r=>setTimeout(r,30)); // let UI paint
+    const byCountry=new Map();
+    for(const p of pts){
+      const c=countryOf(p.lat,p.lng);
+      if(!c) continue;
+      const e=byCountry.get(c)||{n:0,first:null,last:null};
+      e.n++;
+      if(p.date){ if(!e.first||p.date<e.first)e.first=p.date; if(!e.last||p.date>e.last)e.last=p.date; }
+      byCountry.set(c,e);
+    }
+    renderResult(byCountry,pts.length);
+    prog.textContent="";
+  }catch(ex){
+    prog.textContent="";
+    err.textContent=ex.message||String(ex);
+    err.style.display="block";
+  }
+}
+
+function renderResult(byCountry,totalPts){
+  const entries=[...byCountry.entries()].sort((a,b)=>{
+    const fa=a[1].first,fb=b[1].first;
+    if(fa&&fb) return fa-fb;
+    return b[1].n-a[1].n;
+  });
+  const years=[...byCountry.values()].flatMap(e=>[e.first,e.last]).filter(Boolean).map(d=>d.getFullYear());
+  const minY=years.length?Math.min(...years):null, maxY=years.length?Math.max(...years):null;
+  $("st-countries").textContent=byCountry.size;
+  $("st-points").textContent=totalPts.toLocaleString();
+  $("st-span").textContent=I18N[LANG].years(minY,maxY);
+  $("stat").style.display="flex";
+  // table
+  const tb=$("rows"); tb.innerHTML="";
+  const fmt=d=>d?d.toISOString().slice(0,10):"–";
+  for(const [name,e] of entries){
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${name}</td><td>${fmt(e.first)}</td><td>${fmt(e.last)}</td><td>${e.n.toLocaleString()}</td>`;
+    tb.appendChild(tr);
+  }
+  $("tablebox").style.display="block";
+  drawMap(new Set(byCountry.keys()));
+  $("mapbox").style.display="block";
+  LAST={count:byCountry.size,minY,maxY,names:[...byCountry.keys()]};
+}
+
+/* ---------------- map ---------------- */
+let BASE_SVG=null;
+async function drawMap(visited){
+  const feats=await loadAtlas();
+  const svg=d3.select("#map"); svg.selectAll("*").remove();
+  const proj=d3.geoNaturalEarth1().fitSize([960,500],{type:"Sphere"});
+  const path=d3.geoPath(proj);
+  svg.append("path").attr("d",path({type:"Sphere"})).attr("fill","#FFF6EE");
+  const g=svg.append("g").attr("class","countries");
+  g.selectAll("path").data(feats).join("path")
+    .attr("class",d=>"country"+(visited.has(d.properties.name)?" hit":""))
+    .attr("d",path)
+    .append("title").text(d=>d.properties.name);
+  BASE_SVG=svg.node();
+}
+$("copy").addEventListener("click",async e=>{
+  if(!LAST) return;
+  const t=I18N[LANG].summary(LAST.count,LAST.minY||"?",LAST.maxY||"?")+location.href;
+  try{ await navigator.clipboard.writeText(t); e.target.textContent=I18N[LANG].copied; setTimeout(()=>e.target.textContent=I18N[LANG].copy,1500);}catch(_){}
+});
+$("png").addEventListener("click",()=>{
+  if(!BASE_SVG) return;
+  const xml=new XMLSerializer().serializeToString(BASE_SVG);
+  const img=new Image();
+  img.onload=()=>{
+    const c=document.createElement("canvas"); c.width=1920; c.height=1000;
+    const ctx=c.getContext("2d"); ctx.fillStyle="#FCF7F0"; ctx.fillRect(0,0,c.width,c.height);
+    ctx.drawImage(img,0,0,c.width,c.height);
+    const a=document.createElement("a"); a.download="my-countries-map.png"; a.href=c.toDataURL("image/png"); a.click();
+  };
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(xml);
+});
+
+setLang(LANG);
+/* test hook */
+window.__reader={extractPoints,parseDegPair};
+</script>
+</body>
+</html>

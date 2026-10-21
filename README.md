@@ -48,6 +48,7 @@ The same site has a few more pages, built on the same scripts and readers. Like 
 - **US state lines:** the US Census Bureau's 1:500,000 cartographic boundary file (2024), simplified to about 65 m along the lines between states and the borders with Canada and Mexico and about 2 km along the rest of the coast. On the counter, a point inside a state's outline is counted in the United States whatever the 1:50m country borders say (downtown El Paso, the American side of Niagara Falls).
 - **Prefectures:** GSI's Global Map Japan (地球地図日本), every island kept.
 - `us/us.json` and `ja/jp.json` are generated files; the scripts that build them are not in this repository yet.
+- Two guide pages are served from the same site: `/google-timeline-alternative/` (how to export a Google Maps Timeline) and `/tools/timeline-json-reader/`, an older, separate Timeline reader. Unlike the pages above, the reader loads d3, topojson-client and the 1:110m world-atlas file from cdn.jsdelivr.net.
 
 ## Run it
 

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Timeline Alternative — What To Do With Your Travel History (Free Tools)</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<meta name="description" content="Google Maps Timeline moved off the web. Here's how to export your Timeline.json, count the countries you've visited, and keep your travel log going automatically — free and private.">
+<link rel="canonical" href="https://counter.getdriftlog.com/google-timeline-alternative/">
+<meta property="og:title" content="Google Timeline alternative: keep your travel history without the web">
+<meta property="og:description" content="Export Timeline.json, map your countries in the browser (nothing uploaded), and let an app keep recording from here.">
+<meta property="og:image" content="https://counter.getdriftlog.com/og.png">
+<meta property="og:type" content="article">
+<link rel="stylesheet" href="/fonts.css">
+<style>
+  :root{
+    --cream:#FCF7F0; --cream2:#F7EDE1; --card:#FFFDFB; --tint:#FFF6EE;
+    --ink:#322014; --muted:#7A6555;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B;
+    --line:#EAD9C9;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic Medium","Meiryo",sans-serif;
+    background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);background-attachment:fixed;
+    color:var(--ink);line-height:1.7}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+  h1{font-family:"Fraunces","Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    font-weight:600;font-size:clamp(28px,4.6vw,40px);line-height:1.3;letter-spacing:.01em}
+  h2{font-family:"Fraunces","Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;font-weight:600;font-size:1.3rem;margin-top:2em}
+  .lead{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:18px 0}
+  .btn{display:inline-block;font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;margin:6px 8px 6px 0;transition:background .18s}
+  .btn:hover{background:var(--tint)}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t)}
+  ol,ul{padding-left:22px}
+  li{margin-bottom:8px}
+  ol b{color:var(--ink)}
+  footer{color:var(--muted);font-size:.85rem;margin-top:36px}
+  a{color:var(--accent-t)}
+  code{background:var(--tint);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.88em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Google Timeline is gone from the web. Your travel history doesn't have to be.</h1>
+  <p class="lead">Google moved Maps Timeline to on-device storage and retired the web view. If you exported your data — or want to rebuild your history from photos — these free tools pick up where Timeline left off. Everything runs in your browser; nothing is uploaded.</p>
+
+  <h2>Step 1 — Export your Timeline.json</h2>
+  <ol>
+    <li>On your phone, open <b>Google Maps → profile picture → Your Timeline</b>.</li>
+    <li>Go to <b>Settings → Location &amp; privacy → Export Timeline data</b>.</li>
+    <li>You get a <code>Timeline.json</code> file with every visit and path Google kept on the device.</li>
+  </ol>
+
+  <h2>Step 2 — See what it contains</h2>
+  <div class="card">
+    <b>Timeline.json Reader (free)</b>
+    <p>Drop the file in and get a world map of the countries you've visited, with first and last visit dates. Old Google Takeout <code>Records.json</code> files work too. 100% in-browser — you can switch off Wi-Fi first if you like.</p>
+    <a class="btn primary" href="../tools/timeline-json-reader/">Open the reader</a>
+  </div>
+
+  <h2>Step 3 — Fill the gaps with your photos</h2>
+  <div class="card">
+    <b>Photo country counter (free)</b>
+    <p>Timeline only knows the years you used Google Maps. Your photo library remembers the rest: this tool reads the GPS coordinates stored in your photos and rebuilds trips from years before any app was installed — again, entirely on your device.</p>
+    <a class="btn primary" href="https://counter.getdriftlog.com/">Count countries from photos</a>
+  </div>
+
+  <h2>Step 4 — Keep it recording by itself</h2>
+  <p>The reason Timeline mattered was that it worked in the background. <b>Driftlog</b> does the same job as a private, on-device travel log: it records the countries and cities you pass through with no check-ins — no account, no server, no ads, no subscription. Free to download with a one-time unlock.</p>
+  <p><a class="btn primary" href="https://apps.apple.com/app/id6785328399">Driftlog on the App Store</a> <a class="btn" href="https://getdriftlog.com">About Driftlog</a></p>
+
+  <footer>Built by Shiori Studio (Akira Takashima), a solo developer in Calgary · <a href="https://ja-counter.getdriftlog.com/">日本語版</a></footer>
+</div>
+</body>
+</html>
