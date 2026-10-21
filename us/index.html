@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How many US states have you been to? Count them from your own photos</title>
+<link rel="icon" type="image/png" href="/img/icon-64.png" />
+<link rel="apple-touch-icon" href="/img/icon-180.png" />
+<meta name="description" content="Drop in your photos or a Google Maps Timeline export and see every US state you've been to on a map, or tap the states yourself. It runs in your browser: nothing is uploaded, and there is no account." />
+<link rel="canonical" href="https://counter.getdriftlog.com/us/" />
+<meta name="apple-itunes-app" content="app-id=6785328399, affiliate-data=pt=129098692&amp;ct=en_states_sb" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Driftlog" />
+<meta property="og:url" content="https://counter.getdriftlog.com/us/" />
+<meta property="og:title" content="How many US states have you been to?" />
+<meta property="og:description" content="Drop in your photos and watch the map of the United States fill in, state by state. Nothing is uploaded: it all runs in your browser." />
+<meta property="og:image" content="https://counter.getdriftlog.com/us/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="How many US states have you been to? An example map of the United States with some of the states filled in. getdriftlog.com/states" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How many US states have you been to?" />
+<meta name="twitter:description" content="Drop in your photos and watch the map of the United States fill in, state by state. Nothing is uploaded: it all runs in your browser." />
+<meta name="twitter:image" content="https://counter.getdriftlog.com/us/og.png" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Driftlog: US states counter",
+"url":"https://counter.getdriftlog.com/us/","applicationCategory":"TravelApplication",
+"operatingSystem":"Any (runs in the browser)",
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+"description":"Counts how many of the 50 US states you have been to from the GPS coordinates stored in your own photos or a Google Maps Timeline export, and draws them on a map. States can also be picked by hand. Runs entirely in the browser: no upload, no account.",
+"author":{"@type":"Person","name":"Akira Takashima"},
+"publisher":{"@type":"Organization","name":"Shiori Studio"}}
+</script>
+<link rel="stylesheet" href="/fonts.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  [hidden]{display:none!important}
+  /* As on the counter: --muted2 and --accent-t for small text, --accent-d under white text (WCAG AA on cream2). */
+  :root{
+    --cream:#FCF7F0; --cream2:#F6EADF; --ink:#322014; --muted:#7A6555; --muted2:#7D6656;
+    --accent:#D6692E; --accent-d:#B9561F; --accent-t:#A84D1B; --line:#EAD9C9; --card:#FFFDFB; --tint:#FFF6EE;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--cream) 0%,var(--cream2) 100%);
+    color:var(--ink);min-height:100vh;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header{text-align:center;padding:60px 0 22px}
+  .kicker{font-size:12px;letter-spacing:.38em;font-weight:600;color:var(--accent-t);text-transform:uppercase}
+  .kicker a{color:inherit;text-decoration:none}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(34px,6vw,60px);line-height:1.14;margin-top:20px;letter-spacing:-.015em;text-wrap:balance}
+  .lead{font-weight:300;color:var(--muted);margin:20px auto 0;max-width:600px;font-size:clamp(15px,2.1vw,18px)}
+  .drop{margin:32px 0 0;background:var(--card);border:1.5px dashed var(--line);border-radius:20px;padding:44px 24px 36px;text-align:center;
+    transition:border-color .18s,background .18s}
+  .drop.over{border-color:var(--accent);background:var(--tint)}
+  .drop h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:23px;text-wrap:balance}
+  .drop .what{color:var(--muted);font-size:14px;margin:10px auto 0;max-width:560px}
+  .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+  .btn{font-family:inherit;font-weight:500;font-size:15px;padding:13px 24px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;display:inline-block}
+  .btn.primary{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
+  .btn.primary:hover{background:var(--accent-t);border-color:var(--accent-t)}
+  .btn:hover{border-color:var(--accent)}
+  .btn:focus-visible,.linkbtn:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .linkbtn{font:inherit;font-size:14px;background:none;border:0;color:var(--accent-t);text-decoration:underline;text-underline-offset:3px;cursor:pointer;margin-top:16px}
+  .alts{display:flex;gap:4px 20px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .alts .linkbtn{margin-top:0}
+  .note{font-size:12.5px;color:var(--muted2);margin:14px auto 0;max-width:620px;text-align:center}
+  .note a,.how a,.also a,.appline a,#status a,.mobile-note a{color:var(--accent-t)}
+  .note code{font-size:12px;word-break:break-all;color:var(--muted)}
+  .mobile-note{display:none;margin:16px auto 0;max-width:520px;font-size:13.5px;color:var(--ink);background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left}
+  .is-mobile .mobile-note{display:block}
+  .is-mobile #pickDir{display:none}
+  #status{text-align:center;color:var(--muted);font-size:14px;margin:18px auto 0;min-height:22px;max-width:640px}
+  .bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;max-width:420px;margin:10px auto 0;display:none}
+  .bar.on{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .recv{text-align:center;padding:52px 0 0}
+  .recv h1{margin-top:16px}
+  .recv .lead{margin-top:14px}
+  .recv canvas{margin-top:26px}
+  .recv-mode header{display:none}
+  .result{margin-top:30px}
+  .example-flag{text-align:center;margin-bottom:12px;font-size:12px;letter-spacing:.2em;font-weight:600;text-transform:uppercase;color:var(--accent-t)}
+  .count{text-align:center;margin-bottom:12px}
+  .count .n{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(56px,13vw,110px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+  .count .lbl{font-size:15px;color:var(--muted);margin-top:8px}
+  canvas{width:100%;height:auto;display:block;border-radius:18px;background:var(--card);border:1px solid var(--line)}
+  .list{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;justify-content:center}
+  .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13.5px;font-variant-numeric:tabular-nums}
+  .chip b{font-weight:500}
+  .chip span{color:var(--muted)}
+  .also{text-align:center;color:var(--muted);font-size:13.5px;margin:14px auto 0;max-width:620px}
+  .stats{text-align:center;color:var(--muted2);font-size:12.5px;margin-top:12px;font-variant-numeric:tabular-nums}
+  .actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+  .appline{text-align:center;font-size:14px;color:var(--muted);margin:30px auto 0;max-width:600px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .appline a{font-weight:500}
+  .how{margin:48px auto 0;max-width:680px;font-size:14px;color:var(--muted)}
+  .how h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;color:var(--ink);margin-bottom:10px;text-align:center}
+  .how dl{display:grid;gap:14px}
+  .how dt{color:var(--ink);font-weight:500}
+  .how dd{margin-top:2px}
+  footer{text-align:center;padding:48px 0 60px;color:var(--muted2);font-size:13px}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--line)}
+  @media (prefers-reduced-motion: reduce){ .bar i{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="recv" id="recv" hidden aria-label="A shared map">
+    <div class="kicker">A shared map</div>
+    <h1 id="recvTitle">0 of 50 states</h1>
+    <p class="lead">Someone sent you the states they've been to. Which have you been to?</p>
+    <canvas id="recvMap" width="1200" height="700" role="img" aria-label="Map of the United States with the shared states filled in"></canvas>
+    <div class="list" id="recvList"></div>
+    <div class="btns"><button class="btn primary" id="recvPick" type="button">Pick yours</button></div>
+    <button class="linkbtn" id="recvPhotos" type="button">or count yours from photos or a Google Maps Timeline file</button>
+    <p class="note" id="recvNote">The list of states sits after the # in this link, which browsers never send to any server, including ours.</p>
+  </section>
+
+  <header>
+    <div class="kicker"><a href="/">Driftlog</a></div>
+    <h1>How many US states<br>have you been to?</h1>
+    <p class="lead">Fifty sounds like a number you'd just know. Then you try to list them. Your photos already have the answer: drop them in below, or tap the states yourself.</p>
+  </header>
+
+  <section class="drop" id="drop" aria-label="Add photos or location files">
+    <h2>Drop photos or a whole folder here</h2>
+    <p class="what">Road-trip photos, a camera-roll export, a Google Takeout folder, or a Google Maps Timeline export (Timeline.json). Photos from anywhere are fine: only the ones taken in a US state are counted here.</p>
+    <div class="btns">
+      <button class="btn primary" id="pickFiles" type="button">Choose photos</button>
+      <button class="btn" id="pickDir" type="button">Choose a folder</button>
+    </div>
+    <div class="alts">
+      <button class="linkbtn" id="pickBtn" type="button">No photos handy? Pick states</button>
+      <button class="linkbtn" id="exampleBtn" type="button">See an example</button>
+    </div>
+    <input type="file" id="fileInput" multiple hidden accept="image/*,video/*,.heic,.heif,.dng,.tif,.tiff,.json,application/json" />
+    <input type="file" id="dirInput" hidden webkitdirectory multiple />
+    <p class="mobile-note" id="mobileNote">On iPhone: tap <b>Choose photos</b>, pick from your Photo Library and leave <b>“Location Is Included”</b> on (it is by default). A few hundred photos at a time works well, and each batch adds to your map (<b>Add more photos</b> under it). Exported your Google Maps Timeline? Tap <b>Choose photos</b> → <b>Choose Files</b> and pick <code>location-history.json</code> (<a href="https://getdriftlog.com/google-maps-timeline-countries/">how to export it</a>).</p>
+    <p class="note">Nothing is uploaded. Files are read inside your browser: check the network tab, or switch off Wi-Fi once the page has loaded. It keeps working.</p>
+  </section>
+  <section id="picker" hidden aria-label="Pick states"></section>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="bar" id="bar"><i></i></div>
+
+  <section class="result" id="result" hidden aria-label="Your states">
+    <div class="example-flag" id="exFlag" hidden>Example — not your photos</div>
+    <div class="count" id="countBox" tabindex="-1"><div class="n" id="num">0</div><div class="lbl" id="lbl">states</div></div>
+    <canvas id="map" width="1200" height="1150" role="img" aria-label="Map of the United States with the states found in your files filled in"></canvas>
+    <div class="list" id="list"></div>
+    <p class="also" id="also"></p>
+    <p class="also" id="abroad"></p>
+    <p class="stats" id="stats"></p>
+    <div class="actions">
+      <button class="btn primary" id="share" type="button">Share</button>
+      <button class="btn" id="save" type="button">Save this image</button>
+      <button class="btn" id="edit" type="button">Edit states</button>
+      <button class="btn" id="addMore" type="button" hidden>Add more photos</button>
+      <button class="btn" id="again" type="button">Start over</button>
+    </div>
+    <p class="note" id="linkNote" hidden>Your link: <code id="linkTail"></code><br>Your list of states sits after the #, which browsers never send to any server, including ours. Anyone you send the link to, and the app you send it with, can read the list.</p>
+    <p class="appline">In the Driftlog app, for iPhone and Android, your home country gets a map of its own. For the United States that is this map, state by state, and it fills itself in as you go. <a id="appLink" href="https://apps.apple.com/app/id6785328399?ppid=5a2b9909-a132-4847-9b8b-75121e8f78e1&amp;pt=129098692&amp;ct=en_states&amp;mt=8" rel="noopener">See it on the App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.shioristudio.zubotabi" rel="noopener">Google Play</a></p>
+    <p class="also">Just this year? <a href="/us/2026/">Make your 2026 card, state by state</a>. Been abroad too? <a href="/">Count your countries</a> the same way.</p>
+  </section>
+
+  <section class="how" aria-label="How this page works">
+    <h3>How this works</h3>
+    <dl>
+      <div><dt>Photos</dt><dd>A photo taken with location on carries GPS coordinates in its metadata. The page reads only that part of each file, never the picture itself, and tests each location against the state lines. A Google Photos export keeps the location in a small JSON file next to each photo; a Google Maps Timeline export is read in slices, so large files work too.</dd></div>
+      <div><dt>What counts as a state</dt><dd>The fifty states. Washington, D.C. is filled in on the map and named under it, but it is not a state and is not in the number. Puerto Rico, Guam and the other territories are on the <a href="/">countries page</a>, named there as places of their own.</dd></div>
+      <div><dt>What counts as having been there</dt><dd>A photo with a location in the state, or a point of your Timeline. A state you drove through without taking a picture is not in your photos; your Timeline has it, along with anywhere you only changed planes. <b>Edit states</b> adds or removes any of them.</dd></div>
+      <div><dt>State lines</dt><dd>From the US Census Bureau's 1:500,000 boundary file (2024), drawn to within about 65 metres along the lines between states, so a photo from the Cincinnati riverfront is in Ohio and one from Reagan National Airport is in Virginia. A photo taken closer to a state line than that can land on the wrong side. The borders with Canada and Mexico are drawn as closely, down the middle of the Detroit River, the Niagara and the Rio Grande: a photo from Windsor or Tijuana is in no state. The rest of the coast is drawn more roughly, and a photo from a beach, a pier or a ferry goes to the nearest state.</dd></div>
+      <div><dt>Privacy</dt><dd>No file and no coordinate leaves your device. The only requests the page makes are for its own HTML and scripts, fonts and the file of state lines, the same fixed files for everyone, so it keeps working with the network switched off once it has loaded. There are no analytics and no cookies.</dd></div>
+      <div><dt>Shared links</dt><dd>A shared result looks like <code>counter.getdriftlog.com/us/#s=1.…</code> The list of states sits after the #, which browsers never send to any server, including ours; the page reads it in the browser. Anyone who has the link can read the list, including the app you send it with.</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    Made by <a href="https://getdriftlog.com" rel="noopener">Driftlog</a> — a travel map that fills itself in. State lines: <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" rel="noopener">US Census Bureau</a> (public domain). · <a href="/">Count your countries from photos</a> · <a href="/us/2026/">Your 2026, state by state</a> · <a href="/passport/">Passport page</a> · <a href="https://github.com/anegogo/driftlog-counter" rel="noopener">Source on GitHub</a> (MIT)
+  </footer>
+</div>
+
+<script src="/kit.js"></script>
+<script src="/scan.js"></script>
+<script src="/us/states.js"></script>
+<script>
+'use strict';
+const Kit = window.DriftlogKit;       // sharing, colours, the App Store link: /kit.js
+const Scan = window.DriftlogScan;     // a location and a date out of each file: /scan.js
+const States = window.DriftlogStates; // the 50, their lines, the map, the card, the picker: /us/states.js
+const $ = s => document.querySelector(s);
+const statusEl = $('#status'), barEl = $('#bar'), barFill = $('#bar i'), canvas = $('#map');
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_ANDROID = /Android/i.test(navigator.userAgent);
+if (IS_MOBILE) document.body.classList.add('is-mobile');
+if (IS_ANDROID) $('#mobileNote').innerHTML = 'On Android, the browser removes the location from photos you pick, so photos won’t count here. <b>Pick states</b> by hand, choose a <b>Google Maps Timeline export</b> (Timeline.json), or open this page on a computer.';
+if (!('webkitdirectory' in document.createElement('input'))) $('#pickDir').style.display = 'none';
+
+const STORE_KEY = 'driftlog-states', TITLE = document.title;
+const FONTS = ['600 132px Fraunces', '300 38px Inter', '300 27px Inter', '400 24px Inter', '600 25px Inter'];
+function setStatus(t, html){ if (html) statusEl.innerHTML = t; else statusEl.textContent = t; }
+function setProgress(f){ if (f == null){ barEl.classList.remove('on'); return; } barEl.classList.add('on'); barFill.style.width = Math.round(f * 100) + '%'; }
+const fmt = n => n.toLocaleString('en-US');
+const tick = () => new Promise(r => setTimeout(r, 0));
+const scrollToEl = el => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+
+// ---------- borders and fonts ----------
+let FEATS = null, stateOf = null;
+const loadFonts = () => document.fonts && document.fonts.load ? Promise.all(FONTS.map(f => document.fonts.load(f))).catch(() => {}) : Promise.resolve();
+async function ready(){
+  if (FEATS) return;
+  const req = States.load();
+  req.catch(() => {});
+  await loadFonts();               // the image is drawn on a canvas, which falls back to Georgia if Fraunces is not in yet
+  setStatus('Loading the map…');
+  FEATS = await req.catch(() => { throw new Error('The map file did not load. Reload the page and try again.'); });
+  stateOf = States.locator(FEATS);
+  setStatus('');
+}
+// Fetched once the page is idle, so files dropped later are read even with the network switched off.
+(window.requestIdleCallback || (f => setTimeout(f, 1200)))(() => { States.load().catch(() => {}); loadFonts(); });
+// Index of the state (or the District) a point is in, or -1: abroad, out at sea, or across the border.
+function place(lon, lat){
+  const s = stateOf(lon, lat);
+  return s < 0 ? -1 : Math.floor(s / 10000);
+}
+
+// ---------- what is on the page ----------
+// files: the count from files: { agg: Map state index -> { n, y0 }, stats, keys, located }. It grows a batch at a
+// time ("Add more photos") and stays until Start over or a list picked from scratch.
+// state: what the image shows: { codes: Set, years: Map | null, src, base, example }.
+// RECV: a list that came in a link from someone else, shown above everything.
+let files = null, state = null, RECV = null, prepared = null, busy = false, drawing = 0;
+const fileKey = f => f.name + '\n' + f.size;
+
+// ---------- reading files ----------
+async function handle(list, { adding = false } = {}){
+  if (busy) return;
+  busy = true;
+  try {
+    await ready();
+    const prev = adding && files ? files : null;
+    const picked = [...list].filter(f => f && !f.name.startsWith('.'));
+    const all = prev ? picked.filter(f => !prev.keys.has(fileKey(f))) : picked;
+    if (prev && picked.length && !all.length){ setStatus(picked.length === 1 ? 'That file was counted already.' : `Those ${fmt(picked.length)} files were counted already.`); return; }
+    const media = all.filter(f => Scan.KIND(f.name) && Scan.KIND(f.name) !== 'json');
+    const jsons = all.filter(f => Scan.KIND(f.name) === 'json');
+    if (!media.length && !jsons.length){
+      setStatus(all.length ? `None of those ${fmt(all.length)} files are photos, videos or location exports I can read.` : 'Nothing to read in that selection.');
+      return;
+    }
+    const run = prev || { agg: new Map(), stats: { media: 0, withLoc: 0, sidecars: 0, points: 0, elsewhere: 0 }, keys: new Set(), located: new Map() };
+    const { agg, stats, located, keys } = run, before = new Set(agg.keys());
+    for (const f of all) keys.add(fileKey(f));
+    stats.media += media.length;
+    const add = (lon, lat, year) => {
+      const i = place(lon, lat);
+      if (i < 0) stats.elsewhere++;
+      else {
+        let a = agg.get(i);
+        if (!a) agg.set(i, a = { n: 0, y0: null });
+        a.n++;
+        if (year && (a.y0 === null || year < a.y0)) a.y0 = year;
+      }
+      return i;
+    };
+    // File name -> where it was already counted: a Takeout sidecar is skipped only when its own photo (or another
+    // file with the same name) already put that state on the map.
+    const mark = (name, i) => { let set = located.get(name); if (!set) located.set(name, set = new Set()); set.add(i); };
+    let done = 0, loc = 0;
+    const total = media.length + jsons.length;
+    const worker = async queue => {
+      while (queue.length){
+        const f = queue.shift(), r = await Scan.readMedia(f);
+        if (r && r.point){ stats.withLoc++; loc++; mark(f.name.toLowerCase(), add(r.point[0], r.point[1], r.year)); }
+        done++;
+        if (done % 20 === 0){ setStatus(`Reading ${fmt(done)} of ${fmt(total)} files · ${fmt(loc)} with a location`); setProgress(done / total); await tick(); }
+      }
+    };
+    const queue = media.slice();
+    await Promise.all([worker(queue), worker(queue), worker(queue), worker(queue)]);
+    for (const f of jsons){
+      if (f.size < 256 * 1024){
+        let o = null;
+        try { o = JSON.parse(await f.text()); } catch (e){ o = null; }
+        const sc = Scan.sidecar(o);
+        if (sc){
+          const i = sc.point ? place(sc.point[0], sc.point[1]) : -1, seen = located.get(sc.title.toLowerCase());
+          if (sc.point && !(seen && seen.has(i))){ stats.sidecars++; mark(sc.title.toLowerCase(), add(sc.point[0], sc.point[1], sc.year)); }
+          done++;
+          continue;
+        }
+      }
+      await Scan.scanLocationFile(f, (p, year) => { stats.points++; add(p[0], p[1], year); },
+        frac => { setStatus(`Reading ${f.name} · ${Math.round(frac * 100)}% · ${fmt(stats.points)} location points`); setProgress(frac); });
+      done++;
+    }
+    setProgress(null);
+    files = run;
+    showCount({ added: prev ? { total, before } : null });
+  } catch (e){
+    setProgress(null);
+    setStatus(e && e.message ? e.message : 'Something went wrong while reading those files.');
+  } finally { busy = false; }
+}
+// The count from files on the page. added: { total, before } when a batch was added to a count already there.
+function showCount({ added = null } = {}){
+  const { agg, stats } = files, any = stats.withLoc + stats.sidecars + stats.points;
+  if (!agg.size){
+    state = null; $('#result').hidden = true;
+    if (!any){
+      if (IS_IOS) setStatus(`None of those ${fmt(stats.media)} photos had a location in them. In the photo picker, check that “Location Is Included” is on (switch it under Options), and that the camera had location turned on. Or pick your states by hand.`);
+      else if (IS_ANDROID) setStatus(`None of those ${fmt(stats.media)} files had a location in them. Android removes it from photos picked in a browser. Pick your states by hand, or use a Google Maps Timeline export.`);
+      else setStatus(`None of those ${fmt(stats.media)} files had a location saved in them. Photos taken with location turned off for the camera carry no coordinates.`);
+    }
+    else setStatus(`Read ${fmt(any)} locations, but none of them is in a US state. <a href="/">Count your countries</a> with the same files, or add photos from a trip in the States.`, true);
+    return;
+  }
+  const codes = new Set(), years = new Map();
+  for (const [i, a] of agg){ const code = States.LIST[i].code; codes.add(code); if (a.y0) years.set(code, a.y0); }
+  const fromPhotos = stats.withLoc + stats.sidecars > 0, fromTimeline = stats.points > 0;
+  state = { codes, years: years.size ? years : null, src: fromPhotos && fromTimeline ? 'both' : fromTimeline ? 'timeline' : 'photos', base: null, example: false };
+  render(true);
+  const n = States.countOf(codes);
+  if (added){
+    const was = States.countOf([...added.before].map(i => States.LIST[i].code)), fs = added.total === 1 ? 'file' : 'files';
+    setStatus(n > was ? `Added ${fmt(added.total)} ${fs}: ${was} → ${n} states. Nothing left your browser.` : `Added ${fmt(added.total)} ${fs}, but no new states: still ${n}.`);
+  }
+  else setStatus('Done. Nothing left your browser.');
+}
+
+// ---------- picking by hand ----------
+const pickerEl = $('#picker');
+function closePicker(){ pickerEl.hidden = true; pickerEl.innerHTML = ''; }
+const focusOn = el => { if (el) el.focus({ preventScroll: true }); };
+// editing: an image is on the page and its list is being changed; otherwise the picker is the way in.
+function openPicker(editing){
+  const back = editing ? $('#result') : RECV ? $('#recv') : $('#drop');
+  States.picker(pickerEl, {
+    initial: editing && state ? state.codes : [],
+    doneLabel: editing ? 'Update the map' : 'Show my map',
+    onCancel: () => { closePicker(); scrollToEl(back); },
+    onDone: async codes => {
+      closePicker();
+      try { await ready(); } catch (e){ setStatus(e.message); return; }
+      if (editing && state && !state.example && sameSet(codes, state.codes)){ scrollToEl($('#result')); return focusOn($('#countBox')); }
+      // A list changed by hand: a pick stays a pick; a count becomes "edited" and remembers what it was counted
+      // from, and the first years of the states still in it are kept. A count from files is let go either way.
+      const prev = editing && state && !state.example ? state : null, hand = !prev || prev.src === 'tap';
+      const years = prev && prev.years ? new Map([...prev.years].filter(([c]) => codes.has(c))) : null;
+      files = null;
+      state = { codes, years: years && years.size ? years : null, src: hand ? 'tap' : 'edited', base: hand ? null : prev.src === 'edited' ? prev.base : prev.src, example: false };
+      render(true);
+      setStatus(codes.size ? 'Your map is ready.' : 'No states picked. Pick some to fill in the map.');
+      focusOn($('#countBox'));
+    },
+  });
+  pickerEl.hidden = false;
+  scrollToEl(pickerEl);
+}
+
+// ---------- the result ----------
+function shareText(st, n){
+  const from = { timeline: 'Google Maps Timeline', both: 'photos and Google Maps Timeline' }[st.src] || 'photos';
+  return st.src === 'tap' || st.src === 'edited' ? `I have been to ${n} of 50 US states. Which have you been to?`
+    : `I have been to ${n} of 50 US states, counted from my own ${from} (nothing gets uploaded). Which have you been to?`;
+}
+async function render(scroll){
+  const run = ++drawing, st = state, n = States.countOf(st.codes), real = !st.example && st.codes.size > 0;
+  prepared = null;
+  document.title = TITLE;                                        // a link from someone else had put their count in it
+  $('#result').hidden = false;
+  $('#exFlag').hidden = !st.example;
+  $('#num').textContent = String(n);
+  $('#lbl').textContent = States.statesWord(n) + (st.example ? ' in this example' : st.src === 'tap' ? ', picked by hand' : st.src === 'edited' ? ', from your files, edited by hand' : ', found in your files');
+  $('#list').innerHTML = States.chips(st.codes, st.years);
+  $('#also').textContent = st.codes.has(States.DC) ? 'Washington, D.C. is on the map but not in the number: it is not a state.' : '';
+  const s = files && !st.example ? files.stats : null;
+  $('#abroad').innerHTML = s && s.elsewhere ? `${fmt(s.elsewhere)} of the locations in those files are not in any state: abroad, or out at sea. <a href="/">Count your countries</a> with the same files.` : '';
+  const bits = [];
+  if (s){
+    if (s.media) bits.push(`${fmt(s.media)} photos and videos read, ${fmt(s.withLoc)} with a location`);
+    if (s.sidecars) bits.push(`${fmt(s.sidecars)} Google Photos location${s.sidecars === 1 ? '' : 's'}`);
+    if (s.points) bits.push(`${fmt(s.points)} Timeline point${s.points === 1 ? '' : 's'}`);
+  }
+  $('#stats').textContent = st.example ? 'Example data: a made-up set of trips, not anyone\'s real photos.'
+    : st.src === 'tap' ? 'Picked by hand from the fifty states.' : st.src === 'edited' && !s ? 'Counted from your files, then edited by hand.' : bits.join(' · ');
+  $('#edit').hidden = st.example;
+  $('#edit').textContent = st.src === 'tap' || st.src === 'edited' ? 'Edit states' : 'Add or remove states';
+  $('#addMore').hidden = st.example || !files;
+  $('#linkNote').hidden = !real;
+  if (real) $('#linkTail').textContent = States.resultUrl(st.codes).replace(/^https:\/\//, '');
+  $('#appLink').href = Kit.storeUrl(RECV ? 'en_states_recv' : 'en_states');
+  // A real list stays in the address bar (the list only: no years, no source) and in this tab's storage, so a
+  // reload gives the same page. The example and an empty list leave the address alone.
+  if (real) remember(st);
+  if (scroll) scrollToEl($('#result'));
+  await loadFonts();
+  if (run !== drawing) return;                                   // a newer list came in while the fonts were loading
+  const text = States.drawStatesCard(canvas, FEATS, { codes: st.codes, src: st.example ? 'example' : st.src, base: st.base });
+  const names = States.byName([...st.codes].filter(c => c !== States.DC)).map(States.nameOf).join(', ');
+  canvas.setAttribute('aria-label', `${st.example ? 'Example map' : 'Map'} of the United States: ${text.n} ${text.label}${names ? ': ' + names : ''}. ${text.caption}.`);
+  prepared = Kit.prepareShare(canvas, real
+    ? { fileName: 'my-us-states.png', url: States.resultUrl(st.codes), text: shareText(st, n) }
+    : { fileName: 'us-states-example.png', url: Kit.SITE + '/us/', text: 'A free page that counts the US states you have been to from your own photos. Nothing gets uploaded.' });
+  $('#share').textContent = Kit.canShare() ? 'Share' : 'Copy link';
+}
+
+// ---------- the list in the address bar and in this tab's storage ----------
+// The counter hands its count over after the #: s= (the states), y= (first years), f= (where it came from).
+// Only s= stays in the address bar, so a copied address carries the list and nothing else; the rest is kept for a
+// reload in this tab's sessionStorage, which may be missing or blocked (then a reload shows the list as a link
+// from someone else would look).
+function remember(st){
+  try { history.replaceState(null, '', '/us/#' + States.linkHash(st.codes)); } catch (e){}
+  try { sessionStorage.setItem(STORE_KEY, JSON.stringify({ s: States.linkHash(st.codes), years: st.years ? [...st.years] : null, src: st.src, base: st.base || null })); } catch (e){}
+}
+function recall(codes){
+  try {
+    const o = JSON.parse(sessionStorage.getItem(STORE_KEY) || 'null');
+    if (!o || o.s !== States.linkHash(codes) || !States.FROM.includes(o.src)) return null;
+    const years = Array.isArray(o.years) ? new Map(o.years.filter(([c, y]) => codes.has(c) && Number.isInteger(y))) : null;
+    return { years: years && years.size ? years : null, src: o.src, base: o.base || null };
+  } catch (e){ return null; }
+}
+async function openLink(link){
+  try { await ready(); } catch (e){ setStatus(e.message); return; }
+  const mine = link.src ? { years: link.years, src: link.src, base: link.base } : recall(link.codes);
+  closePicker();
+  if (mine){                                                     // handed over by the counter, or this tab's own list after a reload
+    RECV = null; files = null;
+    document.body.classList.remove('recv-mode'); $('#recv').hidden = true; $('#drop').hidden = false;
+    state = Object.assign({ codes: link.codes, example: false }, mine);
+    render(true);
+    setStatus('');
+    return;
+  }
+  RECV = link;
+  const n = States.countOf(link.codes);
+  document.body.classList.add('recv-mode');
+  $('#recv').hidden = false; $('#drop').hidden = true; $('#result').hidden = true; state = null;
+  $('#recvTitle').textContent = `${n} of 50 states`;
+  document.title = `${n} of 50 US states: which have you been to?`;
+  $('#recvList').innerHTML = States.chips(link.codes);
+  States.drawSharedMap($('#recvMap'), FEATS, link.codes);
+  setStatus('');
+}
+
+// ---------- sharing ----------
+$('#share').addEventListener('click', () => Kit.share(prepared, { button: $('#share'), setStatus }));
+$('#save').addEventListener('click', () => Kit.saveCanvas(canvas, state && state.example ? 'us-states-example.png' : 'my-us-states.png'));
+
+// ---------- example ----------
+// [lon, lat, year]: a made-up traveller. The image says "Example" and the line under its map says the data is not real.
+const EXAMPLE = [
+  [-73.99, 40.73, 2015], [-71.06, 42.36, 2015], [-75.17, 39.95, 2016], [-77.035, 38.8895, 2016], [-87.63, 41.88, 2018],
+  [-104.99, 39.74, 2019], [-115.17, 36.11, 2019], [-118.24, 34.05, 2019], [-112.14, 36.05, 2019], [-122.42, 37.77, 2021],
+  [-122.33, 47.61, 2021], [-157.86, 21.31, 2022], [-81.38, 28.54, 2023], [-90.07, 29.95, 2024], [-97.74, 30.27, 2024],
+  [-86.78, 36.16, 2025], [-149.90, 61.22, 2026],
+];
+async function showExample(){
+  if (busy) return;
+  try {
+    await ready();
+    const codes = new Set(), years = new Map();
+    for (const [lon, lat, y] of EXAMPLE){
+      const i = place(lon, lat);
+      if (i < 0) continue;
+      const code = States.LIST[i].code;
+      codes.add(code);
+      if (!(years.get(code) <= y)) years.set(code, y);
+    }
+    files = null;
+    state = { codes, years, src: 'example', base: null, example: true };
+    closePicker();
+    render(true);
+    setStatus('This is an example. Drop your own photos above, or pick your states, to see yours.');
+  } catch (e){ setStatus(e && e.message ? e.message : 'The example did not load.'); }
+}
+
+// ---------- wiring ----------
+const drop = $('#drop');
+// Files chosen or dropped while a count from files is on the page are added to it (see handle). The input is
+// emptied first, so choosing the same files again still reports back.
+const choose = input => () => { if (busy) return; input.value = ''; input.click(); };
+$('#pickFiles').addEventListener('click', choose($('#fileInput')));
+$('#addMore').addEventListener('click', choose($('#fileInput')));
+$('#pickDir').addEventListener('click', choose($('#dirInput')));
+$('#fileInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#dirInput').addEventListener('change', e => handle(e.target.files, { adding: true }));
+$('#exampleBtn').addEventListener('click', showExample);
+$('#pickBtn').addEventListener('click', () => openPicker(false));
+$('#edit').addEventListener('click', () => { if (state && !state.example) openPicker(true); });
+$('#recvPick').addEventListener('click', () => openPicker(false));
+$('#recvPhotos').addEventListener('click', () => { closePicker(); drop.hidden = false; scrollToEl(drop); });
+$('#again').addEventListener('click', () => {
+  files = null; state = null; prepared = null; drawing++;
+  $('#result').hidden = true; closePicker(); setStatus(''); setProgress(null);
+  $('#fileInput').value = ''; $('#dirInput').value = '';
+  try { sessionStorage.removeItem(STORE_KEY); } catch (e){}
+  if (!RECV){ try { history.replaceState(null, '', '/us/'); } catch (e){} }
+  (drop.hidden ? $('#recv') : drop).scrollIntoView({ block: 'center' });
+});
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+drop.addEventListener('dragleave', e => { if (!drop.contains(e.relatedTarget)) drop.classList.remove('over'); });
+drop.addEventListener('drop', async e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const items = e.dataTransfer.items;
+  const entries = items ? [...items].map(it => it.webkitGetAsEntry && it.webkitGetAsEntry()).filter(Boolean) : [];
+  if (entries.some(en => en.isDirectory)){
+    setStatus('Looking through folders…');
+    handle(await Scan.entriesToFiles(entries, n => setStatus(`Looking through folders… ${fmt(n)} files so far`)), { adding: true });
+  }
+  else handle(e.dataTransfer.files, { adding: true });
+});
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => { if (!drop.contains(e.target)) e.preventDefault(); });
+{
+  const link = States.readLink(location.hash);
+  if (link && link.codes) openLink(link);
+  else if (link) setStatus('The list in that link could not be read, so here is the counter on its own.');
+  window.addEventListener('hashchange', () => { const l = States.readLink(location.hash); if (l && l.codes && !(state && !l.src && sameSet(l.codes, state.codes))) openLink(l); });
+}
+</script>
+</body>
+</html>
