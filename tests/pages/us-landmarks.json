@@ -1,0 +1,1022 @@
+[
+{
+"name": "Reagan National Airport",
+"lat": 38.8512,
+"lon": -77.0402,
+"state": "VA"
+},
+{
+"name": "Pentagon",
+"lat": 38.8719,
+"lon": -77.0563,
+"state": "VA"
+},
+{
+"name": "National Mall",
+"lat": 38.8895,
+"lon": -77.0353,
+"state": "DC"
+},
+{
+"name": "Lincoln Memorial",
+"lat": 38.8893,
+"lon": -77.0502,
+"state": "DC"
+},
+{
+"name": "Georgetown",
+"lat": 38.9076,
+"lon": -77.0723,
+"state": "DC"
+},
+{
+"name": "Arlington Cemetery",
+"lat": 38.8783,
+"lon": -77.0687,
+"state": "VA"
+},
+{
+"name": "Bethesda",
+"lat": 38.9847,
+"lon": -77.0947,
+"state": "MD"
+},
+{
+"name": "National Harbor",
+"lat": 38.7829,
+"lon": -77.0165,
+"state": "MD"
+},
+{
+"name": "Statue of Liberty",
+"lat": 40.6892,
+"lon": -74.0445,
+"state": "NY"
+},
+{
+"name": "Newark Airport",
+"lat": 40.6895,
+"lon": -74.1745,
+"state": "NJ"
+},
+{
+"name": "Jersey City waterfront",
+"lat": 40.7178,
+"lon": -74.0339,
+"state": "NJ"
+},
+{
+"name": "Lower Manhattan",
+"lat": 40.7075,
+"lon": -74.0113,
+"state": "NY"
+},
+{
+"name": "Hoboken",
+"lat": 40.744,
+"lon": -74.0324,
+"state": "NJ"
+},
+{
+"name": "Times Square",
+"lat": 40.758,
+"lon": -73.9855,
+"state": "NY"
+},
+{
+"name": "JFK",
+"lat": 40.6413,
+"lon": -73.7781,
+"state": "NY"
+},
+{
+"name": "Staten Island ferry terminal",
+"lat": 40.6437,
+"lon": -74.0736,
+"state": "NY"
+},
+{
+"name": "Brooklyn Bridge Park",
+"lat": 40.7003,
+"lon": -73.9967,
+"state": "NY"
+},
+{
+"name": "Liberty State Park",
+"lat": 40.704,
+"lon": -74.055,
+"state": "NJ"
+},
+{
+"name": "Philadelphia City Hall",
+"lat": 39.9526,
+"lon": -75.1652,
+"state": "PA"
+},
+{
+"name": "Camden waterfront",
+"lat": 39.944,
+"lon": -75.1195,
+"state": "NJ"
+},
+{
+"name": "Penns Landing",
+"lat": 39.9456,
+"lon": -75.141,
+"state": "PA"
+},
+{
+"name": "Kansas City MO",
+"lat": 39.0997,
+"lon": -94.5786,
+"state": "MO"
+},
+{
+"name": "Kansas City KS",
+"lat": 39.1155,
+"lon": -94.6268,
+"state": "KS"
+},
+{
+"name": "Gateway Arch",
+"lat": 38.6247,
+"lon": -90.1848,
+"state": "MO"
+},
+{
+"name": "East St Louis",
+"lat": 38.6245,
+"lon": -90.151,
+"state": "IL"
+},
+{
+"name": "Cincinnati",
+"lat": 39.1031,
+"lon": -84.512,
+"state": "OH"
+},
+{
+"name": "Covington KY",
+"lat": 39.0837,
+"lon": -84.5086,
+"state": "KY"
+},
+{
+"name": "CVG airport",
+"lat": 39.0489,
+"lon": -84.6678,
+"state": "KY"
+},
+{
+"name": "Louisville",
+"lat": 38.2527,
+"lon": -85.7585,
+"state": "KY"
+},
+{
+"name": "Jeffersonville IN",
+"lat": 38.2776,
+"lon": -85.7372,
+"state": "IN"
+},
+{
+"name": "Memphis",
+"lat": 35.1495,
+"lon": -90.049,
+"state": "TN"
+},
+{
+"name": "West Memphis",
+"lat": 35.1465,
+"lon": -90.1845,
+"state": "AR"
+},
+{
+"name": "Portland OR",
+"lat": 45.5152,
+"lon": -122.6784,
+"state": "OR"
+},
+{
+"name": "Vancouver WA",
+"lat": 45.6387,
+"lon": -122.6615,
+"state": "WA"
+},
+{
+"name": "PDX airport",
+"lat": 45.5898,
+"lon": -122.5951,
+"state": "OR"
+},
+{
+"name": "Omaha",
+"lat": 41.2565,
+"lon": -95.9345,
+"state": "NE"
+},
+{
+"name": "Council Bluffs",
+"lat": 41.2619,
+"lon": -95.8608,
+"state": "IA"
+},
+{
+"name": "Prospect Point, Niagara Falls",
+"lat": 43.0862,
+"lon": -79.0692,
+"state": "NY"
+},
+{
+"name": "South Lake Tahoe",
+"lat": 38.9399,
+"lon": -119.9772,
+"state": "CA"
+},
+{
+"name": "Stateline NV",
+"lat": 38.9624,
+"lon": -119.9398,
+"state": "NV"
+},
+{
+"name": "Hoover Dam NV side",
+"lat": 36.0155,
+"lon": -114.74,
+"state": "NV"
+},
+{
+"name": "Las Vegas Strip",
+"lat": 36.1147,
+"lon": -115.1728,
+"state": "NV"
+},
+{
+"name": "Chicago Loop",
+"lat": 41.8781,
+"lon": -87.6298,
+"state": "IL"
+},
+{
+"name": "Hammond IN",
+"lat": 41.5834,
+"lon": -87.5,
+"state": "IN"
+},
+{
+"name": "Texarkana TX",
+"lat": 33.4251,
+"lon": -94.0477,
+"state": "TX"
+},
+{
+"name": "Texarkana AR",
+"lat": 33.4418,
+"lon": -94.0377,
+"state": "AR"
+},
+{
+"name": "Charlotte",
+"lat": 35.2271,
+"lon": -80.8431,
+"state": "NC"
+},
+{
+"name": "Fort Mill SC",
+"lat": 35.0074,
+"lon": -80.9451,
+"state": "SC"
+},
+{
+"name": "Augusta GA",
+"lat": 33.4735,
+"lon": -81.9748,
+"state": "GA"
+},
+{
+"name": "North Augusta SC",
+"lat": 33.5018,
+"lon": -81.9651,
+"state": "SC"
+},
+{
+"name": "Savannah",
+"lat": 32.0809,
+"lon": -81.0912,
+"state": "GA"
+},
+{
+"name": "Fargo",
+"lat": 46.8772,
+"lon": -96.7898,
+"state": "ND"
+},
+{
+"name": "Moorhead",
+"lat": 46.8738,
+"lon": -96.7678,
+"state": "MN"
+},
+{
+"name": "El Paso",
+"lat": 31.7619,
+"lon": -106.485,
+"state": "TX"
+},
+{
+"name": "Sunland Park NM",
+"lat": 31.7965,
+"lon": -106.58,
+"state": "NM"
+},
+{
+"name": "Duluth",
+"lat": 46.7867,
+"lon": -92.1005,
+"state": "MN"
+},
+{
+"name": "Superior WI",
+"lat": 46.7208,
+"lon": -92.1041,
+"state": "WI"
+},
+{
+"name": "Key West",
+"lat": 24.5551,
+"lon": -81.78,
+"state": "FL"
+},
+{
+"name": "Block Island",
+"lat": 41.1717,
+"lon": -71.5773,
+"state": "RI"
+},
+{
+"name": "Nantucket",
+"lat": 41.2835,
+"lon": -70.0995,
+"state": "MA"
+},
+{
+"name": "Mackinac Island",
+"lat": 45.8492,
+"lon": -84.6189,
+"state": "MI"
+},
+{
+"name": "Friday Harbor",
+"lat": 48.5343,
+"lon": -123.0171,
+"state": "WA"
+},
+{
+"name": "Honolulu",
+"lat": 21.3069,
+"lon": -157.8583,
+"state": "HI"
+},
+{
+"name": "Kona",
+"lat": 19.64,
+"lon": -155.9969,
+"state": "HI"
+},
+{
+"name": "Anchorage",
+"lat": 61.2181,
+"lon": -149.9003,
+"state": "AK"
+},
+{
+"name": "Juneau",
+"lat": 58.3019,
+"lon": -134.4197,
+"state": "AK"
+},
+{
+"name": "Detroit",
+"lat": 42.3314,
+"lon": -83.0458,
+"state": "MI"
+},
+{
+"name": "Boston Logan",
+"lat": 42.3656,
+"lon": -71.0096,
+"state": "MA"
+},
+{
+"name": "Providence",
+"lat": 41.824,
+"lon": -71.4128,
+"state": "RI"
+},
+{
+"name": "Wilmington DE",
+"lat": 39.7391,
+"lon": -75.5398,
+"state": "DE"
+},
+{
+"name": "Harpers Ferry WV",
+"lat": 39.3254,
+"lon": -77.7389,
+"state": "WV"
+},
+{
+"name": "Grand Canyon South Rim",
+"lat": 36.0544,
+"lon": -112.1401,
+"state": "AZ"
+},
+{
+"name": "Monument Valley visitor center",
+"lat": 36.982,
+"lon": -110.112,
+"state": "AZ"
+},
+{
+"name": "Old Faithful",
+"lat": 44.4605,
+"lon": -110.8281,
+"state": "WY"
+},
+{
+"name": "West Yellowstone",
+"lat": 44.6621,
+"lon": -111.1041,
+"state": "MT"
+},
+{
+"name": "Mount Rushmore",
+"lat": 43.8791,
+"lon": -103.4591,
+"state": "SD"
+},
+{
+"name": "Devils Tower",
+"lat": 44.5902,
+"lon": -104.7146,
+"state": "WY"
+},
+{
+"name": "Pier 39",
+"lat": 37.8087,
+"lon": -122.4098,
+"state": "CA"
+},
+{
+"name": "Miami Beach",
+"lat": 25.7907,
+"lon": -80.13,
+"state": "FL"
+},
+{
+"name": "French Quarter",
+"lat": 29.9584,
+"lon": -90.0644,
+"state": "LA"
+},
+{
+"name": "Galveston",
+"lat": 29.3013,
+"lon": -94.7977,
+"state": "TX"
+},
+{
+"name": "Pike Place",
+"lat": 47.6097,
+"lon": -122.3422,
+"state": "WA"
+},
+{
+"name": "Bar Harbor",
+"lat": 44.3876,
+"lon": -68.2039,
+"state": "ME"
+},
+{
+"name": "Kitty Hawk",
+"lat": 36.0646,
+"lon": -75.7057,
+"state": "NC"
+},
+{
+"name": "Virginia Beach",
+"lat": 36.8529,
+"lon": -75.978,
+"state": "VA"
+},
+{
+"name": "Ocean City MD",
+"lat": 38.3365,
+"lon": -75.0849,
+"state": "MD"
+},
+{
+"name": "Burlington VT",
+"lat": 44.4759,
+"lon": -73.2121,
+"state": "VT"
+},
+{
+"name": "Portsmouth NH",
+"lat": 43.0718,
+"lon": -70.7626,
+"state": "NH"
+},
+{
+"name": "Kittery ME",
+"lat": 43.0884,
+"lon": -70.7362,
+"state": "ME"
+},
+{
+"name": "Sioux Falls",
+"lat": 43.5446,
+"lon": -96.7311,
+"state": "SD"
+},
+{
+"name": "Sioux City",
+"lat": 42.4963,
+"lon": -96.4049,
+"state": "IA"
+},
+{
+"name": "Lake Mead marina",
+"lat": 36.0297,
+"lon": -114.773,
+"state": "NV"
+},
+{
+"name": "Wendover UT",
+"lat": 40.7372,
+"lon": -114.0375,
+"state": "UT"
+},
+{
+"name": "West Wendover NV",
+"lat": 40.7391,
+"lon": -114.0733,
+"state": "NV"
+},
+{
+"name": "Montgomery",
+"lat": 32.3668,
+"lon": -86.3,
+"state": "AL"
+},
+{
+"name": "Phoenix",
+"lat": 33.4484,
+"lon": -112.074,
+"state": "AZ"
+},
+{
+"name": "Little Rock",
+"lat": 34.7465,
+"lon": -92.2896,
+"state": "AR"
+},
+{
+"name": "Sacramento",
+"lat": 38.5816,
+"lon": -121.4944,
+"state": "CA"
+},
+{
+"name": "Denver",
+"lat": 39.7392,
+"lon": -104.9903,
+"state": "CO"
+},
+{
+"name": "Hartford",
+"lat": 41.7658,
+"lon": -72.6734,
+"state": "CT"
+},
+{
+"name": "Dover",
+"lat": 39.1582,
+"lon": -75.5244,
+"state": "DE"
+},
+{
+"name": "Tallahassee",
+"lat": 30.4383,
+"lon": -84.2807,
+"state": "FL"
+},
+{
+"name": "Atlanta",
+"lat": 33.749,
+"lon": -84.388,
+"state": "GA"
+},
+{
+"name": "Boise",
+"lat": 43.615,
+"lon": -116.2023,
+"state": "ID"
+},
+{
+"name": "Springfield IL",
+"lat": 39.7817,
+"lon": -89.6501,
+"state": "IL"
+},
+{
+"name": "Indianapolis",
+"lat": 39.7684,
+"lon": -86.1581,
+"state": "IN"
+},
+{
+"name": "Des Moines",
+"lat": 41.5868,
+"lon": -93.625,
+"state": "IA"
+},
+{
+"name": "Topeka",
+"lat": 39.0473,
+"lon": -95.6752,
+"state": "KS"
+},
+{
+"name": "Frankfort",
+"lat": 38.2009,
+"lon": -84.8733,
+"state": "KY"
+},
+{
+"name": "Baton Rouge",
+"lat": 30.4515,
+"lon": -91.1871,
+"state": "LA"
+},
+{
+"name": "Augusta ME",
+"lat": 44.3106,
+"lon": -69.7795,
+"state": "ME"
+},
+{
+"name": "Annapolis",
+"lat": 38.9784,
+"lon": -76.4922,
+"state": "MD"
+},
+{
+"name": "Boston",
+"lat": 42.3601,
+"lon": -71.0589,
+"state": "MA"
+},
+{
+"name": "Lansing",
+"lat": 42.7325,
+"lon": -84.5555,
+"state": "MI"
+},
+{
+"name": "St Paul",
+"lat": 44.9537,
+"lon": -93.09,
+"state": "MN"
+},
+{
+"name": "Jackson",
+"lat": 32.2988,
+"lon": -90.1848,
+"state": "MS"
+},
+{
+"name": "Jefferson City",
+"lat": 38.5767,
+"lon": -92.1735,
+"state": "MO"
+},
+{
+"name": "Helena",
+"lat": 46.5891,
+"lon": -112.0391,
+"state": "MT"
+},
+{
+"name": "Lincoln",
+"lat": 40.8136,
+"lon": -96.7026,
+"state": "NE"
+},
+{
+"name": "Carson City",
+"lat": 39.1638,
+"lon": -119.7674,
+"state": "NV"
+},
+{
+"name": "Concord",
+"lat": 43.2081,
+"lon": -71.5376,
+"state": "NH"
+},
+{
+"name": "Trenton",
+"lat": 40.2206,
+"lon": -74.7597,
+"state": "NJ"
+},
+{
+"name": "Santa Fe",
+"lat": 35.687,
+"lon": -105.9378,
+"state": "NM"
+},
+{
+"name": "Albany",
+"lat": 42.6526,
+"lon": -73.7562,
+"state": "NY"
+},
+{
+"name": "Raleigh",
+"lat": 35.7796,
+"lon": -78.6382,
+"state": "NC"
+},
+{
+"name": "Bismarck",
+"lat": 46.8083,
+"lon": -100.7837,
+"state": "ND"
+},
+{
+"name": "Columbus",
+"lat": 39.9612,
+"lon": -82.9988,
+"state": "OH"
+},
+{
+"name": "Oklahoma City",
+"lat": 35.4676,
+"lon": -97.5164,
+"state": "OK"
+},
+{
+"name": "Salem",
+"lat": 44.9429,
+"lon": -123.0351,
+"state": "OR"
+},
+{
+"name": "Harrisburg",
+"lat": 40.2732,
+"lon": -76.8867,
+"state": "PA"
+},
+{
+"name": "Columbia",
+"lat": 34.0007,
+"lon": -81.0348,
+"state": "SC"
+},
+{
+"name": "Pierre",
+"lat": 44.3683,
+"lon": -100.351,
+"state": "SD"
+},
+{
+"name": "Nashville",
+"lat": 36.1627,
+"lon": -86.7816,
+"state": "TN"
+},
+{
+"name": "Austin",
+"lat": 30.2672,
+"lon": -97.7431,
+"state": "TX"
+},
+{
+"name": "Salt Lake City",
+"lat": 40.7608,
+"lon": -111.891,
+"state": "UT"
+},
+{
+"name": "Montpelier",
+"lat": 44.2601,
+"lon": -72.5754,
+"state": "VT"
+},
+{
+"name": "Richmond",
+"lat": 37.5407,
+"lon": -77.436,
+"state": "VA"
+},
+{
+"name": "Olympia",
+"lat": 47.0379,
+"lon": -122.9007,
+"state": "WA"
+},
+{
+"name": "Charleston WV",
+"lat": 38.3498,
+"lon": -81.6326,
+"state": "WV"
+},
+{
+"name": "Madison",
+"lat": 43.0731,
+"lon": -89.4012,
+"state": "WI"
+},
+{
+"name": "Cheyenne",
+"lat": 41.14,
+"lon": -104.8202,
+"state": "WY"
+},
+{
+"name": "Great American Ball Park",
+"lat": 39.0974,
+"lon": -84.5066,
+"state": "OH"
+},
+{
+"name": "Newport on the Levee",
+"lat": 39.0946,
+"lon": -84.4958,
+"state": "KY"
+},
+{
+"name": "Harrah's Lake Tahoe",
+"lat": 38.9601,
+"lon": -119.941,
+"state": "NV"
+},
+{
+"name": "Heavenly Village",
+"lat": 38.9567,
+"lon": -119.9423,
+"state": "CA"
+},
+{
+"name": "Union Station Kansas City",
+"lat": 39.0851,
+"lon": -94.5858,
+"state": "MO"
+},
+{
+"name": "Exchange Place Jersey City",
+"lat": 40.7163,
+"lon": -74.0326,
+"state": "NJ"
+},
+{
+"name": "Battery Park",
+"lat": 40.7033,
+"lon": -74.017,
+"state": "NY"
+},
+{
+"name": "Mud Island Memphis",
+"lat": 35.1493,
+"lon": -90.0553,
+"state": "TN"
+},
+{
+"name": "Hoover Dam Arizona side",
+"lat": 36.0163,
+"lon": -114.736,
+"state": "AZ"
+},
+{
+"name": "Ellis Island main building",
+"lat": 40.6995,
+"lon": -74.0396,
+"state": "NY"
+},
+{
+"name": "Louisville waterfront park",
+"lat": 38.2606,
+"lon": -85.743,
+"state": "KY"
+},
+{
+"name": "Omaha riverfront",
+"lat": 41.259,
+"lon": -95.923,
+"state": "NE"
+},
+{
+"name": "Laughlin NV",
+"lat": 35.1678,
+"lon": -114.573,
+"state": "NV"
+},
+{
+"name": "Bullhead City AZ",
+"lat": 35.1359,
+"lon": -114.5286,
+"state": "AZ"
+},
+{
+"name": "Wheeling WV",
+"lat": 40.064,
+"lon": -80.7209,
+"state": "WV"
+},
+{
+"name": "Vicksburg",
+"lat": 32.3526,
+"lon": -90.8779,
+"state": "MS"
+},
+{
+"name": "Natchez",
+"lat": 31.5604,
+"lon": -91.4032,
+"state": "MS"
+},
+{
+"name": "Quad Cities Davenport",
+"lat": 41.5236,
+"lon": -90.5776,
+"state": "IA"
+},
+{
+"name": "Rock Island IL",
+"lat": 41.5095,
+"lon": -90.5787,
+"state": "IL"
+},
+{
+"name": "La Crosse WI",
+"lat": 43.8014,
+"lon": -91.2396,
+"state": "WI"
+},
+{
+"name": "Dubuque",
+"lat": 42.5006,
+"lon": -90.6646,
+"state": "IA"
+},
+{
+"name": "Evansville",
+"lat": 37.9716,
+"lon": -87.5711,
+"state": "IN"
+},
+{
+"name": "Paducah",
+"lat": 37.0834,
+"lon": -88.6001,
+"state": "KY"
+},
+{
+"name": "Lake Havasu City",
+"lat": 34.4839,
+"lon": -114.3225,
+"state": "AZ"
+},
+{
+"name": "Lewiston ID",
+"lat": 46.4165,
+"lon": -117.0177,
+"state": "ID"
+},
+{
+"name": "Clarkston WA",
+"lat": 46.4163,
+"lon": -117.0452,
+"state": "WA"
+},
+{
+"name": "Yuma",
+"lat": 32.6927,
+"lon": -114.6277,
+"state": "AZ"
+},
+{
+"name": "Chattanooga",
+"lat": 35.0456,
+"lon": -85.3097,
+"state": "TN"
+},
+{
+"name": "Lookout Mountain Rock City",
+"lat": 34.9734,
+"lon": -85.3497,
+"state": "GA"
+}
+]

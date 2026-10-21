@@ -1,0 +1,107 @@
+{
+ "example": {
+  "ops": 90575,
+  "hash": "c4528f26f34bfb6226b949ec449d819b1a3d0ef0e3b2f5ebfcc5a6d540a959ee",
+  "text": "{\"title\":\"Example · 2026 in travel\",\"count\":\"7 countries\",\"sub\":\"3 new · 11 so far\",\"groups\":[{\"label\":\"NEW\",\"names\":[\"🇰🇷 South Korea\",\"🇨🇭 Switzerland\",\"🇮🇸 Iceland\"]},{\"label\":\"BEEN BEFORE\",\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇮🇹 Italy\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,1,0,0,0],\"caption\":\"example data, not real photos\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 7 countries, 3 of them new to me. Make yours:",
+  "order": "CA US JP KR IT CH IS"
+ },
+ "photos": {
+  "ops": 90575,
+  "hash": "21dd8f2c7e273ff19231617c3c295636ab40ed33a02f4f43a1fdcd3f477b2ce9",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"7 countries\",\"sub\":\"3 new to me · 11 so far\",\"groups\":[{\"label\":\"NEW TO ME\",\"names\":[\"🇰🇷 South Korea\",\"🇨🇭 Switzerland\",\"🇮🇸 Iceland\"]},{\"label\":\"BEEN BEFORE\",\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇮🇹 Italy\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,1,0,0,0],\"caption\":\"counted from my own photos, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 7 countries, 3 of them new to me. Make yours:",
+  "order": "CA US JP KR IT CH IS"
+ },
+ "timeline": {
+  "ops": 90575,
+  "hash": "d01b983ba12cf236da5b8dca282444e7ab61278e392745304b3b47698baa2663",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"7 countries\",\"sub\":\"3 new to me · 11 so far\",\"groups\":[{\"label\":\"NEW TO ME\",\"names\":[\"🇰🇷 South Korea\",\"🇨🇭 Switzerland\",\"🇮🇸 Iceland\"]},{\"label\":\"BEEN BEFORE\",\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇮🇹 Italy\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,1,0,0,0],\"caption\":\"counted from my own location history, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 7 countries, 3 of them new to me. Make yours:",
+  "order": "CA US JP KR IT CH IS"
+ },
+ "both": {
+  "ops": 90575,
+  "hash": "4bd1a768fabbc37c4b619649558d6e8da69e6c39b7d5ea66b5ccc73b3d02a727",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"7 countries\",\"sub\":\"3 new to me · 11 so far\",\"groups\":[{\"label\":\"NEW TO ME\",\"names\":[\"🇰🇷 South Korea\",\"🇨🇭 Switzerland\",\"🇮🇸 Iceland\"]},{\"label\":\"BEEN BEFORE\",\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇮🇹 Italy\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,1,0,0,0],\"caption\":\"counted from my own photos and location history, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 7 countries, 3 of them new to me. Make yours:",
+  "order": "CA US JP KR IT CH IS"
+ },
+ "new switched off": {
+  "ops": 90560,
+  "hash": "a526a4a9b89056bc3b6a20ecd5fa23d2a5a026855255ea65f83e33db0a62debd",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"7 countries\",\"sub\":\"11 so far\",\"groups\":[{\"label\":null,\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇰🇷 South Korea\",\"🇮🇹 Italy\",\"🇨🇭 Switzerland\",\"🇮🇸 Iceland\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,1,0,0,0],\"caption\":\"counted from my own photos, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 7 countries. Make yours:",
+  "order": "CA US JP KR IT CH IS"
+ },
+ "all new": {
+  "ops": 90566,
+  "hash": "3bae06573b9fc77c5039741c2a1667893c7d265fec7417b6f7983ab2c24ef986",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"7 countries\",\"sub\":\"7 new to me · 11 so far\",\"groups\":[{\"label\":\"ALL NEW TO ME\",\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇰🇷 South Korea\",\"🇮🇹 Italy\",\"🇨🇭 Switzerland\",\"🇮🇸 Iceland\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,1,0,0,0],\"caption\":\"counted from my own photos, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 7 countries, 7 of them new to me. Make yours:",
+  "order": "CA US JP KR IT CH IS"
+ },
+ "edited": {
+  "ops": 90579,
+  "hash": "352bcaf3b47d40bdebef054925ecc2dd12edc7e1f5911fe92666e352b04ae40e",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"8 countries\",\"sub\":\"2 new to me · 12 so far\",\"groups\":[{\"label\":\"NEW TO ME\",\"names\":[\"🇰🇷 South Korea\",\"🇨🇭 Switzerland\"]},{\"label\":\"BEEN BEFORE\",\"names\":[\"🇨🇦 Canada\",\"🇺🇸 United States\",\"🇯🇵 Japan\",\"🇮🇹 Italy\",\"🇧🇷 Brazil\",\"🇩🇪 Germany\"]}],\"more\":0,\"months\":[1,1,1,2,1,0,2,1,0,0,0,0],\"caption\":\"counted from my own photos and location history, then edited by hand\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 8 countries, 2 of them new to me. Make yours:",
+  "order": "CA US JP KR IT CH BR DE"
+ },
+ "picked: 3": {
+  "ops": 90312,
+  "hash": "3c9363be4c1b94c6ccd478d9452c1711a9466a33755b7832049db24561883d24",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"3 countries\",\"sub\":\"\",\"groups\":[{\"label\":null,\"names\":[\"🇮🇹 Italy\",\"🇯🇵 Japan\",\"🇰🇷 South Korea\"]}],\"more\":0,\"months\":null,\"caption\":\"picked by hand\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 3 countries. Make yours:",
+  "order": "IT JP KR"
+ },
+ "picked: 1": {
+  "ops": 90298,
+  "hash": "54df8dcd79a8382ca09316ffa23dd1e5255f5513250073003420e794c66ba030",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"1 country\",\"sub\":\"\",\"groups\":[{\"label\":null,\"names\":[\"🇯🇵 Japan\"]}],\"more\":0,\"months\":null,\"caption\":\"picked by hand\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 1 country. Make yours:",
+  "order": "JP"
+ },
+ "picked: 0": {
+  "ops": 90288,
+  "hash": "f5b51e5150c533a953bf7717fd6c2c45fefbf2cde4c9f22c465b45e230d9da69",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"0 countries\",\"sub\":\"\",\"groups\":[],\"more\":0,\"months\":null,\"caption\":\"picked by hand\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 0 countries. Make yours:",
+  "order": ""
+ },
+ "picked: 40": {
+  "ops": 90655,
+  "hash": "71dd49c7428ff7983ceb104ab542c841b85e8f8062b9b7867b741a58c8381aaf",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"40 countries\",\"sub\":\"\",\"groups\":[{\"label\":null,\"names\":[\"🇦🇫 Afghanistan\",\"🇦🇱 Albania\",\"🇦🇩 Andorra\",\"🇦🇴 Angola\",\"🇦🇬 Antigua & Barbuda\",\"🇦🇷 Argentina\",\"🇦🇲 Armenia\",\"🇦🇺 Australia\",\"🇦🇹 Austria\",\"🇦🇿 Azerbaijan\",\"🇧🇸 Bahamas\",\"🇧🇭 Bahrain\",\"🇧🇩 Bangladesh\",\"🇧🇧 Barbados\",\"🇧🇾 Belarus\",\"🇧🇪 Belgium\",\"🇧🇿 Belize\",\"🇧🇯 Benin\",\"🇧🇹 Bhutan\",\"🇧🇴 Bolivia\",\"🇧🇦 Bosnia and Herzegovina\",\"🇧🇼 Botswana\",\"🇧🇷 Brazil\",\"🇧🇳 Brunei\",\"🇧🇬 Bulgaria\",\"🇧🇫 Burkina Faso\",\"🇧🇮 Burundi\",\"🇨🇲 Cameroon\",\"🇨🇦 Canada\",\"🇨🇫 Central African Republic\",\"🇨🇱 Chile\",\"🇨🇳 China\",\"🇨🇴 Colombia\",\"🇨🇬 Congo\",\"🇨🇷 Costa Rica\",\"🇨🇮 Côte d'Ivoire\",\"🇨🇺 Cuba\",\"🇨🇩 DR Congo\",\"🇨🇭 Switzerland\",\"🇦🇪 United Arab Emirates\"]}],\"more\":0,\"months\":null,\"caption\":\"picked by hand\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 40 countries. Make yours:",
+  "order": "AF AL AD AO AG AR AM AU AT AZ BS BH BD BB BY BE BZ BJ BT BO BA BW BR BN BG BF BI CM CA CF CL CN CO CG CR CI CU CD CH AE"
+ },
+ "picked: 194": {
+  "ops": 91974,
+  "hash": "de374ee65a6d053b443c6f6e7d7538b9f50fd24794cf3e5deea873aa33c562b0",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"194 countries\",\"sub\":\"\",\"groups\":[{\"label\":null,\"names\":[\"🇦🇫 Afghanistan\",\"🇦🇱 Albania\",\"🇩🇿 Algeria\",\"🇦🇩 Andorra\",\"🇦🇴 Angola\",\"🇦🇬 Antigua & Barbuda\",\"🇦🇷 Argentina\",\"🇦🇲 Armenia\",\"🇦🇺 Australia\",\"🇦🇹 Austria\",\"🇦🇿 Azerbaijan\",\"🇧🇸 Bahamas\",\"🇧🇭 Bahrain\",\"🇧🇩 Bangladesh\",\"🇧🇧 Barbados\",\"🇧🇾 Belarus\",\"🇧🇪 Belgium\",\"🇧🇿 Belize\",\"🇧🇯 Benin\",\"🇧🇹 Bhutan\",\"🇧🇴 Bolivia\",\"🇧🇦 Bosnia and Herzegovina\",\"🇧🇼 Botswana\",\"🇧🇷 Brazil\",\"🇧🇳 Brunei\",\"🇧🇬 Bulgaria\",\"🇧🇫 Burkina Faso\",\"🇧🇮 Burundi\",\"🇰🇭 Cambodia\",\"🇨🇲 Cameroon\",\"🇨🇦 Canada\",\"🇨🇻 Cape Verde\",\"🇨🇫 Central African Republic\",\"🇹🇩 Chad\",\"🇨🇱 Chile\",\"🇨🇳 China\",\"🇨🇴 Colombia\",\"🇰🇲 Comoros\",\"🇨🇬 Congo\",\"🇨🇷 Costa Rica\",\"🇨🇮 Côte d'Ivoire\",\"🇭🇷 Croatia\",\"🇨🇺 Cuba\",\"🇨🇾 Cyprus\",\"🇨🇿 Czechia\",\"🇩🇰 Denmark\",\"🇩🇯 Djibouti\",\"🇩🇲 Dominica\",\"🇩🇴 Dominican Republic\",\"🇨🇩 DR Congo\",\"🇪🇨 Ecuador\",\"🇪🇬 Egypt\",\"🇸🇻 El Salvador\",\"🇬🇶 Equatorial Guinea\",\"🇪🇷 Eritrea\",\"🇪🇪 Estonia\",\"🇸🇿 Eswatini\",\"🇪🇹 Ethiopia\",\"🇫🇯 Fiji\",\"🇫🇮 Finland\",\"🇫🇷 France\",\"🇬🇦 Gabon\",\"🇬🇲 Gambia\",\"🇬🇪 Georgia\",\"🇩🇪 Germany\",\"🇬🇭 Ghana\",\"🇬🇷 Greece\",\"🇬🇩 Grenada\",\"🇬🇹 Guatemala\",\"🇬🇳 Guinea\",\"🇬🇼 Guinea-Bissau\",\"🇬🇾 Guyana\",\"🇭🇹 Haiti\",\"🇭🇳 Honduras\",\"🇭🇺 Hungary\",\"🇮🇸 Iceland\",\"🇮🇳 India\",\"🇮🇩 Indonesia\",\"🇮🇷 Iran\",\"🇮🇶 Iraq\",\"🇮🇪 Ireland\",\"🇮🇱 Israel\",\"🇮🇹 Italy\",\"🇯🇲 Jamaica\",\"🇯🇵 Japan\",\"+109 more\"]}],\"more\":109,\"months\":null,\"caption\":\"picked by hand\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 194 countries. Make yours:",
+  "order": "AF AL DZ AD AO AG AR AM AU AT AZ BS BH BD BB BY BE BZ BJ BT BO BA BW BR BN BG BF BI KH CM CA CV CF TD CL CN CO KM CG CR CI HR CU CY CZ DK DJ DM DO CD EC EG SV GQ ER EE SZ ET FJ FI FR GA GM GE DE GH GR GD GT GN GW GY HT HN HU IS IN ID IR IQ IE IL IT JM JP JO KZ KE KI KW KG LA LV LB LS LR LY LI LT LU MG MW MY MV ML MT MH MR MU MX FM MD MC MN ME MA MZ MM NA NR NP NL NZ NI NE NG KP MK NO OM PK PW PA PG PY PE PH PL PT QA RO RU RW WS SM ST SA SN RS SC SL SG SK SI SB SO ZA KR SS ES LK KN VC LC SD SR SE CH SY TW TJ TZ TH TL TG TO TT TN TR TM TV UG UA AE GB US UY UZ VU VE VN YE ZM ZW"
+ },
+ "France": {
+  "ops": 90445,
+  "hash": "b52e6c0e3129b1227c933dd6f74fc5427637cdcb8f4c7a2cc45b3851d4f72b89",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"1 country\",\"sub\":\"\",\"groups\":[{\"label\":null,\"names\":[\"🇫🇷 France\"]}],\"more\":0,\"months\":[0,0,0,0,0,0,1,0,0,0,0,0],\"caption\":\"counted from my own photos, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 1 country. Make yours:",
+  "order": "FR"
+ },
+ "outside the 194": {
+  "ops": 90513,
+  "hash": "ffc05301ba7979c8f437dd8712d88442a53f496a1e6450e861c3e03744a506ee",
+  "text": "{\"title\":\"My 2026 in travel\",\"count\":\"1 country\",\"sub\":\"1 new to me · 2 so far\",\"groups\":[{\"label\":\"NEW TO ME\",\"names\":[\"🇮🇹 Italy\"]}],\"more\":0,\"months\":[0,0,0,0,0,0,0,0,0,0,0,1],\"caption\":\"counted from my own photos, in my own browser\",\"url\":\"getdriftlog.com/2026\"}",
+  "share": "My 2026 in travel: 1 country, 1 of them new to me. Make yours:",
+  "order": "IT"
+ },
+ "another year": {
+  "ops": 90445,
+  "hash": "44ac65e41342cb43691cffd7e6a514010fb04910541ce27735e846bf1cbcdd86",
+  "text": "{\"title\":\"My 2020 in travel\",\"count\":\"1 country\",\"sub\":\"\",\"groups\":[{\"label\":null,\"names\":[\"🇫🇷 France\"]}],\"more\":0,\"months\":[1,0,0,0,0,0,0,0,0,0,0,0],\"caption\":\"counted from my own photos, in my own browser\",\"url\":\"getdriftlog.com/2020\"}",
+  "share": "My 2020 in travel: 1 country. Make yours:",
+  "order": "FR"
+ }
+}
